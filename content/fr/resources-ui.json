@@ -1,0 +1,97 @@
+{
+  "hero": {
+    "title": "Ressources pour les aidant·e·s",
+    "description": "Retrouvez des aides, démarches, organismes, associations et guides utiles pour vous accompagner au quotidien.",
+    "searchPlaceholder": "Rechercher une aide, un organisme, un guide..."
+  },
+
+  "countrySelector": {
+    "title": "Choisissez votre territoire",
+    "description": "Les aides, dispositifs et organismes diffèrent selon le pays.",
+    "france": "France",
+    "spain": "Espagne"
+  },
+
+  "filters": {
+    "title": "Filtrer les ressources",
+    "all": "Toutes les ressources",
+    "clear": "Réinitialiser les filtres",
+    "results": "ressources trouvées",
+    "noResults": "Aucune ressource ne correspond à votre recherche."
+  },
+
+  "kinds": {
+    "financial-aid": "Aide financière",
+    "service": "Service",
+    "institution": "Institution",
+    "association": "Association",
+    "guide": "Guide",
+    "training": "Formation",
+    "directory": "Annuaire",
+    "tool": "Outil",
+    "legal-information": "Information juridique"
+  },
+
+  "topics": {
+    "financial-support": "Aides financières",
+    "rights-procedures": "Droits & démarches",
+    "dependency-disability": "Dépendance & handicap",
+    "work-leave": "Travail & congés",
+    "tax-retirement": "Fiscalité & retraite",
+    "respite": "Répit",
+    "caregiver-health": "Santé de l’aidant",
+    "psychological-support": "Soutien psychologique",
+    "social-support": "Soutien social",
+    "daily-life": "Vie quotidienne",
+    "care-coordination": "Coordination des soins",
+    "home-care": "Aide à domicile",
+    "accessibility-equipment": "Équipements & aides techniques",
+    "housing-adaptation": "Adaptation du logement",
+    "mobility-transport": "Mobilité & transport",
+    "teleassistance-safety": "Téléassistance & sécurité",
+    "care-skills": "Compétences de l’aidant",
+    "end-of-life": "Fin de vie"
+  },
+
+  "beneficiaries": {
+    "title": "Pour qui ?",
+    "caregiver": "Aidant·e",
+    "cared-person": "Personne accompagnée",
+    "both": "Aidant·e et personne accompagnée"
+  },
+
+  "scopes": {
+    "title": "Niveau territorial",
+    "national": "National",
+    "regional": "Régional",
+    "departmental": "Départemental",
+    "provincial": "Provincial",
+    "local": "Local"
+  },
+
+  "providerTypes": {
+    "public": "Organisme public",
+    "association": "Association",
+    "foundation": "Fondation",
+    "healthcare": "Structure de santé",
+    "private": "Organisme privé",
+    "other": "Autre organisme"
+  },
+
+  "sections": {
+    "featured": "Ressources recommandées",
+    "allResources": "Toutes les ressources",
+    "guides": "Guides pour les aidant·e·s",
+    "institutions": "Organismes et institutions"
+  },
+
+  "card": {
+    "official": "Source officielle",
+    "featured": "Recommandé",
+    "visit": "Consulter la ressource",
+    "organization": "Organisme",
+    "territory": "Territoire",
+    "beneficiary": "Destiné à",
+    "verified": "Informations vérifiées le"
+  }
+}

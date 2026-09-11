@@ -1,0 +1,97 @@
+{
+  "hero": {
+    "title": "Recursos para personas cuidadoras",
+    "description": "Encuentra ayudas, trámites, organismos, asociaciones y guías útiles para acompañarte en el día a día.",
+    "searchPlaceholder": "Buscar una ayuda, un organismo, una guía..."
+  },
+
+  "countrySelector": {
+    "title": "Elige tu territorio",
+    "description": "Las ayudas, los recursos y los organismos varían según el país.",
+    "france": "Francia",
+    "spain": "España"
+  },
+
+  "filters": {
+    "title": "Filtrar recursos",
+    "all": "Todos los recursos",
+    "clear": "Restablecer filtros",
+    "results": "recursos encontrados",
+    "noResults": "Ningún recurso coincide con tu búsqueda."
+  },
+
+  "kinds": {
+    "financial-aid": "Ayuda económica",
+    "service": "Servicio",
+    "institution": "Institución",
+    "association": "Asociación",
+    "guide": "Guía",
+    "training": "Formación",
+    "directory": "Directorio",
+    "tool": "Herramienta",
+    "legal-information": "Información jurídica"
+  },
+
+  "topics": {
+    "financial-support": "Ayudas económicas",
+    "rights-procedures": "Derechos y trámites",
+    "dependency-disability": "Dependencia y discapacidad",
+    "work-leave": "Trabajo y permisos",
+    "tax-retirement": "Fiscalidad y jubilación",
+    "respite": "Respiro",
+    "caregiver-health": "Salud de la persona cuidadora",
+    "psychological-support": "Apoyo psicológico",
+    "social-support": "Apoyo social",
+    "daily-life": "Vida cotidiana",
+    "care-coordination": "Coordinación de cuidados",
+    "home-care": "Atención domiciliaria",
+    "accessibility-equipment": "Equipamiento y ayudas técnicas",
+    "housing-adaptation": "Adaptación de la vivienda",
+    "mobility-transport": "Movilidad y transporte",
+    "teleassistance-safety": "Teleasistencia y seguridad",
+    "care-skills": "Competencias para el cuidado",
+    "end-of-life": "Final de vida"
+  },
+
+  "beneficiaries": {
+    "title": "¿Para quién?",
+    "caregiver": "Persona cuidadora",
+    "cared-person": "Persona atendida",
+    "both": "Persona cuidadora y persona atendida"
+  },
+
+  "scopes": {
+    "title": "Nivel territorial",
+    "national": "Nacional",
+    "regional": "Autonómico / regional",
+    "departmental": "Departamental",
+    "provincial": "Provincial",
+    "local": "Local"
+  },
+
+  "providerTypes": {
+    "public": "Organismo público",
+    "association": "Asociación",
+    "foundation": "Fundación",
+    "healthcare": "Entidad sanitaria",
+    "private": "Organismo privado",
+    "other": "Otro organismo"
+  },
+
+  "sections": {
+    "featured": "Recursos recomendados",
+    "allResources": "Todos los recursos",
+    "guides": "Guías para personas cuidadoras",
+    "institutions": "Organismos e instituciones"
+  },
+
+  "card": {
+    "official": "Fuente oficial",
+    "featured": "Recomendado",
+    "visit": "Consultar el recurso",
+    "organization": "Organismo",
+    "territory": "Territorio",
+    "beneficiary": "Dirigido a",
+    "verified": "Información verificada el"
+  }
+}
