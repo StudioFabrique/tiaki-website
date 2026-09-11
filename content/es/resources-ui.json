@@ -100,5 +100,9 @@
     "territory": "Territorio",
     "beneficiary": "Dirigido a",
     "verified": "Información verificada el"
-  }
+  },
+  "translation": {
+  "draft": "Traducción pendiente de validación",
+  "reviewed": "Traducción revisada"
+}
 }

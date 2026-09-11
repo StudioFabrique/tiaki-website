@@ -2,6 +2,15 @@ export type ResourceCountry =
   | "france"
   | "spain";
 
+export type ResourceLanguage =
+  | "fr"
+  | "es";
+
+export type TranslationStatus =
+  | "original"
+  | "draft"
+  | "reviewed";
+
 export type ResourceKind =
   | "financial-aid"
   | "service"
@@ -58,10 +67,28 @@ export type ResourceTranslation = {
   description: string;
 };
 
+export type ResourceContent =
+  Partial<
+    Record<
+      ResourceLanguage,
+      ResourceTranslation
+    >
+  >;
+
+export type ResourceTranslationStatus =
+  Partial<
+    Record<
+      ResourceLanguage,
+      TranslationStatus
+    >
+  >;
+
 export type Resource = {
   id: string;
 
   country: ResourceCountry;
+
+  sourceLanguage: ResourceLanguage;
 
   kind: ResourceKind;
 
@@ -79,10 +106,10 @@ export type Resource = {
 
   officialName?: string;
 
-  content: {
-    fr: ResourceTranslation;
-    es: ResourceTranslation;
-  };
+  content: ResourceContent;
+
+  translationStatus:
+    ResourceTranslationStatus;
 
   url: string;
 

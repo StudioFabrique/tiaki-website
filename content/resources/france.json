@@ -28,7 +28,12 @@
       "url": "https://www.caf.fr/allocataires/aides-et-demarches/droits-et-prestations/handicap",
       "official": true,
       "featured": true,
-      "lastVerified": "2026-09-11"
+      "lastVerified": "2026-09-11",
+      "sourceLanguage": "fr",
+      "translationStatus": {
+        "fr": "original",
+        "es": "draft"
+      }
     },
     {
       "id": "conge-proche-aidant",
@@ -56,7 +61,12 @@
       "url": "https://www.service-public.fr/particuliers/vosdroits/F16920",
       "official": true,
       "featured": true,
-      "lastVerified": "2026-09-11"
+      "lastVerified": "2026-09-11",
+      "sourceLanguage": "fr",
+      "translationStatus": {
+        "fr": "original",
+        "es": "draft"
+      }
     },
     {
       "id": "apa-domicile",
@@ -86,7 +96,12 @@
       "url": "https://www.pour-les-personnes-agees.gouv.fr/vivre-a-domicile/aides-financieres/l-apa-a-domicile",
       "official": true,
       "featured": true,
-      "lastVerified": "2026-09-11"
+      "lastVerified": "2026-09-11",
+      "sourceLanguage": "fr",
+      "translationStatus": {
+        "fr": "original",
+        "es": "draft"
+      }
     },
     {
       "id": "droit-repit-apa",
@@ -115,7 +130,12 @@
       "url": "https://www.pour-les-personnes-agees.gouv.fr/solutions-pour-les-aidants/soutien-financier/l-aide-au-repit-dans-le-cadre-de-l-apa",
       "official": true,
       "featured": true,
-      "lastVerified": "2026-09-11"
+      "lastVerified": "2026-09-11",
+      "sourceLanguage": "fr",
+      "translationStatus": {
+        "fr": "original",
+        "es": "draft"
+      }
     },
     {
       "id": "pch",
@@ -146,7 +166,12 @@
       "url": "https://www.monparcourshandicap.gouv.fr/aides/la-prestation-de-compensation-du-handicap-pch",
       "official": true,
       "featured": false,
-      "lastVerified": "2026-09-11"
+      "lastVerified": "2026-09-11",
+      "sourceLanguage": "fr",
+      "translationStatus": {
+        "fr": "original",
+        "es": "draft"
+      }
     },
     {
       "id": "solutions-aidants-service-public-autonomie",
@@ -178,7 +203,12 @@
       "url": "https://www.pour-les-personnes-agees.gouv.fr/solutions-pour-les-aidants/tout",
       "official": true,
       "featured": true,
-      "lastVerified": "2026-09-11"
+      "lastVerified": "2026-09-11",
+      "sourceLanguage": "fr",
+      "translationStatus": {
+        "fr": "original",
+        "es": "draft"
+      }
     },
     {
       "id": "fiches-pratiques-aidants",
@@ -210,7 +240,12 @@
       "url": "https://www.pour-les-personnes-agees.gouv.fr/annuaires-et-services/fiches-pratiques/fiches-pratiques-aidants",
       "official": true,
       "featured": false,
-      "lastVerified": "2026-09-11"
+      "lastVerified": "2026-09-11",
+      "sourceLanguage": "fr",
+      "translationStatus": {
+        "fr": "original",
+        "es": "draft"
+      }
     },
     {
       "id": "annuaires-autonomie",
@@ -242,7 +277,12 @@
       "url": "https://www.pour-les-personnes-agees.gouv.fr/des-annuaires-pour-les-personnes-agees-et-les-aidants",
       "official": true,
       "featured": false,
-      "lastVerified": "2026-09-11"
+      "lastVerified": "2026-09-11",
+      "sourceLanguage": "fr",
+      "translationStatus": {
+        "fr": "original",
+        "es": "draft"
+      }
     },
     {
       "id": "association-francaise-aidants",
@@ -273,7 +313,12 @@
       "url": "https://www.aidants.fr/",
       "official": false,
       "featured": false,
-      "lastVerified": "2026-09-11"
+      "lastVerified": "2026-09-11",
+      "sourceLanguage": "fr",
+      "translationStatus": {
+        "fr": "original",
+        "es": "draft"
+      }
     }
   ]
 }

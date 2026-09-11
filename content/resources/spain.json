@@ -1,4 +1,394 @@
 {
   "country": "spain",
-  "resources": []
+  "resources": [
+    {
+      "id": "saad",
+      "country": "spain",
+      "kind": "guide",
+      "topics": [
+        "rights-procedures",
+        "dependency-disability",
+        "care-coordination",
+        "home-care",
+        "respite"
+      ],
+      "beneficiary": "both",
+      "scope": "national",
+      "organization": "IMSERSO",
+      "providerType": "public",
+      "officialName": "Sistema para la Autonomía y Atención a la Dependencia (SAAD)",
+      "content": {
+        "fr": {
+          "title": "Système pour l’autonomie et l’aide à la dépendance (SAAD)",
+          "description": "Le SAAD regroupe, au niveau national, les principaux services et prestations destinés à promouvoir l’autonomie et à accompagner les personnes en situation de dépendance. La gestion concrète des demandes et prestations relève principalement des communautés autonomes."
+        },
+        "es": {
+          "title": "Sistema para la Autonomía y Atención a la Dependencia (SAAD)",
+          "description": "El SAAD reúne, a nivel estatal, los principales servicios y prestaciones destinados a promover la autonomía personal y atender a las personas en situación de dependencia. La gestión concreta de solicitudes y prestaciones corresponde principalmente a las comunidades autónomas."
+        }
+      },
+      "url": "https://imserso.es/autonomia-personal-dependencia/sistema-autonomia-atencion-dependencia-saad",
+      "official": true,
+      "featured": true,
+      "lastVerified": "2026-09-11",
+      "sourceLanguage": "es",
+      "translationStatus": {
+        "es": "original",
+        "fr": "draft"
+      }
+    },
+    {
+      "id": "prestacion-cuidados-entorno-familiar",
+      "country": "spain",
+      "kind": "financial-aid",
+      "topics": [
+        "financial-support",
+        "dependency-disability",
+        "home-care",
+        "caregiver-health",
+        "care-skills"
+      ],
+      "beneficiary": "both",
+      "scope": "national",
+      "organization": "IMSERSO",
+      "providerType": "public",
+      "officialName": "Prestación económica para cuidados en el entorno familiar y apoyo a cuidadores no profesionales",
+      "content": {
+        "fr": {
+          "title": "Prestation pour soins dans l’environnement familial",
+          "description": "Prestation économique du système de dépendance pouvant être reconnue, à titre exceptionnel et sous conditions, lorsqu’une personne dépendante est prise en charge à domicile par un proche ou une personne de son entourage dans le cadre de son Programme individuel d’attention (PIA)."
+        },
+        "es": {
+          "title": "Prestación económica para cuidados en el entorno familiar",
+          "description": "Prestación económica del sistema de dependencia que puede reconocerse, con carácter excepcional y bajo determinadas condiciones, cuando una persona dependiente es atendida en su domicilio por un familiar o persona de su entorno dentro de su Programa Individual de Atención (PIA)."
+        }
+      },
+      "url": "https://imserso.es/es/autonomia-personal-dependencia/sistema-autonomia-atencion-dependencia-saad/preguntas-frecuentes/prestaciones-atencion-dependencia/prestacion-cuidados-entorno-familiar",
+      "official": true,
+      "featured": true,
+      "lastVerified": "2026-09-11",
+      "sourceLanguage": "es",
+      "translationStatus": {
+        "es": "original",
+        "fr": "draft"
+      }
+    },
+    {
+      "id": "convenio-especial-cuidadores-no-profesionales",
+      "country": "spain",
+      "kind": "legal-information",
+      "topics": [
+        "rights-procedures",
+        "tax-retirement",
+        "work-leave"
+      ],
+      "beneficiary": "caregiver",
+      "scope": "national",
+      "organization": "Tesorería General de la Seguridad Social",
+      "providerType": "public",
+      "officialName": "Convenio especial de cuidadores no profesionales de personas en situación de dependencia",
+      "content": {
+        "fr": {
+          "title": "Convention spéciale de Sécurité sociale pour les aidant(e)s non professionnels",
+          "description": "Dispositif de la Sécurité sociale destiné aux personnes reconnues comme aidant(e)s non professionnels dans le cadre d’une prestation pour soins familiaux. Il permet, sous conditions, leur inclusion dans le régime général dans une situation assimilée à l’affiliation."
+        },
+        "es": {
+          "title": "Convenio especial para cuidadores no profesionales",
+          "description": "Mecanismo de la Seguridad Social dirigido a personas reconocidas como cuidadoras no profesionales en el marco de una prestación por cuidados familiares. Permite, bajo determinadas condiciones, su inclusión en el Régimen General en situación asimilada al alta."
+        }
+      },
+      "url": "https://www.seg-social.es/wps/portal/wss/internet/Trabajadores/Afiliacion/10547/51635",
+      "official": true,
+      "featured": true,
+      "lastVerified": "2026-09-11",
+      "sourceLanguage": "es",
+      "translationStatus": {
+        "es": "original",
+        "fr": "draft"
+      }
+    },
+    {
+      "id": "reduccion-jornada-cuidado-familiar",
+      "country": "spain",
+      "kind": "legal-information",
+      "topics": [
+        "rights-procedures",
+        "work-leave",
+        "caregiver-health"
+      ],
+      "beneficiary": "caregiver",
+      "scope": "national",
+      "organization": "Boletín Oficial del Estado (BOE)",
+      "providerType": "public",
+      "officialName": "Reducción de jornada por cuidado directo de familiar",
+      "content": {
+        "fr": {
+          "title": "Réduction du temps de travail pour prendre soin d’un proche",
+          "description": "Le Statut des travailleurs prévoit, sous conditions, un droit à une réduction de la journée de travail avec diminution proportionnelle du salaire pour prendre directement soin d’un conjoint, partenaire ou proche jusqu’au deuxième degré qui ne peut pas se prendre en charge seul."
+        },
+        "es": {
+          "title": "Reducción de jornada por cuidado de familiar",
+          "description": "El Estatuto de los Trabajadores reconoce, bajo determinadas condiciones, el derecho a reducir la jornada laboral con disminución proporcional del salario para atender directamente al cónyuge, pareja de hecho o familiar hasta segundo grado que no pueda valerse por sí mismo."
+        }
+      },
+      "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11430",
+      "official": true,
+      "featured": false,
+      "lastVerified": "2026-09-11",
+      "sourceLanguage": "es",
+      "translationStatus": {
+        "es": "original",
+        "fr": "draft"
+      }
+    },
+    {
+      "id": "prestacion-asistencia-personal",
+      "country": "spain",
+      "kind": "financial-aid",
+      "topics": [
+        "financial-support",
+        "dependency-disability",
+        "daily-life",
+        "home-care"
+      ],
+      "beneficiary": "cared-person",
+      "scope": "national",
+      "organization": "IMSERSO",
+      "providerType": "public",
+      "officialName": "Prestación económica de asistencia personal",
+      "content": {
+        "fr": {
+          "title": "Prestation économique d’assistance personnelle",
+          "description": "Aide destinée à favoriser l’autonomie d’une personne en situation de dépendance en contribuant au financement d’une assistance personnelle pour les activités de la vie quotidienne, l’éducation ou le travail."
+        },
+        "es": {
+          "title": "Prestación económica de asistencia personal",
+          "description": "Ayuda destinada a promover la autonomía de una persona en situación de dependencia contribuyendo a financiar una asistencia personal para actividades de la vida diaria, educación o trabajo."
+        }
+      },
+      "url": "https://imserso.es/autonomia-personal-dependencia/sistema-autonomia-atencion-dependencia-saad/preguntas-frecuentes/prestaciones-atencion-dependencia/prestacion-asistencia-personal",
+      "official": true,
+      "featured": false,
+      "lastVerified": "2026-09-11",
+      "sourceLanguage": "es",
+      "translationStatus": {
+        "es": "original",
+        "fr": "draft"
+      }
+    },
+    {
+      "id": "prestacion-vinculada-servicio",
+      "country": "spain",
+      "kind": "financial-aid",
+      "topics": [
+        "financial-support",
+        "dependency-disability",
+        "home-care",
+        "care-coordination"
+      ],
+      "beneficiary": "cared-person",
+      "scope": "national",
+      "organization": "IMSERSO",
+      "providerType": "public",
+      "officialName": "Prestación económica vinculada al servicio",
+      "content": {
+        "fr": {
+          "title": "Prestation économique liée à un service",
+          "description": "Prestation périodique pouvant contribuer au financement du service prévu dans le Programme individuel d’attention lorsqu’il n’est pas possible d’accéder à un service public ou conventionné adapté."
+        },
+        "es": {
+          "title": "Prestación económica vinculada al servicio",
+          "description": "Prestación periódica que puede contribuir a financiar el servicio previsto en el Programa Individual de Atención cuando no sea posible acceder a un servicio público o concertado adecuado."
+        }
+      },
+      "url": "https://imserso.es/es/autonomia-personal-dependencia/sistema-autonomia-atencion-dependencia-saad/preguntas-frecuentes/prestaciones-atencion-dependencia/prestacion-vinculada-servicio",
+      "official": true,
+      "featured": false,
+      "lastVerified": "2026-09-11",
+      "sourceLanguage": "es",
+      "translationStatus": {
+        "es": "original",
+        "fr": "draft"
+      }
+    },
+    {
+      "id": "servicios-saad",
+      "country": "spain",
+      "kind": "service",
+      "topics": [
+        "home-care",
+        "teleassistance-safety",
+        "daily-life",
+        "respite",
+        "care-coordination"
+      ],
+      "beneficiary": "both",
+      "scope": "national",
+      "organization": "IMSERSO",
+      "providerType": "public",
+      "officialName": "Catálogo de servicios del SAAD",
+      "content": {
+        "fr": {
+          "title": "Services du SAAD : téléassistance, aide à domicile et accueil",
+          "description": "Le catalogue national du SAAD comprend notamment la téléassistance, l’aide à domicile, les centres de jour et de nuit, ainsi que l’accueil résidentiel. Leur accès effectif dépend du Programme individuel d’attention et de la mise en œuvre par chaque communauté autonome."
+        },
+        "es": {
+          "title": "Servicios del SAAD: teleasistencia, ayuda a domicilio y centros",
+          "description": "El catálogo estatal del SAAD incluye, entre otros, teleasistencia, ayuda a domicilio, centros de día y de noche y atención residencial. El acceso efectivo depende del Programa Individual de Atención y de la gestión de cada comunidad autónoma."
+        }
+      },
+      "url": "https://imserso.es/es/autonomia-personal-dependencia/sistema-autonomia-atencion-dependencia-saad/preguntas-frecuentes/prestaciones-atencion-dependencia/criterios-generales",
+      "official": true,
+      "featured": true,
+      "lastVerified": "2026-09-11",
+      "sourceLanguage": "es",
+      "translationStatus": {
+        "es": "original",
+        "fr": "draft"
+      }
+    },
+    {
+      "id": "organos-gestores-saad",
+      "country": "spain",
+      "kind": "directory",
+      "topics": [
+        "rights-procedures",
+        "dependency-disability",
+        "care-coordination"
+      ],
+      "beneficiary": "both",
+      "scope": "national",
+      "organization": "IMSERSO",
+      "providerType": "public",
+      "officialName": "Órganos Gestores de las Comunidades Autónomas y Direcciones Territoriales del Imserso",
+      "content": {
+        "fr": {
+          "title": "Où demander la reconnaissance de la dépendance ?",
+          "description": "Annuaire officiel donnant accès aux organismes compétents, informations et formulaires des communautés autonomes ainsi qu’aux directions territoriales de l’IMSERSO pour engager les démarches liées à la dépendance."
+        },
+        "es": {
+          "title": "¿Dónde solicitar el reconocimiento de la dependencia?",
+          "description": "Directorio oficial con acceso a los organismos gestores, información y formularios de las comunidades autónomas y de las direcciones territoriales del IMSERSO para iniciar los trámites relacionados con la dependencia."
+        }
+      },
+      "url": "https://imserso.es/es/web/imserso/autonomia-personal-dependencia/sistema-autonomia-atencion-dependencia-saad/organos-gestores-ca-direcciones-territoriales-imserso",
+      "official": true,
+      "featured": true,
+      "lastVerified": "2026-09-11",
+      "sourceLanguage": "es",
+      "translationStatus": {
+        "es": "original",
+        "fr": "draft"
+      }
+    },
+    {
+      "id": "guia-ayudas-familias-2026",
+      "country": "spain",
+      "kind": "guide",
+      "topics": [
+        "financial-support",
+        "rights-procedures",
+        "dependency-disability",
+        "work-leave",
+        "tax-retirement"
+      ],
+      "beneficiary": "both",
+      "scope": "national",
+      "organization": "Ministerio de Derechos Sociales, Consumo y Agenda 2030",
+      "providerType": "public",
+      "officialName": "Guía de Ayudas Sociales y Servicios para las Familias 2026",
+      "content": {
+        "fr": {
+          "title": "Guide 2026 des aides sociales et services pour les familles",
+          "description": "Guide officiel rassemblant des informations actualisées sur les prestations, avantages et services relevant de l’Administration générale de l’État, notamment des informations utiles concernant la dépendance et les responsabilités familiales."
+        },
+        "es": {
+          "title": "Guía de Ayudas Sociales y Servicios para las Familias 2026",
+          "description": "Guía oficial que reúne información actualizada sobre prestaciones, beneficios y servicios disponibles en el ámbito de la Administración General del Estado, incluida información útil sobre dependencia y responsabilidades familiares."
+        }
+      },
+      "url": "https://www.dsca.gob.es/es/derechos-sociales/familias/guia-ayudas-sociales-y-servicios-para-las-familias",
+      "official": true,
+      "featured": true,
+      "lastVerified": "2026-09-11",
+      "sourceLanguage": "es",
+      "translationStatus": {
+        "es": "original",
+        "fr": "draft"
+      }
+    },
+    {
+      "id": "ceapat",
+      "country": "spain",
+      "kind": "institution",
+      "topics": [
+        "accessibility-equipment",
+        "housing-adaptation",
+        "daily-life",
+        "dependency-disability"
+      ],
+      "beneficiary": "both",
+      "scope": "national",
+      "organization": "CEAPAT - IMSERSO",
+      "providerType": "public",
+      "officialName": "Centro de Referencia Estatal de Autonomía Personal y Ayudas Técnicas (Ceapat)",
+      "content": {
+        "fr": {
+          "title": "CEAPAT — autonomie personnelle et aides techniques",
+          "description": "Centre national de référence de l’IMSERSO consacré à l’accessibilité, aux produits et technologies d’assistance et à l’autonomie des personnes âgées ou en situation de handicap. Il diffuse également des ressources techniques et des publications."
+        },
+        "es": {
+          "title": "CEAPAT — autonomía personal y ayudas técnicas",
+          "description": "Centro estatal de referencia del IMSERSO dedicado a la accesibilidad, los productos y tecnologías de apoyo y la autonomía de personas mayores o con discapacidad. También difunde recursos técnicos y publicaciones."
+        }
+      },
+      "url": "https://ceapat.imserso.es/el-ceapat/quienes-somos/ceapat-como-cre",
+      "official": true,
+      "featured": false,
+      "lastVerified": "2026-09-11",
+      "sourceLanguage": "es",
+      "translationStatus": {
+        "es": "original",
+        "fr": "draft"
+      }
+    },
+    {
+      "id": "sercuidadora-cruz-roja",
+      "country": "spain",
+      "kind": "guide",
+      "topics": [
+        "caregiver-health",
+        "psychological-support",
+        "social-support",
+        "respite",
+        "home-care",
+        "teleassistance-safety",
+        "care-skills"
+      ],
+      "beneficiary": "caregiver",
+      "scope": "national",
+      "organization": "Cruz Roja Española",
+      "providerType": "association",
+      "officialName": "SerCuidadorA",
+      "content": {
+        "fr": {
+          "title": "SerCuidadorA — ressources pour les aidant(e)s",
+          "description": "Espace de la Croix-Rouge espagnole proposant des ressources pratiques pour les personnes qui accompagnent un proche : répit, aide à domicile, téléassistance, groupes de soutien, soins et autres solutions du quotidien."
+        },
+        "es": {
+          "title": "SerCuidadorA — recursos para personas cuidadoras",
+          "description": "Espacio de Cruz Roja Española con recursos prácticos para quienes cuidan a una persona cercana: respiro, ayuda a domicilio, teleasistencia, grupos de apoyo, cuidados y otras soluciones para el día a día."
+        }
+      },
+      "url": "https://www2.cruzroja.es/-/sercuidadora-recursos",
+      "official": false,
+      "featured": false,
+      "lastVerified": "2026-09-11",
+      "sourceLanguage": "es",
+      "translationStatus": {
+        "es": "original",
+        "fr": "draft"
+      }
+    }
+  ]
 }

@@ -64,7 +64,7 @@ export function HomeFinalCta({
             <div className="order-1 flex min-h-[340px] items-center justify-center p-8 sm:min-h-[400px] sm:p-10 lg:order-2 lg:min-h-0 lg:p-14">
               <div className="relative h-[280px] w-full sm:h-[320px] lg:h-[380px]">
                 <Image
-                  src="/images/pictos/picto-2.png"
+                  src="/images/pictos/picto-10-orange.png"
                   alt=""
                   fill
                   sizes="(min-width: 1024px) 42vw, 90vw"

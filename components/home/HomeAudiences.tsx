@@ -16,7 +16,7 @@ const audienceStyles = [
   },
   {
     background: "bg-tiaki-orange/15",
-    image: "/images/pictos/picto-7.png",
+    image: "/images/pictos/picto-9-orange.png",
   },
   {
     background: "bg-tiaki-green/10",
@@ -24,7 +24,7 @@ const audienceStyles = [
   },
   {
     background: "bg-muted",
-    image: "/images/pictos/picto-6.png",
+    image: "/images/pictos/picto-6-orange.png",
   },
 ];
 

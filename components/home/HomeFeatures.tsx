@@ -15,7 +15,7 @@ const featureStyles = [
   },
   {
     className: "bg-tiaki-orange/15",
-    image: "/images/pictos/picto-5.png",
+    image: "/images/pictos/picto-5-orange.png",
   },
   {
     className: "bg-tiaki-green/10",
@@ -23,7 +23,7 @@ const featureStyles = [
   },
   {
     className: "bg-muted",
-    image: "/images/pictos/picto-7.png",
+    image: "/images/pictos/picto-7-orange.png",
   },
 ]
 
