@@ -1,0 +1,162 @@
+{
+  "hero": {
+    "title": "Una plataforma para acompañar a quienes cuidan de los demás.",
+    "description": "T-IA-KI acompaña a las personas cuidadoras en su día a día mediante recursos, contenidos formativos y herramientas digitales diseñadas junto a profesionales del ámbito sociosanitario.",
+    "primaryCta": "Descubrir T-IA-KI",
+    "secondaryCta": "Acceder a la plataforma",
+    "benefits": [
+      "Informarse",
+      "Recibir apoyo",
+      "Cuidar mejor"
+    ]
+  },
+  "why": {
+  "title": "Cuidar de una persona cercana no debería significar tener que gestionarlo todo solo.",
+  "description": "Las personas cuidadoras afrontan numerosas situaciones en su día a día: encontrar la información adecuada, comprender los trámites, formarse, coordinar a los profesionales o simplemente saber a quién acudir.",
+  "items": [
+    {
+      "title": "Encontrar la información adecuada",
+      "description": "Acceder más fácilmente a recursos útiles, comprensibles y adaptados a cada situación."
+    },
+    {
+      "title": "Recibir un mejor acompañamiento",
+      "description": "Identificar los recursos, servicios y profesionales que pueden ofrecer apoyo."
+    },
+    {
+      "title": "Organizar mejor el día a día",
+      "description": "Facilitar el seguimiento, las actividades, las citas y los distintos elementos relacionados con los cuidados."
+    }
+  ]
+},
+"features": {
+  "title": "Un mismo espacio para acompañar mejor en el día a día.",
+  "description": "T-IA-KI reúne herramientas y recursos pensados para facilitar el día a día de las personas cuidadoras y mejorar la coordinación con quienes las acompañan.",
+  "items": [
+    {
+      "title": "Organización del día a día",
+      "description": "Centralizar citas, actividades, eventos y elementos de seguimiento relacionados con la vida cotidiana."
+    },
+    {
+      "title": "Recursos y acompañamiento",
+      "description": "Acceder a contenidos prácticos, tutoriales, información y recursos útiles según las necesidades."
+    },
+    {
+      "title": "Experiencia personalizada",
+      "description": "Proponer progresivamente contenidos y servicios adaptados al perfil y a las necesidades de cada usuario."
+    },
+    {
+      "title": "Coordinación facilitada",
+      "description": "Facilitar los intercambios entre personas cuidadoras, profesionales y otros actores del acompañamiento."
+    }
+  ]
+},
+"audiences": {
+  "title": "Pensado para quienes acompañan, apoyan y coordinan.",
+  "description": "T-IA-KI se dirige a todos los actores implicados en el acompañamiento cotidiano.",
+  "items": [
+    {
+      "title": "Personas cuidadoras",
+      "description": "Encontrar recursos, organizar mejor el día a día, formarse y acceder más fácilmente a información útil."
+    },
+    {
+      "title": "Profesionales",
+      "description": "Compartir conocimientos, facilitar los intercambios y reforzar la coordinación en torno a las personas acompañadas."
+    },
+    {
+      "title": "Estructuras sociosanitarias",
+      "description": "Favorecer una mejor circulación de la información y conectar a los diferentes actores del acompañamiento."
+    },
+    {
+      "title": "Personas acompañadas",
+      "description": "Beneficiarse indirectamente de un acompañamiento mejor coordinado y de recursos más accesibles para su entorno."
+    }
+  ]
+},
+"cooperation": {
+  "title": "Dos territorios. Una ambición común.",
+  "description": "T-IA-KI reúne a actores franceses y españoles para compartir conocimientos, acercar las prácticas y desarrollar conjuntamente nuevas soluciones al servicio de las personas cuidadoras.",
+  "items": [
+    "Compartir buenas prácticas",
+    "Acercar a los actores del territorio",
+    "Construir soluciones comunes"
+  ]
+},
+"stats": {
+  "title": "T-IA-KI en cifras.",
+  "description": "Un proyecto transfronterizo apoyado por la Unión Europea para desarrollar nuevas soluciones al servicio de las personas cuidadoras.",
+  "items": [
+    {
+      "type": "range",
+      "start": 2026,
+      "end": 2028,
+      "label": "Duración del proyecto",
+      "icon": "calendar"
+    },
+    {
+      "type": "number",
+      "value": 1.78,
+      "decimals": 2,
+      "suffix": " M€",
+      "label": "Presupuesto del proyecto",
+      "icon": "euro"
+    },
+    {
+      "type": "number",
+      "value": 65,
+      "decimals": 0,
+      "suffix": " %",
+      "label": "Cofinanciación FEDER",
+      "icon": "percent"
+    }
+  ]
+},
+"funding": {
+  "title": "Un proyecto europeo y transfronterizo.",
+  "description": "El proyecto T-IA-KI está cofinanciado en un 65 % por la Unión Europea en el marco del programa Interreg VI-A España-Francia-Andorra (POCTEFA 2021-2027). El objetivo de POCTEFA es reforzar la integración económica y social de la zona fronteriza franco-española-andorrana.",
+  "partnersTitle": "Los socios del proyecto",
+  "partners": [
+     {
+      "name": "ESTIA",
+      "logo": "/images/logos/partners/estia.svg"
+    },
+    {
+      "name": "Navarrabiomed",
+      "logo": "/images/logos/partners/navarrabiomed.svg"
+    },
+    {
+      "name": "Rey Ardid",
+      "logo": "/images/logos/partners/rey-ardid.svg"
+    },
+    {
+      "name": "OROI",
+      "logo": "/images/logos/partners/oroi.svg"
+    },
+    {
+      "name": "STEP",
+      "logo": "/images/logos/partners/step.svg"
+    },
+    {
+      "name": "MND",
+      "logo": "/images/logos/partners/mnd.svg"
+    },
+    {
+      "name": "PEP64",
+      "logo": "/images/logos/partners/pep64.svg"
+    },
+    {
+      "name": "SIFU",
+      "logo": "/images/logos/partners/sifu.svg"
+    },
+        {
+      "name": "TSF64",
+      "logo": "/images/logos/partners/tsf64.svg"
+    }
+  ]
+},
+"finalCta": {
+  "title": "Acompañar mejor empieza por conectar mejor.",
+  "description": "Descubre cómo T-IA-KI reúne recursos, herramientas y actores para facilitar el día a día de las personas cuidadoras.",
+  "primaryCta": "Descubrir la plataforma",
+  "secondaryCta": "Contactarnos"
+}
+}

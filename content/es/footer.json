@@ -1,0 +1,13 @@
+{
+  "description": "Una plataforma digital para acompañar a las personas cuidadoras, facilitar su día a día y reforzar la cooperación entre los actores del acompañamiento.",
+  "navigationTitle": "Navegación",
+  "projectTitle": "El proyecto",
+  "projectLinks": {
+    "platform": "Descubrir la plataforma",
+    "about": "Sobre T-IA-KI",
+    "contact": "Contactarnos"
+  },
+  "funding": "El proyecto T-IA-KI está cofinanciado en un 65 % por la Unión Europea en el marco del programa Interreg VI-A España-Francia-Andorra (POCTEFA 2021-2027).",
+  "fundingAlt": "POCTEFA - Interreg España Francia Andorra",
+  "copyright": "T-IA-KI. Todos los derechos reservados."
+}

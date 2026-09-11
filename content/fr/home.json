@@ -1,0 +1,162 @@
+{
+  "hero": {
+    "title": "Une plateforme pour accompagner celles et ceux qui prennent soin des autres.",
+    "description": "T-IA-KI accompagne les aidant(e)s au quotidien grâce à des ressources, des contenus de formation et des outils numériques conçus avec les professionnels du secteur médico-social.",
+    "primaryCta": "Découvrir T-IA-KI",
+    "secondaryCta": "Accéder à la plateforme",
+    "benefits": [
+      "S'informer",
+      "Être accompagné·e",
+      "Mieux prendre soin"
+    ]
+  },
+  "why": {
+    "title": "Prendre soin d’un proche ne devrait pas vouloir dire tout gérer seul.",
+    "description": "Les aidant(e)s font face à de nombreuses situations au quotidien : trouver la bonne information, comprendre les démarches, se former, coordonner les intervenants ou simplement savoir vers qui se tourner.",
+    "items": [
+      {
+        "title": "Trouver la bonne information",
+        "description": "Accéder plus facilement à des ressources utiles, compréhensibles et adaptées à chaque situation."
+      },
+      {
+        "title": "Être mieux accompagné·e",
+        "description": "Identifier les ressources, les services et les professionnels qui peuvent apporter un soutien."
+      },
+      {
+        "title": "Mieux organiser le quotidien",
+        "description": "Faciliter le suivi, les activités, les rendez-vous et les différents éléments liés à l’accompagnement."
+      }
+    ]
+  },
+  "features": {
+  "title": "Un même espace pour mieux accompagner au quotidien.",
+  "description": "T-IA-KI rassemble des outils et des ressources pensés pour faciliter le quotidien des aidant(e)s et améliorer la coordination avec les personnes qui les accompagnent.",
+  "items": [
+    {
+      "title": "Organisation du quotidien",
+      "description": "Centraliser les rendez-vous, activités, événements et éléments de suivi liés à la vie quotidienne."
+    },
+    {
+      "title": "Ressources & accompagnement",
+      "description": "Accéder à des contenus pratiques, tutoriels, informations et ressources utiles selon les besoins."
+    },
+    {
+      "title": "Expérience personnalisée",
+      "description": "Proposer progressivement des contenus et services adaptés au profil et aux besoins de chaque utilisateur."
+    },
+    {
+      "title": "Coordination facilitée",
+      "description": "Fluidifier les échanges entre aidant(e)s, professionnel(le)s et autres acteurs de l’accompagnement."
+    }
+  ]
+},
+"audiences": {
+  "title": "Pensé pour celles et ceux qui accompagnent, soutiennent et coordonnent.",
+  "description": "T-IA-KI s’adresse à l’ensemble des acteurs impliqués dans l’accompagnement au quotidien.",
+  "items": [
+    {
+      "title": "aidant(e)s",
+      "description": "Trouver des ressources, mieux organiser le quotidien, se former et accéder plus facilement aux informations utiles."
+    },
+    {
+      "title": "Professionnel(le)s",
+      "description": "Partager des connaissances, faciliter les échanges et renforcer la coordination autour des personnes accompagnées."
+    },
+    {
+      "title": "Structures médico-sociales",
+      "description": "Favoriser une meilleure circulation de l’information et rapprocher les différents acteurs de l’accompagnement."
+    },
+    {
+      "title": "Personnes accompagnées",
+      "description": "Bénéficier indirectement d’un accompagnement mieux coordonné et de ressources plus accessibles pour leur entourage."
+    }
+  ]
+},
+"cooperation": {
+  "title": "Deux territoires. Une ambition commune.",
+  "description": "T-IA-KI réunit des acteurs français et espagnols pour partager les connaissances, rapprocher les pratiques et développer ensemble de nouvelles solutions au service des aidant·e·s.",
+  "items": [
+    "Partager les bonnes pratiques",
+    "Rapprocher les acteurs du territoire",
+    "Construire des solutions communes"
+  ]
+},
+"stats": {
+  "title": "T-IA-KI en quelques chiffres.",
+  "description": "Un projet transfrontalier soutenu par l’Union européenne pour développer de nouvelles solutions au service des aidant(e)s.",
+  "items": [
+    {
+      "type": "range",
+      "start": 2026,
+      "end": 2028,
+      "label": "Durée du projet",
+      "icon": "calendar"
+    },
+    {
+      "type": "number",
+      "value": 1.78,
+      "decimals": 2,
+      "suffix": " M€",
+      "label": "Budget du projet",
+      "icon": "euro"
+    },
+    {
+      "type": "number",
+      "value": 65,
+      "decimals": 0,
+      "suffix": " %",
+      "label": "Cofinancement FEDER",
+      "icon": "percent"
+    }
+  ]
+},
+"funding": {
+  "title": "Un projet européen et transfrontalier.",
+  "description": "Le projet T-IA-KI est cofinancé à 65 % par l’Union européenne dans le cadre du programme Interreg VI-A Espagne-France-Andorre (POCTEFA 2021-2027). L’objectif de POCTEFA est de renforcer l’intégration économique et sociale de la région frontalière franco-espagnole-andorrane.",
+  "partnersTitle": "Les partenaires du projet",
+  "partners": [
+     {
+      "name": "ESTIA",
+      "logo": "/images/logos/partners/estia.svg"
+    },
+    {
+      "name": "Navarrabiomed",
+      "logo": "/images/logos/partners/navarrabiomed.svg"
+    },
+    {
+      "name": "Rey Ardid",
+      "logo": "/images/logos/partners/rey-ardid.svg"
+    },
+    {
+      "name": "OROI",
+      "logo": "/images/logos/partners/oroi.svg"
+    },
+    {
+      "name": "STEP",
+      "logo": "/images/logos/partners/step.svg"
+    },
+    {
+      "name": "MND",
+      "logo": "/images/logos/partners/mnd.svg"
+    },
+    {
+      "name": "PEP64",
+      "logo": "/images/logos/partners/pep64.svg"
+    },
+    {
+      "name": "SIFU",
+      "logo": "/images/logos/partners/sifu.svg"
+    },
+        {
+      "name": "TSF64",
+      "logo": "/images/logos/partners/tsf64.svg"
+    }
+  ]
+},
+"finalCta": {
+  "title": "Mieux accompagner commence par mieux connecter.",
+  "description": "Découvrez comment T-IA-KI rassemble ressources, outils et acteurs pour faciliter le quotidien des aidant(e)s.",
+  "primaryCta": "Découvrir la plateforme",
+  "secondaryCta": "Nous contacter"
+}
+}

@@ -1,0 +1,13 @@
+{
+  "description": "Une plateforme numérique pour accompagner les aidant·e·s, faciliter leur quotidien et renforcer la coopération entre les acteurs de l’accompagnement.",
+  "navigationTitle": "Navigation",
+  "projectTitle": "Le projet",
+  "projectLinks": {
+    "platform": "Découvrir la plateforme",
+    "about": "À propos de T-IA-KI",
+    "contact": "Nous contacter"
+  },
+  "funding": "Le projet T-IA-KI est cofinancé à 65 % par l’Union européenne dans le cadre du programme Interreg VI-A Espagne-France-Andorre (POCTEFA 2021-2027).",
+  "fundingAlt": "POCTEFA - Interreg Espagne France Andorre",
+  "copyright": "T-IA-KI. Tous droits réservés."
+}
