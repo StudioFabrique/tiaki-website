@@ -1,6 +1,6 @@
 {
   "hero": {
-    "title": "Ressources pour les aidant·e·s",
+    "title": "Ressources pour les aidant(e)s",
     "description": "Retrouvez des aides, démarches, organismes, associations et guides utiles pour vous accompagner au quotidien.",
     "searchPlaceholder": "Rechercher une aide, un organisme, un guide..."
   },
@@ -13,12 +13,19 @@
   },
 
   "filters": {
-    "title": "Filtrer les ressources",
-    "all": "Toutes les ressources",
-    "clear": "Réinitialiser les filtres",
-    "results": "ressources trouvées",
-    "noResults": "Aucune ressource ne correspond à votre recherche."
-  },
+  "title": "Filtrer les ressources",
+  "frequentNeeds": "Besoins fréquents",
+  "all": "Toutes les ressources",
+  "showAll": "Voir tous les filtres",
+  "hideAll": "Masquer les filtres",
+  "clear": "Réinitialiser les filtres",
+  "results": "ressources trouvées",
+  "noResults": "Aucune ressource ne correspond à votre recherche.",
+  "resourceType": "Type de ressource",
+"anyKind": "Tous les types",
+"anyBeneficiary": "Tous les publics",
+"anyScope": "Tous les niveaux"
+},
 
   "kinds": {
     "financial-aid": "Aide financière",
@@ -55,9 +62,9 @@
 
   "beneficiaries": {
     "title": "Pour qui ?",
-    "caregiver": "Aidant·e",
+    "caregiver": "Aidant(e)",
     "cared-person": "Personne accompagnée",
-    "both": "Aidant·e et personne accompagnée"
+    "both": "Aidant(e) et personne accompagnée"
   },
 
   "scopes": {
@@ -81,7 +88,7 @@
   "sections": {
     "featured": "Ressources recommandées",
     "allResources": "Toutes les ressources",
-    "guides": "Guides pour les aidant·e·s",
+    "guides": "Guides pour les aidant(e)s",
     "institutions": "Organismes et institutions"
   },
 

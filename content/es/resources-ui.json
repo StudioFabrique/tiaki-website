@@ -14,10 +14,17 @@
 
   "filters": {
     "title": "Filtrar recursos",
+    "frequentNeeds": "Necesidades frecuentes",
     "all": "Todos los recursos",
+    "showAll": "Ver todos los filtros",
+    "hideAll": "Ocultar filtros",
     "clear": "Restablecer filtros",
     "results": "recursos encontrados",
-    "noResults": "Ningún recurso coincide con tu búsqueda."
+    "noResults": "Ningún recurso coincide con tu búsqueda.",
+    "resourceType": "Tipo de recurso",
+"anyKind": "Todos los tipos",
+"anyBeneficiary": "Todos los públicos",
+"anyScope": "Todos los niveles"
   },
 
   "kinds": {

@@ -1,0 +1,279 @@
+{
+  "country": "france",
+  "resources": [
+    {
+      "id": "ajpa",
+      "country": "france",
+      "kind": "financial-aid",
+      "topics": [
+        "financial-support",
+        "rights-procedures",
+        "work-leave"
+      ],
+      "beneficiary": "caregiver",
+      "scope": "national",
+      "organization": "Caisse d'allocations familiales (CAF)",
+      "providerType": "public",
+      "officialName": "Allocation journalière du proche aidant (AJPA)",
+      "content": {
+        "fr": {
+          "title": "Allocation journalière du proche aidant (AJPA)",
+          "description": "L’AJPA peut compenser une partie de la perte de revenus lorsqu’un aidant réduit ou cesse ponctuellement son activité professionnelle pour accompagner un proche en situation de handicap ou de perte d’autonomie."
+        },
+        "es": {
+          "title": "Prestación diaria para personas cuidadoras (AJPA)",
+          "description": "La AJPA puede compensar parte de la pérdida de ingresos cuando una persona cuidadora reduce o interrumpe temporalmente su actividad profesional para acompañar a una persona cercana con discapacidad o pérdida de autonomía."
+        }
+      },
+      "url": "https://www.caf.fr/allocataires/aides-et-demarches/droits-et-prestations/handicap",
+      "official": true,
+      "featured": true,
+      "lastVerified": "2026-09-11"
+    },
+    {
+      "id": "conge-proche-aidant",
+      "country": "france",
+      "kind": "legal-information",
+      "topics": [
+        "rights-procedures",
+        "work-leave"
+      ],
+      "beneficiary": "caregiver",
+      "scope": "national",
+      "organization": "Service-Public.fr",
+      "providerType": "public",
+      "officialName": "Congé de proche aidant",
+      "content": {
+        "fr": {
+          "title": "Congé de proche aidant",
+          "description": "Le congé de proche aidant permet, sous conditions, de suspendre ou de réduire temporairement son activité professionnelle afin de s’occuper d’un proche handicapé, âgé ou en perte d’autonomie."
+        },
+        "es": {
+          "title": "Permiso para cuidar a una persona cercana",
+          "description": "El congé de proche aidant permite, bajo determinadas condiciones, suspender o reducir temporalmente la actividad profesional para cuidar a una persona cercana con discapacidad, de edad avanzada o con pérdida de autonomía."
+        }
+      },
+      "url": "https://www.service-public.fr/particuliers/vosdroits/F16920",
+      "official": true,
+      "featured": true,
+      "lastVerified": "2026-09-11"
+    },
+    {
+      "id": "apa-domicile",
+      "country": "france",
+      "kind": "financial-aid",
+      "topics": [
+        "financial-support",
+        "dependency-disability",
+        "home-care",
+        "daily-life"
+      ],
+      "beneficiary": "cared-person",
+      "scope": "national",
+      "organization": "Service public de l’autonomie",
+      "providerType": "public",
+      "officialName": "Allocation personnalisée d’autonomie (APA) à domicile",
+      "content": {
+        "fr": {
+          "title": "APA à domicile",
+          "description": "L’Allocation personnalisée d’autonomie aide à financer une partie des dépenses nécessaires au maintien à domicile d’une personne âgée de 60 ans ou plus en perte d’autonomie."
+        },
+        "es": {
+          "title": "APA a domicilio",
+          "description": "La Allocation personnalisée d’autonomie ayuda a financiar parte de los gastos necesarios para que una persona de 60 años o más con pérdida de autonomía pueda seguir viviendo en su domicilio."
+        }
+      },
+      "url": "https://www.pour-les-personnes-agees.gouv.fr/vivre-a-domicile/aides-financieres/l-apa-a-domicile",
+      "official": true,
+      "featured": true,
+      "lastVerified": "2026-09-11"
+    },
+    {
+      "id": "droit-repit-apa",
+      "country": "france",
+      "kind": "financial-aid",
+      "topics": [
+        "respite",
+        "financial-support",
+        "caregiver-health"
+      ],
+      "beneficiary": "both",
+      "scope": "national",
+      "organization": "Service public de l’autonomie",
+      "providerType": "public",
+      "officialName": "Aide au répit dans le cadre de l’APA",
+      "content": {
+        "fr": {
+          "title": "Droit au répit dans le cadre de l’APA",
+          "description": "Le plan d’aide APA à domicile peut financer certaines solutions de répit, comme l’accueil de jour, l’hébergement temporaire ou un relais à domicile, afin de permettre à l’aidant de souffler."
+        },
+        "es": {
+          "title": "Derecho al respiro dentro de la APA",
+          "description": "El plan de ayuda APA a domicilio puede financiar determinadas soluciones de respiro, como la atención diurna, el alojamiento temporal o el relevo en el domicilio, para permitir que la persona cuidadora disponga de tiempo de descanso."
+        }
+      },
+      "url": "https://www.pour-les-personnes-agees.gouv.fr/solutions-pour-les-aidants/soutien-financier/l-aide-au-repit-dans-le-cadre-de-l-apa",
+      "official": true,
+      "featured": true,
+      "lastVerified": "2026-09-11"
+    },
+    {
+      "id": "pch",
+      "country": "france",
+      "kind": "financial-aid",
+      "topics": [
+        "financial-support",
+        "dependency-disability",
+        "home-care",
+        "accessibility-equipment",
+        "housing-adaptation"
+      ],
+      "beneficiary": "cared-person",
+      "scope": "national",
+      "organization": "Mon Parcours Handicap",
+      "providerType": "public",
+      "officialName": "Prestation de compensation du handicap (PCH)",
+      "content": {
+        "fr": {
+          "title": "Prestation de compensation du handicap (PCH)",
+          "description": "La PCH est une aide financière personnalisée destinée à compenser les conséquences du handicap dans la vie quotidienne et sociale. Elle peut notamment couvrir de l’aide humaine, du matériel ou l’adaptation du logement."
+        },
+        "es": {
+          "title": "Prestación de compensación de la discapacidad (PCH)",
+          "description": "La PCH es una ayuda económica personalizada destinada a compensar las consecuencias de la discapacidad en la vida cotidiana y social. Puede cubrir, entre otros aspectos, ayuda humana, equipamiento o adaptación de la vivienda."
+        }
+      },
+      "url": "https://www.monparcourshandicap.gouv.fr/aides/la-prestation-de-compensation-du-handicap-pch",
+      "official": true,
+      "featured": false,
+      "lastVerified": "2026-09-11"
+    },
+    {
+      "id": "solutions-aidants-service-public-autonomie",
+      "country": "france",
+      "kind": "guide",
+      "topics": [
+        "financial-support",
+        "rights-procedures",
+        "respite",
+        "caregiver-health",
+        "work-leave",
+        "social-support"
+      ],
+      "beneficiary": "caregiver",
+      "scope": "national",
+      "organization": "Service public de l’autonomie",
+      "providerType": "public",
+      "officialName": "Solutions pour les aidants",
+      "content": {
+        "fr": {
+          "title": "Solutions pour les aidants",
+          "description": "Un portail national qui regroupe des informations sur le soutien financier, le répit, la santé de l’aidant, l’accompagnement et la conciliation entre vie professionnelle et rôle d’aidant."
+        },
+        "es": {
+          "title": "Soluciones para personas cuidadoras",
+          "description": "Portal nacional que reúne información sobre apoyo económico, respiro, salud de la persona cuidadora, acompañamiento y conciliación entre la vida profesional y el papel de cuidador."
+        }
+      },
+      "url": "https://www.pour-les-personnes-agees.gouv.fr/solutions-pour-les-aidants/tout",
+      "official": true,
+      "featured": true,
+      "lastVerified": "2026-09-11"
+    },
+    {
+      "id": "fiches-pratiques-aidants",
+      "country": "france",
+      "kind": "guide",
+      "topics": [
+        "financial-support",
+        "rights-procedures",
+        "respite",
+        "caregiver-health",
+        "psychological-support",
+        "daily-life"
+      ],
+      "beneficiary": "caregiver",
+      "scope": "national",
+      "organization": "Service public de l’autonomie",
+      "providerType": "public",
+      "officialName": "Fiches pratiques pour les aidants",
+      "content": {
+        "fr": {
+          "title": "Fiches pratiques pour les aidants",
+          "description": "Des fiches pratiques officielles pour s’informer sur les aides financières, les solutions de répit, l’épuisement de l’aidant et différentes situations rencontrées au quotidien."
+        },
+        "es": {
+          "title": "Fichas prácticas para personas cuidadoras",
+          "description": "Fichas prácticas oficiales sobre ayudas económicas, soluciones de respiro, agotamiento de la persona cuidadora y distintas situaciones habituales del cuidado."
+        }
+      },
+      "url": "https://www.pour-les-personnes-agees.gouv.fr/annuaires-et-services/fiches-pratiques/fiches-pratiques-aidants",
+      "official": true,
+      "featured": false,
+      "lastVerified": "2026-09-11"
+    },
+    {
+      "id": "annuaires-autonomie",
+      "country": "france",
+      "kind": "directory",
+      "topics": [
+        "rights-procedures",
+        "respite",
+        "home-care",
+        "care-coordination",
+        "accessibility-equipment",
+        "daily-life"
+      ],
+      "beneficiary": "both",
+      "scope": "national",
+      "organization": "Service public de l’autonomie",
+      "providerType": "public",
+      "officialName": "Annuaires pour les personnes âgées et les aidants",
+      "content": {
+        "fr": {
+          "title": "Annuaire des services et structures de proximité",
+          "description": "Un annuaire national permettant de rechercher des points d’information, plateformes d’accompagnement et de répit, services à domicile, établissements et autres structures selon sa localisation."
+        },
+        "es": {
+          "title": "Directorio de servicios y recursos de proximidad",
+          "description": "Directorio nacional para buscar puntos de información, plataformas de acompañamiento y respiro, servicios a domicilio, centros y otras estructuras según la ubicación."
+        }
+      },
+      "url": "https://www.pour-les-personnes-agees.gouv.fr/des-annuaires-pour-les-personnes-agees-et-les-aidants",
+      "official": true,
+      "featured": false,
+      "lastVerified": "2026-09-11"
+    },
+    {
+      "id": "association-francaise-aidants",
+      "country": "france",
+      "kind": "association",
+      "topics": [
+        "social-support",
+        "psychological-support",
+        "caregiver-health",
+        "care-skills",
+        "respite"
+      ],
+      "beneficiary": "caregiver",
+      "scope": "national",
+      "organization": "Association Française des Aidants",
+      "providerType": "association",
+      "officialName": "Association Française des Aidants",
+      "content": {
+        "fr": {
+          "title": "Association Française des Aidants",
+          "description": "Association nationale dédiée à la reconnaissance et au soutien des aidants. Elle propose notamment des actions d’information, de formation, des Cafés des Aidants et des actions autour de la santé des aidants."
+        },
+        "es": {
+          "title": "Association Française des Aidants",
+          "description": "Asociación nacional dedicada al reconocimiento y apoyo de las personas cuidadoras. Propone acciones de información y formación, Cafés des Aidants y actividades relacionadas con la salud de las personas cuidadoras."
+        }
+      },
+      "url": "https://www.aidants.fr/",
+      "official": false,
+      "featured": false,
+      "lastVerified": "2026-09-11"
+    }
+  ]
+}
