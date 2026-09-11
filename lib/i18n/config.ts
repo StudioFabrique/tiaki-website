@@ -13,6 +13,10 @@ export const routes = {
     fr: "plateforme",
     es: "plataforma",
   },
+   resources: {
+    fr: "ressources",
+    es: "recursos",
+  },
   about: {
     fr: "a-propos",
     es: "sobre-tiaki",

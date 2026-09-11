@@ -24,7 +24,7 @@ type NavbarProps = {
   currentRoute: RouteKey
 }
 
-const navigationRoutes: RouteKey[] = ["home", "platform", "about", "contact"]
+const navigationRoutes: RouteKey[] = ["home", "platform","resources", "about", "contact"]
 
 export function Navbar({ locale, currentRoute }: NavbarProps) {
   const content = getNavigationContent(locale)
