@@ -18,10 +18,20 @@ import { Container } from "@/components/layout/Container"
 import { ResourceCard } from "@/components/resources/ResourceCard"
 
 import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectSeparator,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+
+import {
   getResourceTerritories,
   getResourcesByCountry,
   getResourcesUI,
-  getTerritoryAncestors,
   isResourceAvailableForTerritory,
 } from "@/lib/content/resources"
 
@@ -38,47 +48,62 @@ import type {
 import { cn } from "@/lib/utils"
 
 
+/* =========================================================
+   TYPES
+   ========================================================= */
+
 type ResourcesExplorerProps = {
   locale: SiteLocale
   defaultCountry: ResourceCountry
 }
 
 
+/* =========================================================
+   CONSTANTS
+   ========================================================= */
+
 /**
- * Besoins fréquents mis en avant.
+ * Valeur interne utilisée pour représenter
+ * l'ensemble du pays dans le Select.
  *
- * Ils restent séparés des filtres avancés afin de réduire
- * la charge mentale sur la page.
+ * Elle ne doit jamais être affichée directement.
+ */
+const ALL_TERRITORIES = "__all__"
+
+
+/**
+ * Besoins fréquents mis en avant directement
+ * dans l'interface.
  */
 const frequentTopics: {
   topic: ResourceTopic
   icon: typeof BadgeEuro
 }[] = [
-  {
-    topic: "financial-support",
-    icon: BadgeEuro,
-  },
-  {
-    topic: "rights-procedures",
-    icon: Scale,
-  },
-  {
-    topic: "respite",
-    icon: TimerReset,
-  },
-  {
-    topic: "caregiver-health",
-    icon: HeartPulse,
-  },
-  {
-    topic: "work-leave",
-    icon: BriefcaseBusiness,
-  },
-]
+    {
+      topic: "financial-support",
+      icon: BadgeEuro,
+    },
+    {
+      topic: "rights-procedures",
+      icon: Scale,
+    },
+    {
+      topic: "respite",
+      icon: TimerReset,
+    },
+    {
+      topic: "caregiver-health",
+      icon: HeartPulse,
+    },
+    {
+      topic: "work-leave",
+      icon: BriefcaseBusiness,
+    },
+  ]
 
 
 /**
- * Types de ressources disponibles dans le filtre avancé.
+ * Types disponibles dans les filtres avancés.
  */
 const resourceKinds: ResourceKind[] = [
   "financial-aid",
@@ -94,7 +119,7 @@ const resourceKinds: ResourceKind[] = [
 
 
 /**
- * Public concerné par la ressource.
+ * Bénéficiaires possibles.
  */
 const beneficiaries: ResourceBeneficiary[] = [
   "caregiver",
@@ -104,12 +129,14 @@ const beneficiaries: ResourceBeneficiary[] = [
 
 
 /**
- * Niveaux territoriaux disponibles.
+ * Niveaux territoriaux.
  *
- * Ce filtre est différent du territoire concret :
+ * Attention :
+ * scope !== territoire.
  *
+ * Exemple :
  * scope = "regional"
- * territory = "Nouvelle-Aquitaine"
+ * territoire = "Nouvelle-Aquitaine"
  */
 const scopes: ResourceScope[] = [
   "national",
@@ -120,53 +147,59 @@ const scopes: ResourceScope[] = [
 ]
 
 
+/* =========================================================
+   COMPONENT
+   ========================================================= */
+
 export function ResourcesExplorer({
   locale,
   defaultCountry,
 }: ResourcesExplorerProps) {
-  /**
-   * Contenus UI localisés FR / ES.
-   */
+  /* ---------------------------------------------------------
+     LOCALIZED UI CONTENT
+     --------------------------------------------------------- */
+
   const content = getResourcesUI(locale)
 
-  /**
-   * Outils Next.js permettant de synchroniser
-   * le pays sélectionné avec l'URL.
-   */
+
+  /* ---------------------------------------------------------
+     NEXT.JS ROUTER
+     --------------------------------------------------------- */
+
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
 
+
+  /* ---------------------------------------------------------
+     COUNTRY
+     --------------------------------------------------------- */
+
   /**
-   * Lecture du pays depuis :
+   * Le pays peut être stocké dans l'URL :
    *
    * ?country=france
    * ?country=spain
    */
   const countryParam = searchParams.get("country")
 
-  /**
-   * Si l'URL contient un pays valide, on l'utilise.
-   * Sinon on utilise le pays par défaut associé à la route.
-   */
   const initialCountry: ResourceCountry =
     countryParam === "france" || countryParam === "spain"
       ? countryParam
       : defaultCountry
 
-  /**
-   * États principaux.
-   */
   const [country, setCountry] =
     useState<ResourceCountry>(initialCountry)
+
+
+  /* ---------------------------------------------------------
+     SEARCH + FILTER STATES
+     --------------------------------------------------------- */
 
   const [search, setSearch] = useState("")
 
   const [selectedTopic, setSelectedTopic] =
     useState<ResourceTopic | null>(null)
-
-  const [showAllFilters, setShowAllFilters] =
-    useState(false)
 
   const [selectedKind, setSelectedKind] =
     useState<ResourceKind | null>(null)
@@ -179,81 +212,102 @@ export function ResourcesExplorer({
   const [selectedScope, setSelectedScope] =
     useState<ResourceScope | null>(null)
 
-  /**
-   * Identifiant territorial sélectionné.
-   *
-   * Exemple :
-   *
-   * ""                → tous les territoires
-   * "fr-naq"          → Nouvelle-Aquitaine
-   * "fr-64"           → Pyrénées-Atlantiques
-   * "es-eus"          → Euskadi
-   * "es-eus-gipuzkoa" → Gipuzkoa
-   */
   const [
     selectedTerritoryId,
     setSelectedTerritoryId,
-  ] = useState("")
+  ] = useState(ALL_TERRITORIES)
+
+  const [showAllFilters, setShowAllFilters] =
+    useState(false)
+
+
+  /* ---------------------------------------------------------
+     TERRITORIES
+     --------------------------------------------------------- */
 
   /**
-   * Territoires disponibles pour le pays actif.
-   *
-   * IMPORTANT :
-   * le state s'appelle `country`.
-   *
-   * C'est ici que se trouvait ton erreur :
-   * `selectedCountry` n'existe pas dans ce composant.
+   * Charge uniquement les territoires du pays actif.
    */
   const territories =
     getResourceTerritories(country)
 
+
   /**
-   * Ressources appartenant au pays actuellement sélectionné.
+   * Regroupe les territoires selon leur parent.
+   *
+   * Exemple France :
+   *
+   * Nouvelle-Aquitaine
+   * └── Pyrénées-Atlantiques
+   *
+   * Exemple Espagne :
+   *
+   * Euskadi
+   * ├── Álava / Araba
+   * ├── Bizkaia
+   * └── Gipuzkoa
+   */
+  const territoryGroups = territories
+    .filter((territory) => !territory.parentId)
+    .map((parent) => ({
+      parent,
+
+      children: territories.filter(
+        (territory) =>
+          territory.parentId === parent.id
+      ),
+    }))
+
+
+  /**
+   * Liste simple utilisée par Base UI / shadcn
+   * pour résoudre correctement le label de la valeur
+   * actuellement sélectionnée.
+   *
+   * Sans cette liste, SelectValue pourrait afficher :
+   *
+   * __all__
+   *
+   * au lieu de :
+   *
+   * Toute la France
+   */
+  const selectItems = [
+    {
+      value: ALL_TERRITORIES,
+      label: content.territory.all[country],
+    },
+
+    ...territories.map((territory) => ({
+      value: territory.id,
+      label: territory.labels[locale],
+    })),
+  ]
+
+
+  /* ---------------------------------------------------------
+     RESOURCES
+     --------------------------------------------------------- */
+
+  /**
+   * Première sélection :
+   * uniquement les ressources appartenant au pays actif.
    */
   const resources =
     getResourcesByCountry(country)
 
 
-  /**
-   * Construit le libellé visuel d'un territoire
-   * en fonction de sa profondeur dans la hiérarchie.
-   *
-   * Exemple :
-   *
-   * Nouvelle-Aquitaine
-   * — Pyrénées-Atlantiques
-   *
-   * Euskadi
-   * — Gipuzkoa
-   */
-  function getTerritoryOptionLabel(
-    territoryId: string,
-    label: string
-  ) {
-    const depth =
-      getTerritoryAncestors(territoryId).length
+  /* ---------------------------------------------------------
+     FILTERING
+     --------------------------------------------------------- */
 
-    if (depth === 0) {
-      return label
-    }
-
-    return `${"— ".repeat(depth)}${label}`
-  }
-
-
-  /**
-   * Filtrage des ressources.
-   *
-   * useMemo évite de recalculer toute la liste à chaque
-   * rendu lorsque les critères n'ont pas changé.
-   */
   const filteredResources = useMemo(() => {
     /**
      * Normalisation de la recherche :
      *
-     * "Pyrénées" → "pyrenees"
+     * Pyrénées → pyrenees
      *
-     * Cela permet une recherche insensible aux accents.
+     * pour permettre une recherche sans accents.
      */
     const normalizedSearch = search
       .trim()
@@ -263,10 +317,8 @@ export function ResourcesExplorer({
 
     return resources.filter((resource) => {
       /**
-       * On utilise la traduction correspondant à l'interface.
-       *
-       * Si elle n'existe pas encore, fallback vers la
-       * langue originale de la ressource.
+       * Utilise la langue actuelle si disponible.
+       * Sinon fallback vers la langue originale.
        */
       const localizedContent =
         resource.content[locale] ??
@@ -276,15 +328,11 @@ export function ResourcesExplorer({
         return false
       }
 
-      /**
-       * Recherche plein texte.
-       *
-       * Recherche dans :
-       * - titre
-       * - description
-       * - organisation
-       * - nom officiel
-       */
+
+      /* -----------------------------------------------------
+         FULL-TEXT SEARCH
+         ----------------------------------------------------- */
+
       const searchableText = [
         localizedContent.title,
         localizedContent.description,
@@ -301,26 +349,36 @@ export function ResourcesExplorer({
         !normalizedSearch ||
         searchableText.includes(normalizedSearch)
 
-      /**
-       * Besoin fréquent / topic.
-       */
+
+      /* -----------------------------------------------------
+         TOPIC
+         ----------------------------------------------------- */
+
       const matchesTopic =
         !selectedTopic ||
         resource.topics.includes(selectedTopic)
 
-      /**
-       * Type de ressource.
-       */
+
+      /* -----------------------------------------------------
+         RESOURCE TYPE
+         ----------------------------------------------------- */
+
       const matchesKind =
         !selectedKind ||
         resource.kind === selectedKind
 
+
+      /* -----------------------------------------------------
+         BENEFICIARY
+         ----------------------------------------------------- */
+
       /**
-       * Bénéficiaire.
-       *
        * Une ressource destinée à "both" reste pertinente
-       * lorsqu'on filtre seulement pour l'aidant(e)
-       * ou seulement pour la personne accompagnée.
+       * lorsqu'on cherche :
+       *
+       * caregiver
+       * ou
+       * cared-person
        */
       const matchesBeneficiary =
         !selectedBeneficiary ||
@@ -330,31 +388,43 @@ export function ResourcesExplorer({
           resource.beneficiary === "both"
         )
 
-      /**
-       * Niveau administratif.
-       *
-       * Exemple :
-       * national / regional / departmental / provincial.
-       */
+
+      /* -----------------------------------------------------
+         ADMINISTRATIVE SCOPE
+         ----------------------------------------------------- */
+
       const matchesScope =
         !selectedScope ||
         resource.scope === selectedScope
 
+
+      /* -----------------------------------------------------
+         TERRITORY
+         ----------------------------------------------------- */
+
       /**
-       * Territoire concret.
-       *
        * Exemple :
-       * sélectionner Pyrénées-Atlantiques accepte :
        *
-       * - les ressources nationales françaises
-       * - les ressources Nouvelle-Aquitaine
-       * - les ressources Pyrénées-Atlantiques
+       * Pyrénées-Atlantiques
+       *
+       * peut afficher :
+       *
+       * - ressources nationales
+       * - ressources Nouvelle-Aquitaine
+       * - ressources Pyrénées-Atlantiques
        */
       const matchesTerritory =
         isResourceAvailableForTerritory(
           resource,
-          selectedTerritoryId || undefined
+          selectedTerritoryId === ALL_TERRITORIES
+            ? undefined
+            : selectedTerritoryId
         )
+
+
+      /* -----------------------------------------------------
+         FINAL RESULT
+         ----------------------------------------------------- */
 
       return (
         matchesSearch &&
@@ -377,16 +447,16 @@ export function ResourcesExplorer({
   ])
 
 
-  /**
-   * Change le pays actif.
-   *
-   * Tous les autres filtres sont réinitialisés
-   * afin d'éviter des combinaisons incohérentes entre
-   * la France et l'Espagne.
-   */
+  /* ---------------------------------------------------------
+     CHANGE COUNTRY
+     --------------------------------------------------------- */
+
   function changeCountry(
     nextCountry: ResourceCountry
   ) {
+    /**
+     * Ne fait rien si le pays est déjà actif.
+     */
     if (nextCountry === country) {
       return
     }
@@ -394,25 +464,27 @@ export function ResourcesExplorer({
     setCountry(nextCountry)
 
     /**
-     * Réinitialisation de la recherche
-     * et de tous les filtres.
+     * Réinitialise tous les critères.
+     *
+     * Important notamment pour éviter :
+     *
+     * Espagne + fr-64
      */
     setSearch("")
     setSelectedTopic(null)
     setSelectedKind(null)
     setSelectedBeneficiary(null)
     setSelectedScope(null)
-    setSelectedTerritoryId("")
+    setSelectedTerritoryId(ALL_TERRITORIES)
     setShowAllFilters(false)
 
     /**
-     * Synchronisation du pays avec l'URL.
-     *
-     * scroll: false permet de conserver la position
-     * de lecture actuelle.
+     * Synchronise le pays avec l'URL.
      */
     const params =
-      new URLSearchParams(searchParams.toString())
+      new URLSearchParams(
+        searchParams.toString()
+      )
 
     params.set("country", nextCountry)
 
@@ -425,24 +497,26 @@ export function ResourcesExplorer({
   }
 
 
-  /**
-   * Réinitialise les filtres sans changer de pays.
-   */
+  /* ---------------------------------------------------------
+     RESET FILTERS
+     --------------------------------------------------------- */
+
   function resetFilters() {
     setSearch("")
     setSelectedTopic(null)
     setSelectedKind(null)
     setSelectedBeneficiary(null)
     setSelectedScope(null)
-    setSelectedTerritoryId("")
+    setSelectedTerritoryId(ALL_TERRITORIES)
   }
 
 
+  /* ---------------------------------------------------------
+     ACTIVE FILTERS
+     --------------------------------------------------------- */
+
   /**
-   * Permet de savoir rapidement si au moins
-   * un filtre est actif.
-   *
-   * Utilisé pour afficher les boutons
+   * Permet d'afficher ou non le bouton
    * "Effacer les filtres".
    */
   const hasActiveFilters =
@@ -451,385 +525,623 @@ export function ResourcesExplorer({
     Boolean(selectedKind) ||
     Boolean(selectedBeneficiary) ||
     Boolean(selectedScope) ||
-    Boolean(selectedTerritoryId)
+    selectedTerritoryId !== ALL_TERRITORIES
 
+
+  /* =========================================================
+     RENDER
+     ========================================================= */
 
   return (
     <section>
       <Container>
         <div>
-          {/* =========================================================
-              COUNTRY
-             ========================================================= */}
 
-          <fieldset>
-            <legend className="font-heading text-lg font-semibold">
-              {content.countrySelector.title}
-            </legend>
+          {/* =================================================
+              FILTER PANEL
+             ================================================= */}
 
-            <p className="mt-2 text-sm leading-6 text-foreground/55">
-              {content.countrySelector.description}
-            </p>
+          <div className="rounded-[2rem] border border-foreground/10 bg-background p-5 sm:p-7 lg:p-8 my-16">
 
-            <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-              <button
-                type="button"
-                onClick={() => changeCountry("france")}
-                aria-pressed={country === "france"}
-                className={cn(
-                  "min-h-12 rounded-full border px-6 font-heading text-sm font-semibold",
-                  "transition-colors",
-                  "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none",
-                  country === "france"
-                    ? "border-foreground bg-foreground text-background"
-                    : "border-foreground/15 bg-background text-foreground hover:bg-muted"
-                )}
-              >
-                🇫🇷 {content.countrySelector.france}
-              </button>
+            {/* ===============================================
+                COUNTRY
+               =============================================== */}
 
-              <button
-                type="button"
-                onClick={() => changeCountry("spain")}
-                aria-pressed={country === "spain"}
-                className={cn(
-                  "min-h-12 rounded-full border px-6 font-heading text-sm font-semibold",
-                  "transition-colors",
-                  "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none",
-                  country === "spain"
-                    ? "border-foreground bg-foreground text-background"
-                    : "border-foreground/15 bg-background text-foreground hover:bg-muted"
-                )}
-              >
-                🇪🇸 {content.countrySelector.spain}
-              </button>
-            </div>
-          </fieldset>
+            <fieldset>
+              <legend className="font-heading text-2xl text-tiaki-green font-extrabold ">
+                {content.countrySelector.title}
+              </legend>
 
+              <p className="mt-2 text-sm  leading-6 text-foreground/55">
+                {content.countrySelector.description}
+              </p>
 
-          {/* =========================================================
-              TERRITORY
-              
-              Le territoire est volontairement visible immédiatement,
-              contrairement aux filtres secondaires.
-             ========================================================= */}
+              <div className="mt-5 flex flex-col gap-3 sm:flex-row">
 
-          <div className="mt-6 max-w-sm">
-            <label
-              htmlFor="resource-territory"
-              className="font-heading text-sm font-semibold"
-            >
-              {content.territory.label}
-            </label>
-
-            <select
-              id="resource-territory"
-              value={selectedTerritoryId}
-              onChange={(event) =>
-                setSelectedTerritoryId(
-                  event.target.value
-                )
-              }
-              className="mt-2 min-h-12 w-full rounded-xl border border-foreground/15 bg-background px-4 text-sm text-foreground outline-none transition-colors hover:border-foreground/30 focus-visible:ring-2 focus-visible:ring-ring"
-            >
-              <option value="">
-                {content.territory.all}
-              </option>
-
-              {territories.map((territory) => (
-                <option
-                  key={territory.id}
-                  value={territory.id}
-                >
-                  {getTerritoryOptionLabel(
-                    territory.id,
-                    territory.labels[locale]
-                  )}
-                </option>
-              ))}
-            </select>
-          </div>
-
-
-          {/* =========================================================
-              SEARCH
-             ========================================================= */}
-
-          <div className="mt-8">
-            <label
-              htmlFor="resource-search"
-              className="sr-only"
-            >
-              {content.hero.searchPlaceholder}
-            </label>
-
-            <div className="relative max-w-3xl">
-              <Search
-                aria-hidden="true"
-                className="pointer-events-none absolute top-1/2 left-5 size-5 -translate-y-1/2 text-foreground/40"
-              />
-
-              <input
-                id="resource-search"
-                type="search"
-                value={search}
-                onChange={(event) =>
-                  setSearch(event.target.value)
-                }
-                placeholder={
-                  content.hero.searchPlaceholder
-                }
-                autoComplete="off"
-                className="h-14 w-full rounded-full border border-foreground/10 bg-background pr-5 pl-14 text-base transition-shadow outline-none placeholder:text-foreground/35 focus-visible:ring-2 focus-visible:ring-ring"
-              />
-            </div>
-          </div>
-
-
-          {/* =========================================================
-              FREQUENT NEEDS
-             ========================================================= */}
-
-          <div className="mt-8 border-t border-foreground/10 pt-8">
-            <div className="flex items-center justify-between gap-4">
-              <h2 className="font-heading text-base font-semibold">
-                {content.filters.frequentNeeds}
-              </h2>
-
-              {selectedTopic && (
+                {/* France */}
                 <button
                   type="button"
                   onClick={() =>
-                    setSelectedTopic(null)
+                    changeCountry("france")
                   }
-                  className="text-sm font-medium text-foreground/50 underline-offset-4 transition-colors hover:text-foreground hover:underline focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                  aria-pressed={
+                    country === "france"
+                  }
+                  className={cn(
+                    "min-h-12 rounded-full border px-6 font-heading text-sm font-semibold",
+                    "transition-colors",
+                    "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none",
+                    country === "france"
+                      ? "border-foreground bg-foreground text-background"
+                      : "border-foreground/15 bg-background text-foreground hover:bg-muted"
+                  )}
                 >
-                  {content.filters.clear}
+                  🇫🇷{" "}
+                  {
+                    content.countrySelector
+                      .france
+                  }
                 </button>
-              )}
-            </div>
 
-            <div className="mt-5 flex flex-wrap gap-3">
-              {frequentTopics.map(
-                ({ topic, icon: Icon }) => {
-                  const isSelected =
-                    selectedTopic === topic
 
-                  return (
-                    <button
-                      key={topic}
-                      type="button"
-                      onClick={() =>
-                        setSelectedTopic(
-                          isSelected
-                            ? null
-                            : topic
+                {/* Spain */}
+                <button
+                  type="button"
+                  onClick={() =>
+                    changeCountry("spain")
+                  }
+                  aria-pressed={
+                    country === "spain"
+                  }
+                  className={cn(
+                    "min-h-12 rounded-full border px-6 font-heading text-sm font-semibold",
+                    "transition-colors",
+                    "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none",
+                    country === "spain"
+                      ? "border-foreground bg-foreground text-background"
+                      : "border-foreground/15 bg-background text-foreground hover:bg-muted"
+                  )}
+                >
+                  🇪🇸{" "}
+                  {
+                    content.countrySelector
+                      .spain
+                  }
+                </button>
+              </div>
+            </fieldset>
+
+
+            {/* ===============================================
+                MAIN FILTER LAYOUT
+
+                LEFT:
+                Territory
+
+                RIGHT:
+                Search
+                Frequent needs
+               =============================================== */}
+
+            <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(260px,0.8fr)_minmax(0,2fr)]">
+
+
+              {/* =============================================
+                  LEFT COLUMN — TERRITORY
+                 ============================================= */}
+
+              <div>
+                <div className="rounded-[1.5rem] bg-muted/40 p-5 sm:p-6">
+
+                  <p className="font-heading text-sm font-semibold">
+                    {content.territory.label}
+                  </p>
+
+
+                  {/* Territory selector */}
+                  <div className="mt-3">
+                    <Select
+                      items={selectItems}
+                      value={selectedTerritoryId}
+                      onValueChange={(
+                        value: string
+                      ) =>
+                        setSelectedTerritoryId(
+                          value
                         )
                       }
-                      aria-pressed={isSelected}
-                      className={cn(
-                        "inline-flex min-h-12 items-center gap-2.5 rounded-full border px-5 py-2.5",
-                        "font-heading text-sm font-semibold transition-colors",
-                        "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none",
-                        isSelected
-                          ? "border-foreground bg-foreground text-background"
-                          : "border-foreground/10 bg-background text-foreground/70 hover:border-foreground/20 hover:text-foreground"
-                      )}
                     >
-                      <Icon
+                      <SelectTrigger
+                        id="resource-territory"
+                        className="min-h-12 w-full rounded-xl border-foreground/15 bg-background px-4"
+                      >
+                        <SelectValue />
+                      </SelectTrigger>
+
+
+                      <SelectContent>
+
+                        {/* Entire country */}
+                        <SelectGroup>
+                          <SelectItem
+                            value={
+                              ALL_TERRITORIES
+                            }
+                          >
+                            {
+                              content.territory
+                                .all[country]
+                            }
+                          </SelectItem>
+                        </SelectGroup>
+
+
+                        <SelectSeparator />
+
+
+                        {/* Territories */}
+                        {territoryGroups.map(
+                          (
+                            {
+                              parent,
+                              children,
+                            },
+                            groupIndex
+                          ) => (
+                            <SelectGroup
+                              key={parent.id}
+                            >
+                              {groupIndex > 0 && (
+                                <SelectSeparator />
+                              )}
+
+
+                              {/* Region /
+                                  autonomous community */}
+                              <SelectLabel>
+                                {
+                                  parent.labels[
+                                  locale
+                                  ]
+                                }
+                              </SelectLabel>
+
+
+                              {/* Entire parent territory */}
+                              <SelectItem
+                                value={parent.id}
+                              >
+                                <span className="flex items-center gap-2">
+                                  <span>
+                                    {
+                                      content
+                                        .territory
+                                        .whole[
+                                      country
+                                      ]
+                                    }
+                                  </span>
+
+                                  <span className="text-foreground/45">
+                                    ·{" "}
+                                    {
+                                      parent.labels[
+                                      locale
+                                      ]
+                                    }
+                                  </span>
+                                </span>
+                              </SelectItem>
+
+
+                              {/* Departments / provinces */}
+                              {children.map(
+                                (territory) => (
+                                  <SelectItem
+                                    key={
+                                      territory.id
+                                    }
+                                    value={
+                                      territory.id
+                                    }
+                                  >
+                                    <span className="pl-3">
+                                      {
+                                        territory
+                                          .labels[
+                                        locale
+                                        ]
+                                      }
+                                    </span>
+                                  </SelectItem>
+                                )
+                              )}
+                            </SelectGroup>
+                          )
+                        )}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+
+                  {/* Territory helper */}
+                  <p className="mt-3 text-sm leading-6 text-foreground/50">
+                    {content.territory.help}
+                  </p>
+                </div>
+              </div>
+
+
+              {/* =============================================
+                  RIGHT COLUMN
+                  SEARCH + FREQUENT NEEDS
+                 ============================================= */}
+
+              <div>
+
+                {/* -------------------------------------------
+                    SEARCH
+                   ------------------------------------------- */}
+
+                <div>
+                  <label
+                    htmlFor="resource-search"
+                    className="sr-only"
+                  >
+                    {
+                      content.hero
+                        .searchPlaceholder
+                    }
+                  </label>
+
+                  <div className="relative">
+                    <Search
+                      aria-hidden="true"
+                      className="pointer-events-none absolute top-1/2 left-5 size-5 -translate-y-1/2 text-foreground/40"
+                    />
+
+                    <input
+                      id="resource-search"
+                      type="search"
+                      value={search}
+                      onChange={(event) =>
+                        setSearch(
+                          event.target.value
+                        )
+                      }
+                      placeholder={
+                        content.hero
+                          .searchPlaceholder
+                      }
+                      autoComplete="off"
+                      className="h-14 w-full rounded-full border border-foreground/10 bg-background pr-5 pl-14 text-base transition-shadow outline-none placeholder:text-foreground/35 focus-visible:ring-2 focus-visible:ring-ring"
+                    />
+                  </div>
+                </div>
+
+
+                {/* -------------------------------------------
+                    FREQUENT NEEDS
+                   ------------------------------------------- */}
+
+                <div className="mt-7">
+
+                  {/* Header */}
+                  <div className="flex items-center justify-between gap-4">
+
+                    <h2 className="font-heading text-base font-semibold">
+                      {
+                        content.filters
+                          .frequentNeeds
+                      }
+                    </h2>
+
+
+                    {/* Clear topic only */}
+                    {selectedTopic && (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setSelectedTopic(null)
+                        }
+                        className="text-sm font-medium text-foreground/50 underline-offset-4 transition-colors hover:text-foreground hover:underline focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                      >
+                        {
+                          content.filters
+                            .clear
+                        }
+                      </button>
+                    )}
+                  </div>
+
+
+                  {/* Topic buttons */}
+                  <div className="mt-4 flex flex-wrap gap-3">
+                    {frequentTopics.map(
+                      ({
+                        topic,
+                        icon: Icon,
+                      }) => {
+                        const isSelected =
+                          selectedTopic ===
+                          topic
+
+                        return (
+                          <button
+                            key={topic}
+                            type="button"
+                            onClick={() =>
+                              setSelectedTopic(
+                                isSelected
+                                  ? null
+                                  : topic
+                              )
+                            }
+                            aria-pressed={
+                              isSelected
+                            }
+                            className={cn(
+                              "inline-flex min-h-11 items-center gap-2 rounded-full border px-4 py-2",
+                              "font-heading text-sm font-semibold transition-colors",
+                              "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none",
+                              isSelected
+                                ? "border-foreground bg-foreground text-background"
+                                : "border-foreground/10 bg-background text-foreground/70 hover:border-foreground/20 hover:text-foreground"
+                            )}
+                          >
+                            <Icon
+                              aria-hidden="true"
+                              className="size-4"
+                            />
+
+                            {
+                              content.topics[
+                              topic
+                              ]
+                            }
+                          </button>
+                        )
+                      }
+                    )}
+
+
+                    {/* Advanced filters toggle */}
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setShowAllFilters(
+                          (current) =>
+                            !current
+                        )
+                      }
+                      aria-expanded={
+                        showAllFilters
+                      }
+                      aria-controls="advanced-resource-filters"
+                      className="inline-flex min-h-11 items-center gap-2 rounded-full border border-dashed border-foreground/20 px-4 py-2 font-heading text-sm font-semibold text-foreground/60 transition-colors hover:border-foreground/40 hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none"
+                    >
+                      <SlidersHorizontal
                         aria-hidden="true"
                         className="size-4"
                       />
 
-                      {content.topics[topic]}
+                      {showAllFilters
+                        ? content.filters
+                          .hideAll
+                        : content.filters
+                          .showAll}
                     </button>
-                  )
-                }
-              )}
-
-              <button
-                type="button"
-                onClick={() =>
-                  setShowAllFilters(
-                    (current) => !current
-                  )
-                }
-                aria-expanded={showAllFilters}
-                aria-controls="advanced-resource-filters"
-                className="inline-flex min-h-12 items-center gap-2.5 rounded-full border border-dashed border-foreground/20 px-5 py-2.5 font-heading text-sm font-semibold text-foreground/60 transition-colors hover:border-foreground/40 hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none"
-              >
-                <SlidersHorizontal
-                  aria-hidden="true"
-                  className="size-4"
-                />
-
-                {showAllFilters
-                  ? content.filters.hideAll
-                  : content.filters.showAll}
-              </button>
-            </div>
-          </div>
-
-
-          {/* =========================================================
-              ADVANCED FILTERS
-             ========================================================= */}
-
-          {showAllFilters && (
-            <div
-              id="advanced-resource-filters"
-              className="mt-6 rounded-[1.5rem] border border-foreground/10 bg-background p-5 sm:p-6"
-            >
-              <div className="grid gap-5 md:grid-cols-3">
-                {/* Resource kind */}
-                <div>
-                  <label
-                    htmlFor="resource-kind"
-                    className="font-heading text-sm font-semibold"
-                  >
-                    {content.filters.resourceType}
-                  </label>
-
-                  <select
-                    id="resource-kind"
-                    value={selectedKind ?? ""}
-                    onChange={(event) =>
-                      setSelectedKind(
-                        event.target.value
-                          ? (
-                              event.target
-                                .value as ResourceKind
-                            )
-                          : null
-                      )
-                    }
-                    className="mt-2 h-12 w-full rounded-xl border border-foreground/15 bg-background px-4 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                  >
-                    <option value="">
-                      {content.filters.anyKind}
-                    </option>
-
-                    {resourceKinds.map((kind) => (
-                      <option
-                        key={kind}
-                        value={kind}
-                      >
-                        {content.kinds[kind]}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-
-                {/* Beneficiary */}
-                <div>
-                  <label
-                    htmlFor="resource-beneficiary"
-                    className="font-heading text-sm font-semibold"
-                  >
-                    {content.beneficiaries.title}
-                  </label>
-
-                  <select
-                    id="resource-beneficiary"
-                    value={
-                      selectedBeneficiary ?? ""
-                    }
-                    onChange={(event) =>
-                      setSelectedBeneficiary(
-                        event.target.value
-                          ? (
-                              event.target
-                                .value as ResourceBeneficiary
-                            )
-                          : null
-                      )
-                    }
-                    className="mt-2 h-12 w-full rounded-xl border border-foreground/15 bg-background px-4 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                  >
-                    <option value="">
-                      {
-                        content.filters
-                          .anyBeneficiary
-                      }
-                    </option>
-
-                    {beneficiaries.map(
-                      (beneficiary) => (
-                        <option
-                          key={beneficiary}
-                          value={beneficiary}
-                        >
-                          {
-                            content.beneficiaries[
-                              beneficiary
-                            ]
-                          }
-                        </option>
-                      )
-                    )}
-                  </select>
-                </div>
-
-
-                {/* Territorial scope */}
-                <div>
-                  <label
-                    htmlFor="resource-scope"
-                    className="font-heading text-sm font-semibold"
-                  >
-                    {content.scopes.title}
-                  </label>
-
-                  <select
-                    id="resource-scope"
-                    value={selectedScope ?? ""}
-                    onChange={(event) =>
-                      setSelectedScope(
-                        event.target.value
-                          ? (
-                              event.target
-                                .value as ResourceScope
-                            )
-                          : null
-                      )
-                    }
-                    className="mt-2 h-12 w-full rounded-xl border border-foreground/15 bg-background px-4 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                  >
-                    <option value="">
-                      {content.filters.anyScope}
-                    </option>
-
-                    {scopes.map((scope) => (
-                      <option
-                        key={scope}
-                        value={scope}
-                      >
-                        {content.scopes[scope]}
-                      </option>
-                    ))}
-                  </select>
+                  </div>
                 </div>
               </div>
             </div>
-          )}
 
 
-          {/* =========================================================
+            {/* ===============================================
+                ADVANCED FILTERS
+
+                Takes the full width below the two columns.
+               =============================================== */}
+
+            {showAllFilters && (
+              <div
+                id="advanced-resource-filters"
+                className="mt-8 rounded-[1.5rem] border border-foreground/10 bg-muted/20 p-5 sm:p-6"
+              >
+                <div className="grid gap-5 md:grid-cols-3">
+
+
+                  {/* -----------------------------------------
+                      RESOURCE KIND
+                     ----------------------------------------- */}
+
+                  <div>
+                    <label
+                      htmlFor="resource-kind"
+                      className="font-heading text-sm font-semibold"
+                    >
+                      {
+                        content.filters
+                          .resourceType
+                      }
+                    </label>
+
+                    <select
+                      id="resource-kind"
+                      value={
+                        selectedKind ?? ""
+                      }
+                      onChange={(event) =>
+                        setSelectedKind(
+                          event.target.value
+                            ? (event.target
+                              .value as ResourceKind)
+                            : null
+                        )
+                      }
+                      className="mt-2 h-12 w-full rounded-xl border border-foreground/15 bg-background px-4 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    >
+                      <option value="">
+                        {
+                          content.filters
+                            .anyKind
+                        }
+                      </option>
+
+                      {resourceKinds.map(
+                        (kind) => (
+                          <option
+                            key={kind}
+                            value={kind}
+                          >
+                            {
+                              content.kinds[
+                              kind
+                              ]
+                            }
+                          </option>
+                        )
+                      )}
+                    </select>
+                  </div>
+
+
+                  {/* -----------------------------------------
+                      BENEFICIARY
+                     ----------------------------------------- */}
+
+                  <div>
+                    <label
+                      htmlFor="resource-beneficiary"
+                      className="font-heading text-sm font-semibold"
+                    >
+                      {
+                        content
+                          .beneficiaries.title
+                      }
+                    </label>
+
+                    <select
+                      id="resource-beneficiary"
+                      value={
+                        selectedBeneficiary ??
+                        ""
+                      }
+                      onChange={(event) =>
+                        setSelectedBeneficiary(
+                          event.target.value
+                            ? (event.target
+                              .value as ResourceBeneficiary)
+                            : null
+                        )
+                      }
+                      className="mt-2 h-12 w-full rounded-xl border border-foreground/15 bg-background px-4 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    >
+                      <option value="">
+                        {
+                          content.filters
+                            .anyBeneficiary
+                        }
+                      </option>
+
+                      {beneficiaries.map(
+                        (beneficiary) => (
+                          <option
+                            key={beneficiary}
+                            value={
+                              beneficiary
+                            }
+                          >
+                            {
+                              content
+                                .beneficiaries[
+                              beneficiary
+                              ]
+                            }
+                          </option>
+                        )
+                      )}
+                    </select>
+                  </div>
+
+
+                  {/* -----------------------------------------
+                      SCOPE
+                     ----------------------------------------- */}
+
+                  <div>
+                    <label
+                      htmlFor="resource-scope"
+                      className="font-heading text-sm font-semibold"
+                    >
+                      {content.scopes.title}
+                    </label>
+
+                    <select
+                      id="resource-scope"
+                      value={
+                        selectedScope ?? ""
+                      }
+                      onChange={(event) =>
+                        setSelectedScope(
+                          event.target.value
+                            ? (event.target
+                              .value as ResourceScope)
+                            : null
+                        )
+                      }
+                      className="mt-2 h-12 w-full rounded-xl border border-foreground/15 bg-background px-4 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    >
+                      <option value="">
+                        {
+                          content.filters
+                            .anyScope
+                        }
+                      </option>
+
+                      {scopes.map(
+                        (scope) => (
+                          <option
+                            key={scope}
+                            value={scope}
+                          >
+                            {
+                              content.scopes[
+                              scope
+                              ]
+                            }
+                          </option>
+                        )
+                      )}
+                    </select>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+
+          {/* =================================================
               RESULTS
-             ========================================================= */}
+             ================================================= */}
 
           <section
-            className="mt-10 border-t border-foreground/10 pt-8"
+            className="mt-10"
             aria-labelledby="resource-results-title"
           >
+
+            {/* Results header */}
             <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+
               <div>
                 <h2
                   id="resource-results-title"
-                  className="font-heading text-2xl font-semibold tracking-[-0.025em]"
+                  className="font-heading text-lg text-tiaki-green font-extrabold tracking-[-0.025em]"
                 >
-                  {content.sections.allResources}
+                  {
+                    content.sections
+                      .allResources
+                  }
                 </h2>
 
                 <p
@@ -838,12 +1150,16 @@ export function ResourcesExplorer({
                   className="mt-2 text-sm text-foreground/55"
                 >
                   <strong className="font-semibold text-foreground">
-                    {filteredResources.length}
+                    {
+                      filteredResources.length
+                    }
                   </strong>{" "}
                   {content.filters.results}
                 </p>
               </div>
 
+
+              {/* Clear all filters */}
               {hasActiveFilters && (
                 <button
                   type="button"
@@ -856,9 +1172,16 @@ export function ResourcesExplorer({
             </div>
 
 
-            {/* Resource cards */}
+            {/* ===============================================
+                RESOURCE GRID
+
+                Mobile  → 1
+                Tablet  → 2
+                Desktop → 3
+               =============================================== */}
+
             {filteredResources.length > 0 ? (
-              <div className="mt-7 grid gap-4 lg:grid-cols-2">
+              <div className="mt-7 grid gap-4 md:grid-cols-2 xl:grid-cols-2">
                 {filteredResources.map(
                   (resource) => (
                     <ResourceCard
@@ -871,10 +1194,13 @@ export function ResourcesExplorer({
                 )}
               </div>
             ) : (
-              /**
-               * Empty state.
-               */
+
+              /* =============================================
+                  EMPTY STATE
+                 ============================================= */
+
               <div className="mt-7 flex min-h-[260px] flex-col items-center justify-center rounded-[1.5rem] border border-dashed border-foreground/15 bg-background px-6 py-10 text-center">
+
                 <div className="flex size-12 items-center justify-center rounded-full bg-muted">
                   <SearchX
                     aria-hidden="true"
@@ -883,7 +1209,10 @@ export function ResourcesExplorer({
                 </div>
 
                 <p className="mt-5 max-w-md font-heading text-lg font-semibold">
-                  {content.filters.noResults}
+                  {
+                    content.filters
+                      .noResults
+                  }
                 </p>
 
                 {hasActiveFilters && (

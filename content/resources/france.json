@@ -65,7 +65,7 @@
       "sourceLanguage": "fr",
       "translationStatus": {
         "fr": "original",
-        "es": "draft"
+        "es": "reviewed"
       }
     },
     {
@@ -134,7 +134,7 @@
       "sourceLanguage": "fr",
       "translationStatus": {
         "fr": "original",
-        "es": "draft"
+        "es": "reviewed"
       }
     },
     {
@@ -314,6 +314,84 @@
       "official": false,
       "featured": false,
       "lastVerified": "2026-09-11",
+      "sourceLanguage": "fr",
+      "translationStatus": {
+        "fr": "original",
+        "es": "draft"
+      }
+    },
+    {
+      "id": "departement-64-autonomie",
+      "country": "france",
+      "kind": "institution",
+      "topics": [
+        "rights-procedures",
+        "dependency-disability",
+        "care-coordination",
+        "home-care",
+        "daily-life"
+      ],
+      "beneficiary": "both",
+      "scope": "departmental",
+      "territoryIds": [
+        "fr-64"
+      ],
+      "organization": "Département des Pyrénées-Atlantiques",
+      "providerType": "public",
+      "officialName": "Direction de l'autonomie - Département des Pyrénées-Atlantiques",
+      "content": {
+        "fr": {
+          "title": "Autonomie dans les Pyrénées-Atlantiques",
+          "description": "Le Département des Pyrénées-Atlantiques propose des informations et des services concernant l'autonomie, le maintien à domicile, l'hébergement, la mobilité, la téléassistance et les démarches liées aux aides à l'autonomie."
+        },
+        "es": {
+          "title": "Autonomía en Pirineos Atlánticos",
+          "description": "El Departamento de Pirineos Atlánticos ofrece información y servicios sobre autonomía, permanencia en el domicilio, alojamiento, movilidad, teleasistencia y trámites relacionados con las ayudas a la autonomía."
+        }
+      },
+      "url": "URL_FR64_AUTONOMIE",
+      "official": true,
+      "featured": false,
+      "lastVerified": "2026-09-14",
+      "sourceLanguage": "fr",
+      "translationStatus": {
+        "fr": "original",
+        "es": "draft"
+      }
+    },
+    {
+      "id": "plateformes-repit-pyrenees-atlantiques",
+      "country": "france",
+      "kind": "directory",
+      "topics": [
+        "respite",
+        "caregiver-health",
+        "psychological-support",
+        "social-support",
+        "care-coordination"
+      ],
+      "beneficiary": "caregiver",
+      "scope": "departmental",
+      "territoryIds": [
+        "fr-64"
+      ],
+      "organization": "Service public de l'autonomie",
+      "providerType": "public",
+      "officialName": "Plateformes d'accompagnement et de répit - Pyrénées-Atlantiques",
+      "content": {
+        "fr": {
+          "title": "Plateformes d'accompagnement et de répit dans les Pyrénées-Atlantiques",
+          "description": "Annuaire officiel des plateformes d'accompagnement et de répit destinées aux aidant(e)s dans les Pyrénées-Atlantiques. Il permet d'identifier les structures de proximité proposant accompagnement, information et solutions de répit."
+        },
+        "es": {
+          "title": "Plataformas de apoyo y respiro en Pirineos Atlánticos",
+          "description": "Directorio oficial de las plataformas de apoyo y respiro destinadas a personas cuidadoras en Pirineos Atlánticos. Permite localizar estructuras cercanas que ofrecen acompañamiento, información y soluciones de respiro."
+        }
+      },
+      "url": "URL_FR64_REPIT",
+      "official": true,
+      "featured": false,
+      "lastVerified": "2026-09-14",
       "sourceLanguage": "fr",
       "translationStatus": {
         "fr": "original",

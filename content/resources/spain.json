@@ -34,7 +34,7 @@
       "sourceLanguage": "es",
       "translationStatus": {
         "es": "original",
-        "fr": "draft"
+        "fr": "reviewed"
       }
     },
     {
@@ -384,6 +384,83 @@
       "official": false,
       "featured": false,
       "lastVerified": "2026-09-11",
+      "sourceLanguage": "es",
+      "translationStatus": {
+        "es": "original",
+        "fr": "draft"
+      }
+    },
+    {
+      "id": "navarra-apoyo-cuidados-domicilio",
+      "country": "spain",
+      "kind": "financial-aid",
+      "topics": [
+        "financial-support",
+        "dependency-disability",
+        "home-care",
+        "social-support"
+      ],
+      "beneficiary": "both",
+      "scope": "regional",
+      "territoryIds": [
+        "es-nav"
+      ],
+      "organization": "Gobierno de Navarra",
+      "providerType": "public",
+      "officialName": "Ayuda económica de apoyo a familias con personas dependientes en su domicilio",
+      "content": {
+        "es": {
+          "title": "Ayuda a familias que cuidan a personas dependientes en el domicilio",
+          "description": "Ayuda económica del Gobierno de Navarra destinada a favorecer la permanencia en el domicilio de personas en situación de dependencia cuando los cuidados son prestados por familiares o personas de su entorno."
+        },
+        "fr": {
+          "title": "Aide aux familles accompagnant une personne dépendante à domicile en Navarre",
+          "description": "Aide financière du Gouvernement de Navarre destinée à favoriser le maintien à domicile des personnes en situation de dépendance lorsque l'accompagnement est assuré par la famille ou des personnes de leur entourage."
+        }
+      },
+      "url": "URL_NAVARRA_CUIDADOS",
+      "official": true,
+      "featured": false,
+      "lastVerified": "2026-09-14",
+      "sourceLanguage": "es",
+      "translationStatus": {
+        "es": "original",
+        "fr": "draft"
+      }
+    },
+    {
+      "id": "euskadi-apoyo-personas-cuidadoras",
+      "country": "spain",
+      "kind": "service",
+      "topics": [
+        "caregiver-health",
+        "care-skills",
+        "psychological-support",
+        "social-support",
+        "dependency-disability"
+      ],
+      "beneficiary": "caregiver",
+      "scope": "regional",
+      "territoryIds": [
+        "es-eus"
+      ],
+      "organization": "Gobierno Vasco",
+      "providerType": "public",
+      "officialName": "Servicio de apoyo a personas cuidadoras",
+      "content": {
+        "es": {
+          "title": "Servicio de apoyo a personas cuidadoras",
+          "description": "Servicio dirigido a personas cuidadoras no profesionales de personas en riesgo o situación de dependencia. Ofrece información, orientación y formación para mejorar las competencias de cuidado, el autocuidado y la calidad de vida de la persona cuidadora."
+        },
+        "fr": {
+          "title": "Service de soutien aux personnes aidantes en Euskadi",
+          "description": "Service destiné aux personnes aidantes non professionnelles accompagnant une personne en risque ou en situation de dépendance. Il propose information, orientation et formation afin de renforcer les compétences d'accompagnement, l'auto-soin et la qualité de vie de l'aidant(e)."
+        }
+      },
+      "url": "URL_EUSKADI_CUIDADORES",
+      "official": true,
+      "featured": false,
+      "lastVerified": "2026-09-14",
       "sourceLanguage": "es",
       "translationStatus": {
         "es": "original",

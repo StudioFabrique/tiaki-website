@@ -103,7 +103,7 @@ export function isResourceAvailableForTerritory(
   territoryId?: string
 ): boolean {
   if (!territoryId) {
-    return true
+    return resource.scope === "national"
   }
 
   if (resource.scope === "national") {
