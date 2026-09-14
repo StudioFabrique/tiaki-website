@@ -6,6 +6,27 @@ export type ResourceLanguage =
   | "fr"
   | "es";
 
+
+export type ResourceTerritoryLevel =
+  | "region"
+  | "department"
+  | "autonomous-community"
+  | "province"
+  | "local";
+
+export type ResourceTerritory = {
+  id: string;
+  country: ResourceCountry;
+  level: ResourceTerritoryLevel;
+  parentId?: string;
+  labels: Record<ResourceLanguage, string>; // une propriété du territoire, pas du pays sélectionné
+};
+
+// le type du fichier JSON lui-même dans content/resources/territories.json
+export type ResourceTerritoryDataset = {
+  territories: ResourceTerritory[]
+}
+
 export type TranslationStatus =
   | "original"
   | "draft"
@@ -98,7 +119,7 @@ export type Resource = {
 
   scope: ResourceScope;
 
-  territories?: string[];
+  territoryIds?: string[];
 
   organization?: string;
 
@@ -109,7 +130,7 @@ export type Resource = {
   content: ResourceContent;
 
   translationStatus:
-    ResourceTranslationStatus;
+  ResourceTranslationStatus;
 
   url: string;
 
