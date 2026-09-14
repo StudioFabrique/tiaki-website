@@ -17,7 +17,7 @@ export function HomeHero({ locale }: HomeHeroProps) {
     <section className="pt-4 sm:pt-6">
       <Container>
         <div className="overflow-hidden rounded-[2rem] bg-tiaki-blue/35">
-          <div className="grid min-h-[720px] lg:grid-cols-[0.95fr_1.05fr]">
+          <div className="grid min-h-[750px] lg:grid-cols-[0.95fr_1.05fr]">
             {/* Content */}
             <div className="order-2 flex items-center p-7 sm:p-10 lg:order-1 lg:p-14">
               <div className="max-w-3xl">

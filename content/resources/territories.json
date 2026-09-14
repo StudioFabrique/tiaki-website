@@ -1,0 +1,110 @@
+{
+  "territories": [
+    {
+      "id": "fr-naq",
+      "country": "france",
+      "level": "region",
+      "labels": {
+        "fr": "Nouvelle-Aquitaine",
+        "es": "Nueva Aquitania"
+      }
+    },
+    {
+      "id": "fr-64",
+      "country": "france",
+      "level": "department",
+      "parentId": "fr-naq",
+      "labels": {
+        "fr": "Pyrénées-Atlantiques",
+        "es": "Pirineos Atlánticos"
+      }
+    },
+    {
+      "id": "es-nav",
+      "country": "spain",
+      "level": "autonomous-community",
+      "labels": {
+        "fr": "Navarre",
+        "es": "Navarra"
+      }
+    },
+    {
+      "id": "es-eus",
+      "country": "spain",
+      "level": "autonomous-community",
+      "labels": {
+        "fr": "Pays basque",
+        "es": "Euskadi"
+      }
+    },
+    {
+      "id": "es-eus-araba",
+      "country": "spain",
+      "level": "province",
+      "parentId": "es-eus",
+      "labels": {
+        "fr": "Álava / Araba",
+        "es": "Álava / Araba"
+      }
+    },
+    {
+      "id": "es-eus-bizkaia",
+      "country": "spain",
+      "level": "province",
+      "parentId": "es-eus",
+      "labels": {
+        "fr": "Biscaye",
+        "es": "Bizkaia"
+      }
+    },
+    {
+      "id": "es-eus-gipuzkoa",
+      "country": "spain",
+      "level": "province",
+      "parentId": "es-eus",
+      "labels": {
+        "fr": "Guipuscoa",
+        "es": "Gipuzkoa"
+      }
+    },
+    {
+      "id": "es-ara",
+      "country": "spain",
+      "level": "autonomous-community",
+      "labels": {
+        "fr": "Aragon",
+        "es": "Aragón"
+      }
+    },
+    {
+      "id": "es-ara-huesca",
+      "country": "spain",
+      "level": "province",
+      "parentId": "es-ara",
+      "labels": {
+        "fr": "Huesca",
+        "es": "Huesca"
+      }
+    },
+    {
+      "id": "es-ara-zaragoza",
+      "country": "spain",
+      "level": "province",
+      "parentId": "es-ara",
+      "labels": {
+        "fr": "Saragosse",
+        "es": "Zaragoza"
+      }
+    },
+    {
+      "id": "es-ara-teruel",
+      "country": "spain",
+      "level": "province",
+      "parentId": "es-ara",
+      "labels": {
+        "fr": "Teruel",
+        "es": "Teruel"
+      }
+    }
+  ]
+}

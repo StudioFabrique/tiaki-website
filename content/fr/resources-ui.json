@@ -4,29 +4,26 @@
     "description": "Retrouvez des aides, démarches, organismes, associations et guides utiles pour vous accompagner au quotidien.",
     "searchPlaceholder": "Rechercher une aide, un organisme, un guide..."
   },
-
   "countrySelector": {
     "title": "Choisissez votre territoire",
     "description": "Les aides, dispositifs et organismes diffèrent selon le pays.",
     "france": "France",
     "spain": "Espagne"
   },
-
   "filters": {
-  "title": "Filtrer les ressources",
-  "frequentNeeds": "Besoins fréquents",
-  "all": "Toutes les ressources",
-  "showAll": "Voir tous les filtres",
-  "hideAll": "Masquer les filtres",
-  "clear": "Réinitialiser les filtres",
-  "results": "ressources trouvées",
-  "noResults": "Aucune ressource ne correspond à votre recherche.",
-  "resourceType": "Type de ressource",
-"anyKind": "Tous les types",
-"anyBeneficiary": "Tous les publics",
-"anyScope": "Tous les niveaux"
-},
-
+    "title": "Filtrer les ressources",
+    "frequentNeeds": "Besoins fréquents",
+    "all": "Toutes les ressources",
+    "showAll": "Voir tous les filtres",
+    "hideAll": "Masquer les filtres",
+    "clear": "Réinitialiser les filtres",
+    "results": "ressources trouvées",
+    "noResults": "Aucune ressource ne correspond à votre recherche.",
+    "resourceType": "Type de ressource",
+    "anyKind": "Tous les types",
+    "anyBeneficiary": "Tous les publics",
+    "anyScope": "Tous les niveaux"
+  },
   "kinds": {
     "financial-aid": "Aide financière",
     "service": "Service",
@@ -38,7 +35,6 @@
     "tool": "Outil",
     "legal-information": "Information juridique"
   },
-
   "topics": {
     "financial-support": "Aides financières",
     "rights-procedures": "Droits & démarches",
@@ -59,14 +55,12 @@
     "care-skills": "Compétences de l’aidant",
     "end-of-life": "Fin de vie"
   },
-
   "beneficiaries": {
     "title": "Pour qui ?",
     "caregiver": "Aidant(e)",
     "cared-person": "Personne accompagnée",
     "both": "Aidant(e) et personne accompagnée"
   },
-
   "scopes": {
     "title": "Niveau territorial",
     "national": "National",
@@ -75,7 +69,10 @@
     "provincial": "Provincial",
     "local": "Local"
   },
-
+  "territory": {
+    "label": "Territoire",
+    "all": "Tous les territoires"
+  },
   "providerTypes": {
     "public": "Organisme public",
     "association": "Association",
@@ -84,14 +81,12 @@
     "private": "Organisme privé",
     "other": "Autre organisme"
   },
-
   "sections": {
     "featured": "Ressources recommandées",
     "allResources": "Toutes les ressources",
     "guides": "Guides pour les aidant(e)s",
     "institutions": "Organismes et institutions"
   },
-
   "card": {
     "official": "Source officielle",
     "featured": "Recommandé",
@@ -102,7 +97,7 @@
     "verified": "Informations vérifiées le"
   },
   "translation": {
-  "draft": "Traduction en cours de validation",
-  "reviewed": "Traduction vérifiée"
-}
+    "draft": "Traduction en cours de validation",
+    "reviewed": "Traduction vérifiée"
+  }
 }

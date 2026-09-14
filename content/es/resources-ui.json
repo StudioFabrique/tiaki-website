@@ -4,14 +4,12 @@
     "description": "Encuentra ayudas, trámites, organismos, asociaciones y guías útiles para acompañarte en el día a día.",
     "searchPlaceholder": "Buscar una ayuda, un organismo, una guía..."
   },
-
   "countrySelector": {
     "title": "Elige tu territorio",
     "description": "Las ayudas, los recursos y los organismos varían según el país.",
     "france": "Francia",
     "spain": "España"
   },
-
   "filters": {
     "title": "Filtrar recursos",
     "frequentNeeds": "Necesidades frecuentes",
@@ -22,11 +20,10 @@
     "results": "recursos encontrados",
     "noResults": "Ningún recurso coincide con tu búsqueda.",
     "resourceType": "Tipo de recurso",
-"anyKind": "Todos los tipos",
-"anyBeneficiary": "Todos los públicos",
-"anyScope": "Todos los niveles"
+    "anyKind": "Todos los tipos",
+    "anyBeneficiary": "Todos los públicos",
+    "anyScope": "Todos los niveles"
   },
-
   "kinds": {
     "financial-aid": "Ayuda económica",
     "service": "Servicio",
@@ -38,7 +35,6 @@
     "tool": "Herramienta",
     "legal-information": "Información jurídica"
   },
-
   "topics": {
     "financial-support": "Ayudas económicas",
     "rights-procedures": "Derechos y trámites",
@@ -59,14 +55,12 @@
     "care-skills": "Competencias para el cuidado",
     "end-of-life": "Final de vida"
   },
-
   "beneficiaries": {
     "title": "¿Para quién?",
     "caregiver": "Persona cuidadora",
     "cared-person": "Persona atendida",
     "both": "Persona cuidadora y persona atendida"
   },
-
   "scopes": {
     "title": "Nivel territorial",
     "national": "Nacional",
@@ -75,7 +69,10 @@
     "provincial": "Provincial",
     "local": "Local"
   },
-
+  "territory": {
+    "label": "Territorio",
+    "all": "Todos los territorios"
+  },
   "providerTypes": {
     "public": "Organismo público",
     "association": "Asociación",
@@ -84,14 +81,12 @@
     "private": "Organismo privado",
     "other": "Otro organismo"
   },
-
   "sections": {
     "featured": "Recursos recomendados",
     "allResources": "Todos los recursos",
     "guides": "Guías para personas cuidadoras",
     "institutions": "Organismos e instituciones"
   },
-
   "card": {
     "official": "Fuente oficial",
     "featured": "Recomendado",
@@ -102,7 +97,7 @@
     "verified": "Información verificada el"
   },
   "translation": {
-  "draft": "Traducción pendiente de validación",
-  "reviewed": "Traducción revisada"
-}
+    "draft": "Traducción pendiente de validación",
+    "reviewed": "Traducción revisada"
+  }
 }
