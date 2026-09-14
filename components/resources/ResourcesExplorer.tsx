@@ -643,11 +643,9 @@ export function ResourcesExplorer({
                     <Select
                       items={selectItems}
                       value={selectedTerritoryId}
-                      onValueChange={(
-                        value: string
-                      ) =>
+                      onValueChange={(value) =>
                         setSelectedTerritoryId(
-                          value
+                          value ?? ALL_TERRITORIES
                         )
                       }
                     >
