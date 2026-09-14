@@ -143,6 +143,22 @@ export function ResourceCard({
     )}
   </div>
 )}
+{/* Resource link */}
+<div className="mt-auto pt-7">
+  <Link
+    href={resource.url}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-foreground px-5 py-2.5 font-heading text-sm font-semibold text-background transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+  >
+    {content.card.visit}
+
+    <ExternalLink
+      aria-hidden="true"
+      className="size-4"
+    />
+  </Link>
+</div>
     </article>
   )
 }
