@@ -33,7 +33,7 @@ export function HomeFeatures({ locale }: HomeFeaturesProps) {
   return (
     <section className="py-8 sm:py-8 lg:py-12">
       <Container>
-        <div className="max-w-3xl">
+        <div className="max-w-4xl">
           <h2 className="font-heading text-4xl leading-[0.98] font-bold tracking-[-0.045em] sm:text-5xl lg:text-6xl">
             {features.title}
           </h2>

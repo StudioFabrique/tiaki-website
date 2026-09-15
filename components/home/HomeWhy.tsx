@@ -47,13 +47,13 @@ export function HomeWhy({ locale }: HomeWhyProps) {
               {why.items.map((item, index) => (
                 <div
                   key={item.title}
-                  className="border-b border-white/20 p-7 last:border-b-0 sm:p-9 md:border-r md:border-b-0 md:last:border-r-0"
+                  className="border-b border-white/20 p-7 last:border-b-0 sm:p-8 md:border-r md:border-b-0 md:last:border-r-0"
                 >
-                  <div className="font-heading text-sm font-semibold text-white/55">
+                  {/* <div className="font-heading text-sm font-semibold text-white/55">
                     {String(index + 1).padStart(2, "0")}
-                  </div>
+                  </div> */}
 
-                  <h3 className="mt-8 font-heading text-2xl font-semibold tracking-[-0.025em] text-white">
+                  <h3 className="mt-2 font-heading text-2xl font-semibold tracking-[-0.025em] text-white">
                     {item.title}
                   </h3>
 
