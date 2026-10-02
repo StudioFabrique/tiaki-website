@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
+import { Analytics } from "@vercel/analytics/next";
+
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
@@ -9,7 +11,7 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: "T-IA-KI",
-  description: "Une plateforme pour les aidant.e.s",
+  description: "Une plateforme pour les aidant(e)s",
 
    icons: {
     icon: "/images/logos/tiaki-icon.svg",
@@ -25,7 +27,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr" className={inter.variable}>
-      <body>{children}</body>
+      <body>
+        {children}
+        <Analytics />
+        </body>
     </html>
   );
 }

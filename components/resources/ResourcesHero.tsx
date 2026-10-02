@@ -16,8 +16,8 @@ export function ResourcesHero({
   return (
     <section className="pt-4 sm:pt-6">
       <Container>
-        <div className="overflow-hidden rounded-[2rem] bg-tiaki-blue/20">
-          <div className="grid min-h-[440px] lg:grid-cols-[1.1fr_0.9fr]">
+        <div className="overflow-hidden rounded-[2rem] bg-tiaki-blue/30">
+          <div className="grid min-h-[320px] lg:grid-cols-[1.1fr_0.9fr]">
             {/* Text */}
             <div className="flex items-center p-7 sm:p-10 lg:p-14">
               <div className="max-w-3xl">
@@ -32,8 +32,8 @@ export function ResourcesHero({
             </div>
 
             {/* Picto */}
-            <div className="flex min-h-[300px] items-center justify-center px-8 pb-8 sm:min-h-[340px] sm:px-10 lg:min-h-0 lg:p-12">
-              <div className="relative h-[280px] w-full sm:h-[320px] lg:h-[360px]">
+            <div className="flex min-h-[30px] items-center justify-center px-8 pb-8 sm:min-h-[30px] sm:px-10 lg:min-h-0 lg:p-12">
+              <div className="relative h-[200px] w-full sm:h-[200px] lg:h-[240px]">
                 <Image
                   src="/images/pictos/picto-2.png"
                   alt=""
