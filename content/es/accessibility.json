@@ -3,5 +3,24 @@
   "trigger": {
     "open": "Abrir las opciones de accesibilidad",
     "close": "Cerrar las opciones de accesibilidad"
+  },
+  "panel": {
+    "title": "Opciones de accesibilidad",
+    "close": "Cerrar las opciones de accesibilidad",
+    "sections": {
+      "textAndReading": {
+        "title": "Texto y lectura",
+        "textScale": {
+          "title": "Tamaño del texto",
+          "description": "Elige el tamaño que te resulte más cómodo.",
+          "options": {
+            "smaller": "Más pequeño",
+            "default": "Normal",
+            "large": "Grande",
+            "larger": "Muy grande"
+          }
+        }
+      }
+    }
   }
 }

@@ -1,27 +1,32 @@
 "use client";
 
-type AccessibilityTriggerProps = {
-  label: string;
-  isOpen: boolean;
-  panelId: string;
-  onClick: () => void;
-};
+import {
+  forwardRef,
+  type ButtonHTMLAttributes,
+} from "react";
 
-export function AccessibilityTrigger({
-  label,
-  isOpen,
-  panelId,
-  onClick,
-}: AccessibilityTriggerProps) {
+type AccessibilityTriggerProps =
+  ButtonHTMLAttributes<HTMLButtonElement> & {
+    label: string;
+  };
+
+export const AccessibilityTrigger = forwardRef<
+  HTMLButtonElement,
+  AccessibilityTriggerProps
+>(function AccessibilityTrigger(
+  {
+    label,
+    className = "",
+    ...props
+  },
+  ref,
+) {
   return (
     <button
+      ref={ref}
       type="button"
-      onClick={onClick}
       aria-label={label}
-      aria-haspopup="dialog"
-      aria-expanded={isOpen}
-      aria-controls={panelId}
-      className="
+      className={`
         fixed bottom-6 right-6 z-50
         flex h-12 w-12
         items-center justify-center
@@ -36,7 +41,9 @@ export function AccessibilityTrigger({
         focus-visible:ring-2
         focus-visible:ring-ring
         focus-visible:ring-offset-2
-      "
+        ${className}
+      `}
+      {...props}
     >
       <span
         aria-hidden="true"
@@ -46,4 +53,4 @@ export function AccessibilityTrigger({
       </span>
     </button>
   );
-}
+});

@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { AccessibilityProvider } from "@/components/accessibility/AccessibilityProvider";
 import { SkipToContent } from "@/components/accessibility/SkipToContent";
 
+import { AccessibilityWidget } from "@/components/accessibility/AccessibilityWidget";
+
 import accessibilityFr from "@/content/fr/accessibility.json";
 import accessibilityEs from "@/content/es/accessibility.json";
 
@@ -44,6 +46,10 @@ export default async function LocaleLayout({
       <SkipToContent
         label={accessibilityContent.skipToContent}
       />
+
+       <AccessibilityWidget
+      content={accessibilityContent}
+    />
 
       {children}
     </AccessibilityProvider>
