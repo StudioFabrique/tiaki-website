@@ -1,0 +1,7 @@
+{
+  "skipToContent": "Ir al contenido principal",
+  "trigger": {
+    "open": "Abrir las opciones de accesibilidad",
+    "close": "Cerrar las opciones de accesibilidad"
+  }
+}
