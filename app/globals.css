@@ -141,3 +141,16 @@
   }
 }
 
+/* Accessibility — text scale */
+
+html[data-a11y-text-scale="0.9"] {
+  font-size: 90%;
+}
+
+html[data-a11y-text-scale="1.125"] {
+  font-size: 112.5%;
+}
+
+html[data-a11y-text-scale="1.25"] {
+  font-size: 125%;
+}

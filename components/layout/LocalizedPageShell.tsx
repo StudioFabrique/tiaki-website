@@ -20,8 +20,10 @@ export function LocalizedPageShell({
     <>
       <Navbar locale={locale} currentRoute={currentRoute} />
 
-      <main>{children}</main>
-      
+      <main id="main-content" tabIndex={-1}>
+        {children}
+      </main>
+
       <Footer locale={locale} currentRoute={currentRoute} />
     </>
   )

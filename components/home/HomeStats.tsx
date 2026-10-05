@@ -258,12 +258,12 @@ export function HomeStats({
                       {item.label}
                     </p>
 
-                    <span className="mt-8 block font-heading text-xs font-semibold text-foreground/25">
+                    {/* <span className="mt-8 block font-heading text-xs font-semibold text-foreground/25">
                       {String(index + 1).padStart(
                         2,
                         "0"
                       )}
-                    </span>
+                    </span> */}
                   </div>
                 </article>
               );

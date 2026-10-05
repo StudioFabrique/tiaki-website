@@ -1,5 +1,13 @@
 import { notFound } from "next/navigation";
 
+import { AccessibilityProvider } from "@/components/accessibility/AccessibilityProvider";
+import { SkipToContent } from "@/components/accessibility/SkipToContent";
+
+import { AccessibilityWidget } from "@/components/accessibility/AccessibilityWidget";
+
+import accessibilityFr from "@/content/fr/accessibility.json";
+import accessibilityEs from "@/content/es/accessibility.json";
+
 import {
   isSiteLocale,
   locales,
@@ -28,5 +36,22 @@ export default async function LocaleLayout({
     notFound();
   }
 
-  return children;
+  const accessibilityContent =
+    locale === "fr"
+      ? accessibilityFr
+      : accessibilityEs;
+
+  return (
+    <AccessibilityProvider>
+      <SkipToContent
+        label={accessibilityContent.skipToContent}
+      />
+
+       <AccessibilityWidget
+      content={accessibilityContent}
+    />
+
+      {children}
+    </AccessibilityProvider>
+  );
 }
