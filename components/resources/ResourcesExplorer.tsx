@@ -765,18 +765,7 @@ export function ResourcesExplorer({
                         )
                       }
                     >
-                      <SelectTrigger className="
-    mt-2
-    h-auto min-h-12 w-full
-    whitespace-normal
-    rounded-xl
-    border-foreground/15
-    bg-background
-    px-4 py-3
-    text-left
-    *:data-[slot=select-value]:line-clamp-none
-    *:data-[slot=select-value]:whitespace-normal
-  ">
+                      <SelectTrigger className="mt-2 h-auto min-h-12 w-full rounded-xl border-foreground/15 bg-background px-4 py-3 text-left whitespace-normal *:data-[slot=select-value]:line-clamp-none *:data-[slot=select-value]:whitespace-normal">
                         <SelectValue
                           placeholder={content.filters.anyBeneficiary}
                         />
@@ -807,7 +796,7 @@ export function ResourcesExplorer({
                         )
                       }
                     >
-                      <SelectTrigger className="mt-2 min-h-12 w-full rounded-xl border-foreground/15 bg-background px-4">
+                      <SelectTrigger className="mt-2 h-auto min-h-12 w-full rounded-xl border-foreground/15 bg-background px-4 py-3 text-left whitespace-normal *:data-[slot=select-value]:line-clamp-none *:data-[slot=select-value]:whitespace-normal">
                         <SelectValue placeholder={content.filters.anyScope} />
                       </SelectTrigger>
 
