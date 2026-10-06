@@ -104,7 +104,7 @@ export function Navbar({ locale, currentRoute }: NavbarProps) {
 
             <SheetContent
               side="right"
-              className="w-[88vw] max-w-sm border-l-0 bg-background p-0 shadow-2xl"
+              className="flex w-[88vw] max-w-sm flex-col border-l-0 bg-background p-0 shadow-2xl"
             >
               {/* Header */}
               <SheetHeader className="border-b px-6 py-6 text-left">
@@ -126,7 +126,7 @@ export function Navbar({ locale, currentRoute }: NavbarProps) {
               </SheetHeader>
 
               {/* Navigation */}
-              <div className="flex h-[calc(100%-97px)] flex-col">
+              <div className="flex min-h-0 flex-1 flex-col">
                 <nav className="flex flex-col gap-2 px-4 py-6">
                   {navigationRoutes.map((route, index) => {
                     const isActive = currentRoute === route
