@@ -7,6 +7,7 @@
   "panel": {
     "title": "Options d’accessibilité",
     "close": "Fermer les options d’accessibilité",
+    "reset": "Réinitialiser les réglages",
     "sections": {
       "textAndReading": {
         "title": "Texte et lecture",
