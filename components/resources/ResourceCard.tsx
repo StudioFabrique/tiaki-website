@@ -155,7 +155,7 @@ export function ResourceCard({
           {visibleTopics.map((topic) => (
             <span
               key={topic}
-              className="inline-flex min-h-7 items-center whitespace-nowrap rounded-full bg-muted px-3 py-1.5 text-xs font-medium text-foreground/65"
+              className="inline-flex min-h-7 max-w-full items-center whitespace-normal rounded-full bg-muted px-3 py-1.5 text-center text-xs font-medium leading-snug text-foreground/65"
             >
               {content.topics[topic]}
             </span>
@@ -173,7 +173,7 @@ export function ResourceCard({
                   .map((topic) => (
                     <span
                       key={topic}
-                      className="inline-flex min-h-7 items-center whitespace-nowrap rounded-full bg-muted px-3 py-1.5 text-xs font-medium text-foreground/65"
+                      className="inline-flex min-h-7 max-w-full items-center whitespace-normal rounded-full bg-muted px-3 py-1.5 text-center text-xs font-medium leading-snug text-foreground/65"
                     >
                       {content.topics[topic]}
                     </span>
