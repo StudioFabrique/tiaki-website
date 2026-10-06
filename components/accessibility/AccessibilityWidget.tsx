@@ -18,6 +18,7 @@ type AccessibilityWidgetContent = {
   panel: {
     title: string;
     close: string;
+    reset: string;
     sections: {
       textAndReading: {
         title: string;
@@ -86,6 +87,7 @@ export function AccessibilityWidget({
         id={ACCESSIBILITY_PANEL_ID}
         title={content.panel.title}
         closeLabel={content.panel.close}
+        resetLabel={content.panel.reset}
         textSectionTitle={
           content.panel.sections.textAndReading.title
         }

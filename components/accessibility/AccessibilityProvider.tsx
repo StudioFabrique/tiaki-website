@@ -13,7 +13,6 @@ import { applyAccessibilityPreferences } from "@/lib/accessibility/apply";
 import { DEFAULT_ACCESSIBILITY_PREFERENCES } from "@/lib/accessibility/defaults";
 import { getInitialAccessibilityPreferences } from "@/lib/accessibility/initial";
 import {
-  removeAccessibilityPreferences,
   writeAccessibilityPreferences,
 } from "@/lib/accessibility/storage";
 
@@ -77,13 +76,11 @@ export function AccessibilityProvider({
     [],
   );
 
-  const resetPreferences = useCallback(() => {
-    setPreferences({
-      ...DEFAULT_ACCESSIBILITY_PREFERENCES,
-    });
-
-    removeAccessibilityPreferences();
-  }, []);
+const resetPreferences = useCallback(() => {
+  setPreferences({
+    ...DEFAULT_ACCESSIBILITY_PREFERENCES,
+  });
+}, []);
 
   return (
     <AccessibilityContext.Provider
