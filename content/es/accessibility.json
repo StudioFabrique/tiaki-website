@@ -38,7 +38,14 @@
             "wide": "Amplio"
           }
         }
-      }
+      },
+       "visibility": {
+          "title": "Visibilidad",
+          "highContrast": {
+            "title": "Contraste reforzado",
+            "description": "Aumenta el contraste entre los textos, los fondos y los elementos interactivos."
+          }
+        }
     }
   }
 }

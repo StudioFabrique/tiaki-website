@@ -19,11 +19,11 @@ export function HomeFunding({ locale }: HomeFundingProps) {
           <div className="grid lg:grid-cols-[1.15fr_0.85fr]">
             <div className="flex items-center p-7 sm:p-10 lg:p-14">
               <div>
-                <h2 className="font-heading text-4xl leading-[0.98] font-bold tracking-[-0.045em] sm:text-5xl lg:text-6xl">
+                <h2 className="font-heading text-4xl leading-[0.98] font-bold tracking-[-0.045em] text-foreground sm:text-5xl lg:text-6xl">
                   {funding.title}
                 </h2>
 
-                <p className="mt-6 text-base leading-7 text-foreground/65 sm:text-lg sm:leading-8">
+                <p className="mt-6 text-base leading-7 text-muted-foreground sm:text-lg sm:leading-8">
                   {funding.description}
                 </p>
               </div>
@@ -46,7 +46,7 @@ export function HomeFunding({ locale }: HomeFundingProps) {
           {/* Partners */}
           <div className="border-t">
             <div className="p-7 sm:p-10 lg:p-14">
-              <h3 className="font-heading text-2xl font-semibold tracking-[-0.03em] sm:text-3xl">
+              <h3 className="font-heading text-2xl font-semibold tracking-[-0.03em] text-foreground sm:text-3xl">
                 {funding.partnersTitle}
               </h3>
 

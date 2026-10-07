@@ -477,7 +477,7 @@ export function ResourcesExplorer({
         <div>
           {/* ========== FILTER PANEL ========= */}
 
-          <div className="my-16 rounded-[2rem] border border-foreground/10 bg-background p-5 sm:p-7 lg:p-8">
+          <div className="my-16 rounded-[2rem] border border-border bg-background p-5 sm:p-7 lg:p-8">
             {/* ======== COUNTRY ============================== */}
 
             <fieldset>
@@ -485,7 +485,7 @@ export function ResourcesExplorer({
                 {content.countrySelector.title}
               </legend>
 
-              <p className="mt-2 text-sm leading-6 text-foreground/55">
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">
                 {content.countrySelector.description}
               </p>
 
@@ -501,7 +501,7 @@ export function ResourcesExplorer({
                     "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none",
                     country === "france"
                       ? "border-foreground bg-foreground text-background"
-                      : "border-foreground/15 bg-background text-foreground hover:bg-muted"
+                      : "border-border bg-background text-foreground hover:bg-muted"
                   )}
                 >
                   🇫🇷 {content.countrySelector.france}
@@ -553,7 +553,7 @@ export function ResourcesExplorer({
                     >
                       <SelectTrigger
                         id="resource-territory"
-                        className="h-auto min-h-12 w-full rounded-xl border-foreground/15 bg-background px-4 py-3 text-left whitespace-normal *:data-[slot=select-value]:line-clamp-none *:data-[slot=select-value]:whitespace-normal"
+                        className="h-auto min-h-12 w-full rounded-xl border-border bg-background px-4 py-3 text-left whitespace-normal *:data-[slot=select-value]:line-clamp-none *:data-[slot=select-value]:whitespace-normal"
                       >
                         <SelectValue />
                       </SelectTrigger>
@@ -583,7 +583,7 @@ export function ResourcesExplorer({
                                     {content.territory.whole[country]}
                                   </span>
 
-                                  <span className="text-foreground/45">
+                                  <span className="text-muted-foreground">
                                     · {parent.labels[locale]}
                                   </span>
                                 </span>
@@ -608,7 +608,7 @@ export function ResourcesExplorer({
                   </div>
 
                   {/* Territory helper */}
-                  <p className="mt-3 text-sm leading-6 text-foreground/50">
+                  <p className="mt-3 text-sm leading-6 text-muted-foreground">
                     {content.territory.help}
                   </p>
                 </div>
@@ -627,7 +627,7 @@ export function ResourcesExplorer({
                   <div className="relative">
                     <Search
                       aria-hidden="true"
-                      className="pointer-events-none absolute top-1/2 left-5 size-5 -translate-y-1/2 text-foreground/40"
+                      className="pointer-events-none absolute top-1/2 left-5 size-5 -translate-y-1/2 text-muted-foreground"
                     />
 
                     <input
@@ -637,7 +637,7 @@ export function ResourcesExplorer({
                       onChange={(event) => setSearch(event.target.value)}
                       placeholder={content.hero.searchPlaceholder}
                       autoComplete="off"
-                      className="h-14 w-full rounded-full border border-foreground/10 bg-background pr-5 pl-14 text-base transition-shadow outline-none placeholder:text-foreground/35 focus-visible:ring-2 focus-visible:ring-ring"
+                      className="h-14 w-full rounded-full border border-border bg-background pr-5 pl-14 text-base transition-shadow outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
                     />
                   </div>
                 </div>
@@ -654,7 +654,7 @@ export function ResourcesExplorer({
                       <button
                         type="button"
                         onClick={() => setSelectedTopic(null)}
-                        className="shrink-0 text-sm font-medium text-foreground/50 underline-offset-4 transition-colors hover:text-foreground hover:underline focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                        className="shrink-0 text-sm font-medium text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                       >
                         {content.filters.clear}
                       </button>
@@ -679,7 +679,7 @@ export function ResourcesExplorer({
                             "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none",
                             isSelected
                               ? "border-foreground bg-foreground text-background"
-                              : "border-foreground/10 bg-background text-foreground/70 hover:border-foreground/20 hover:text-foreground"
+                              : "border-border bg-background text-foreground hover:bg-muted"
                           )}
                         >
                           <Icon
@@ -698,7 +698,7 @@ export function ResourcesExplorer({
                       onClick={() => setShowAllFilters((current) => !current)}
                       aria-expanded={showAllFilters}
                       aria-controls="advanced-resource-filters"
-                      className="inline-flex min-h-11 max-w-full items-center gap-2 rounded-full border border-dashed border-foreground/20 px-4 py-2 text-center font-heading text-sm leading-snug font-semibold whitespace-normal text-foreground/60 transition-colors hover:border-foreground/40 hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none"
+                      className="inline-flex min-h-11 max-w-full items-center gap-2 rounded-full border border-dashed border-border px-4 py-2 text-center font-heading text-sm leading-snug font-semibold whitespace-normal text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none"
                     >
                       <SlidersHorizontal
                         aria-hidden="true"
@@ -719,7 +719,7 @@ export function ResourcesExplorer({
             {showAllFilters && (
               <div
                 id="advanced-resource-filters"
-                className="mt-8 rounded-[1.5rem] border border-foreground/10 bg-muted/20 p-5 sm:p-6"
+                className="mt-8 rounded-[1.5rem] border border-border bg-muted/20 p-5 sm:p-6"
               >
                 <div className="grid gap-5 md:grid-cols-3">
                   {/* ---------RESOURCE TYPE -------------- */}
@@ -735,7 +735,7 @@ export function ResourcesExplorer({
                         setSelectedKind(value ? (value as ResourceKind) : null)
                       }
                     >
-                      <SelectTrigger className="mt-2 h-auto min-h-12 w-full rounded-xl border-foreground/15 bg-background px-4 py-3 text-left whitespace-normal *:data-[slot=select-value]:line-clamp-none *:data-[slot=select-value]:whitespace-normal">
+                      <SelectTrigger className="mt-2 h-auto min-h-12 w-full rounded-xl border-border bg-background px-4 py-3 text-left whitespace-normal *:data-[slot=select-value]:line-clamp-none *:data-[slot=select-value]:whitespace-normal">
                         {" "}
                         <SelectValue placeholder={content.filters.anyKind} />
                       </SelectTrigger>
@@ -765,7 +765,7 @@ export function ResourcesExplorer({
                         )
                       }
                     >
-                      <SelectTrigger className="mt-2 h-auto min-h-12 w-full rounded-xl border-foreground/15 bg-background px-4 py-3 text-left whitespace-normal *:data-[slot=select-value]:line-clamp-none *:data-[slot=select-value]:whitespace-normal">
+                      <SelectTrigger className="mt-2 h-auto min-h-12 w-full rounded-xl border-border bg-background px-4 py-3 text-left whitespace-normal *:data-[slot=select-value]:line-clamp-none *:data-[slot=select-value]:whitespace-normal">
                         <SelectValue
                           placeholder={content.filters.anyBeneficiary}
                         />
@@ -796,7 +796,7 @@ export function ResourcesExplorer({
                         )
                       }
                     >
-                      <SelectTrigger className="mt-2 h-auto min-h-12 w-full rounded-xl border-foreground/15 bg-background px-4 py-3 text-left whitespace-normal *:data-[slot=select-value]:line-clamp-none *:data-[slot=select-value]:whitespace-normal">
+                      <SelectTrigger className="mt-2 h-auto min-h-12 w-full rounded-xl border-border bg-background px-4 py-3 text-left whitespace-normal *:data-[slot=select-value]:line-clamp-none *:data-[slot=select-value]:whitespace-normal">
                         <SelectValue placeholder={content.filters.anyScope} />
                       </SelectTrigger>
 
@@ -836,7 +836,7 @@ export function ResourcesExplorer({
                 <p
                   aria-live="polite"
                   aria-atomic="true"
-                  className="mt-2 text-sm text-foreground/55"
+                  className="mt-2 text-sm text-muted-foreground"
                 >
                   <strong className="font-semibold text-foreground">
                     {filteredResources.length}
@@ -850,7 +850,7 @@ export function ResourcesExplorer({
                 <button
                   type="button"
                   onClick={resetFilters}
-                  className="self-start font-heading text-sm font-semibold text-foreground/55 underline-offset-4 transition-colors hover:text-foreground hover:underline focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none sm:self-auto"
+                  className="self-start font-heading text-sm font-semibold text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none sm:self-auto"
                 >
                   {content.filters.clear}
                 </button>
@@ -879,11 +879,11 @@ export function ResourcesExplorer({
             ) : (
               /* =======EMPTY STATE ============= */
 
-              <div className="mt-7 flex min-h-[260px] flex-col items-center justify-center rounded-[1.5rem] border border-dashed border-foreground/15 bg-background px-6 py-10 text-center">
+              <div className="mt-7 flex min-h-[260px] flex-col items-center justify-center rounded-[1.5rem] border border-dashed border-border bg-background px-6 py-10 text-center">
                 <div className="flex size-12 items-center justify-center rounded-full bg-muted">
                   <SearchX
                     aria-hidden="true"
-                    className="size-5 text-foreground/45"
+                    className="size-5 text-muted-foreground"
                   />
                 </div>
 
@@ -895,7 +895,7 @@ export function ResourcesExplorer({
                   <button
                     type="button"
                     onClick={resetFilters}
-                    className="mt-5 inline-flex min-h-11 items-center justify-center rounded-full border border-foreground/15 bg-background px-5 font-heading text-sm font-semibold transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                    className="mt-5 inline-flex min-h-11 items-center justify-center rounded-full border border-border bg-background px-5 font-heading text-sm font-semibold transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                   >
                     {content.filters.clear}
                   </button>

@@ -51,6 +51,15 @@ type AccessibilityWidgetContent = {
           }
         }
       }
+
+      visibility: {
+        title: string
+
+        highContrast: {
+          title: string
+          description: string
+        }
+      }
     }
   }
 }
@@ -99,7 +108,11 @@ export function AccessibilityWidget({ content }: AccessibilityWidgetProps) {
         textSectionTitle={content.panel.sections.textAndReading.title}
         textScaleContent={content.panel.sections.textAndReading.textScale}
         lineSpacingContent={content.panel.sections.textAndReading.lineSpacing}
-        letterSpacingContent={content.panel.sections.textAndReading.letterSpacing}
+        letterSpacingContent={
+          content.panel.sections.textAndReading.letterSpacing
+        }
+        visibilitySectionTitle={content.panel.sections.visibility.title}
+        highContrastContent={content.panel.sections.visibility.highContrast}
       />
     </Drawer>
   )

@@ -22,6 +22,10 @@ import {
   LetterSpacingControl,
   type LetterSpacingControlContent,
 } from "@/components/accessibility/controls/LetterSpacingControl"
+import {
+  HighContrastControl,
+  type HighContrastControlContent,
+} from "@/components/accessibility/controls/HighContrastControl"
 
 type AccessibilityPanelProps = {
   id: string
@@ -29,9 +33,14 @@ type AccessibilityPanelProps = {
   closeLabel: string
   resetLabel: string
   textSectionTitle: string
+
   textScaleContent: TextScaleControlContent
+
   lineSpacingContent: LineSpacingControlContent
   letterSpacingContent: LetterSpacingControlContent
+
+  visibilitySectionTitle: string
+  highContrastContent: HighContrastControlContent
 }
 
 export function AccessibilityPanel({
@@ -43,6 +52,8 @@ export function AccessibilityPanel({
   textScaleContent,
   lineSpacingContent,
   letterSpacingContent,
+  visibilitySectionTitle,
+  highContrastContent,
 }: AccessibilityPanelProps) {
   const { resetPreferences } = useAccessibility()
   return (
@@ -93,6 +104,19 @@ export function AccessibilityPanel({
               <span>{resetLabel}</span>
             </button>
           </div>
+        </section>
+        <section
+          aria-labelledby={`${id}-visibility-title`}
+          className="space-y-3"
+        >
+          <h3
+            id={`${id}-visibility-title`}
+            className="px-1 text-xs font-semibold tracking-[0.14em] text-muted-foreground uppercase"
+          >
+            {visibilitySectionTitle}
+          </h3>
+
+          <HighContrastControl content={highContrastContent} />
         </section>
       </div>
     </DrawerContent>
