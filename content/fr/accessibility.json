@@ -20,6 +20,23 @@
             "large": "Grand",
             "larger": "Très grand"
           }
+        },
+        "lineSpacing": {
+          "title": "Interligne",
+          "description": "Ajustez l’espace entre les lignes de texte.",
+          "options": {
+            "default": "Normal",
+            "relaxed": "Confortable",
+            "wide": "Large"
+          }
+        },
+        "letterSpacing": {
+          "title": "Espacement des lettres",
+          "description": "Ajustez l’espace entre les caractères.",
+          "options": {
+            "default": "Normal",
+            "wide": "Large"
+          }
         }
       }
     }

@@ -141,7 +141,10 @@
   }
 }
 
-/* Accessibility — text scale */
+
+/* =========================================
+   Accessibility — Text Scaling
+   ========================================= */
 
 html[data-a11y-text-scale="0.9"] {
   font-size: 90%;
@@ -153,4 +156,94 @@ html[data-a11y-text-scale="1.125"] {
 
 html[data-a11y-text-scale="1.25"] {
   font-size: 125%;
+}
+
+
+/* =========================================
+   Accessibility — line spacing
+   ========================================= */
+
+html[data-a11y-line-spacing]
+  :where(p, li, a, dd, dt, blockquote) {
+  line-height: var(--a11y-body-line-height) !important;
+}
+
+html[data-a11y-line-spacing]
+  :where(label, button, input, textarea, select, summary) {
+  line-height: 1.5 !important;
+}
+
+html[data-a11y-line-spacing="relaxed"] {
+  --a11y-body-line-height: 1.75;
+  --a11y-heading-line-height: 1.4;
+}
+
+html[data-a11y-line-spacing="wide"] {
+  --a11y-body-line-height: 2;
+  --a11y-heading-line-height: 1.55;
+}
+
+/*
+ * Some Tailwind utilities such as leading-tight or leading-7
+ * define their own line-height, so inheriting from body alone
+ * is not sufficient.
+ */
+html[data-a11y-line-spacing] body {
+  line-height: var(--a11y-body-line-height);
+}
+
+html[data-a11y-line-spacing]
+  :where(
+    p,
+    li,
+    a,
+    dd,
+    dt,
+    blockquote,
+    label,
+    button,
+    input,
+    textarea,
+    select,
+    summary
+  ) {
+  line-height: var(--a11y-body-line-height) !important;
+}
+
+html[data-a11y-line-spacing]
+  :where(h1, h2, h3, h4, h5, h6) {
+  line-height: var(--a11y-heading-line-height) !important;
+}
+
+
+/* =========================================
+   Accessibility — letter spacing
+   ========================================= */
+
+html[data-a11y-letter-spacing="wide"] {
+  --a11y-letter-spacing: 0.08em;
+  --a11y-heading-letter-spacing: 0.05em;
+}
+
+html[data-a11y-letter-spacing="wide"]
+  :where(
+    p,
+    li,
+    a,
+    dd,
+    dt,
+    blockquote,
+    label,
+    button,
+    input,
+    textarea,
+    select,
+    summary
+  ) {
+  letter-spacing: var(--a11y-letter-spacing) !important;
+}
+
+html[data-a11y-letter-spacing="wide"]
+  :where(h1, h2, h3, h4, h5, h6) {
+  letter-spacing: var(--a11y-heading-letter-spacing) !important;
 }

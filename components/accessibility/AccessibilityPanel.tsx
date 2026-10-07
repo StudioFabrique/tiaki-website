@@ -14,6 +14,14 @@ import {
   TextScaleControl,
   type TextScaleControlContent,
 } from "@/components/accessibility/controls/TextScaleControl"
+import {
+  LineSpacingControl,
+  type LineSpacingControlContent,
+} from "@/components/accessibility/controls/LineSpacingControl"
+import {
+  LetterSpacingControl,
+  type LetterSpacingControlContent,
+} from "@/components/accessibility/controls/LetterSpacingControl"
 
 type AccessibilityPanelProps = {
   id: string
@@ -22,6 +30,8 @@ type AccessibilityPanelProps = {
   resetLabel: string
   textSectionTitle: string
   textScaleContent: TextScaleControlContent
+  lineSpacingContent: LineSpacingControlContent
+  letterSpacingContent: LetterSpacingControlContent
 }
 
 export function AccessibilityPanel({
@@ -31,8 +41,10 @@ export function AccessibilityPanel({
   resetLabel,
   textSectionTitle,
   textScaleContent,
+  lineSpacingContent,
+  letterSpacingContent,
 }: AccessibilityPanelProps) {
-   const { resetPreferences } = useAccessibility();
+  const { resetPreferences } = useAccessibility()
   return (
     <DrawerContent
       id={id}
@@ -66,6 +78,8 @@ export function AccessibilityPanel({
           </h3>
 
           <TextScaleControl content={textScaleContent} />
+          <LineSpacingControl content={lineSpacingContent} />
+          <LetterSpacingControl content={letterSpacingContent} />
 
           {/* Accessibility ResetButton  */}
           <div className="shrink-0 border-t border-border p-4">
