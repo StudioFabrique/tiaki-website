@@ -80,7 +80,7 @@ export function LetterSpacingControl({
 
               <span
                 className="
-                  flex min-h-20
+                  flex min-h-10
                   flex-col
                   items-center
                   justify-center
@@ -88,7 +88,7 @@ export function LetterSpacingControl({
                   rounded-xl
                   border border-border
                   bg-background
-                  px-3 py-3
+                  px-3 py-2
                   text-center
                   transition-colors
 
