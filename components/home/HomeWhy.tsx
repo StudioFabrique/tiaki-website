@@ -59,7 +59,7 @@ export function HomeWhy({
               >
                 <span
                   aria-hidden="true"
-                  className="font-heading text-sm font-semibold tracking-[0.08em] text-foreground/40"
+                  className="font-heading text-sm font-semibold tracking-[0.08em] text-muted-foreground"
                 >
                   {String(index + 1).padStart(2, "0")}
                 </span>

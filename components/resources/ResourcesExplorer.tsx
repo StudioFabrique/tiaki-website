@@ -518,7 +518,7 @@ export function ResourcesExplorer({
                     "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none",
                     country === "spain"
                       ? "border-foreground bg-foreground text-background"
-                      : "border-foreground/15 bg-background text-foreground hover:bg-muted"
+                      : "border-border bg-background text-foreground hover:bg-muted"
                   )}
                 >
                   🇪🇸 {content.countrySelector.spain}

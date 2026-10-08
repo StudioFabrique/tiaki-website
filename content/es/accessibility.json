@@ -6,6 +6,8 @@
   },
   "panel": {
     "title": "Opciones de accesibilidad",
+      "description": "Adapta la visualización a tus necesidades",
+
     "close": "Cerrar las opciones de accesibilidad",
     "reset": "Restablecer los ajustes",
     "sections": {

@@ -6,6 +6,7 @@
   },
   "panel": {
     "title": "Options d’accessibilité",
+      "description": "Adaptez l’affichage à vos besoins",
     "close": "Fermer les options d’accessibilité",
     "reset": "Réinitialiser les réglages",
     "sections": {
