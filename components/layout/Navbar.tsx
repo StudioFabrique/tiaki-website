@@ -204,7 +204,6 @@ export function Navbar({ locale, currentRoute }: NavbarProps) {
                               </span>
                             ) : (
                               <Link
-                                data-a11y-text-link
                                 href={getLocalizedPath(
                                   currentRoute,
                                   itemLocale
