@@ -446,9 +446,7 @@ export function ResourcesExplorer({
     })
   }
 
-  /* ---------------------------------------------------------
-     RESET FILTERS
-     --------------------------------------------------------- */
+  /* ----- RESET FILTERS----------- */
 
   function resetFilters() {
     setSearch("")
