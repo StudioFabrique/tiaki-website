@@ -60,6 +60,11 @@ type AccessibilityWidgetContent = {
           title: string
           description: string
         }
+
+        grayscale: {
+          title: string
+          description: string
+        }
       }
     }
   }
@@ -115,6 +120,7 @@ export function AccessibilityWidget({ content }: AccessibilityWidgetProps) {
         }
         visibilitySectionTitle={content.panel.sections.visibility.title}
         highContrastContent={content.panel.sections.visibility.highContrast}
+        grayscaleContent={content.panel.sections.visibility.grayscale}
       />
     </Drawer>
   )
