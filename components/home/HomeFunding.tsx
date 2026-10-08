@@ -33,6 +33,7 @@ export function HomeFunding({ locale }: HomeFundingProps) {
             <div className="flex min-h-[280px] items-center justify-center bg-muted/40 p-8 sm:p-10 lg:min-h-[420px] lg:p-14">
               <div className="relative h-[180px] w-full max-w-[460px] sm:h-[220px]">
                 <Image
+                data-a11y-grayscale-image
                   src="/images/logos/poctefa.png"
                   alt="POCTEFA - Interreg Espagne France Andorre"
                   fill
@@ -58,6 +59,7 @@ export function HomeFunding({ locale }: HomeFundingProps) {
                   >
                     <div className="relative h-[72px] w-full">
                       <Image
+                      data-a11y-grayscale-image
                         src={partner.logo}
                         alt={partner.name}
                         fill

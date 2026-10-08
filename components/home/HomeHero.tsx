@@ -41,6 +41,7 @@ export function HomeHero({ locale }: HomeHeroProps) {
             {/* Illustration */}
             <div className="relative order-1 min-h-[360px] overflow-hidden sm:min-h-[420px] lg:order-2 lg:min-h-0">
               <Image
+              data-a11y-grayscale-image
                 src="/images/photos/hero-caregiver.jpg"
                 alt="Une aidante accompagnant une personne au quotidien"
                 fill

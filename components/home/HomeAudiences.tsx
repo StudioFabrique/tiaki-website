@@ -93,6 +93,7 @@ export function HomeAudiences({
                   >
                     <div className="relative h-[280px] w-full sm:h-[320px] lg:h-[340px]">
                       <Image
+                      data-a11y-grayscale-image
                         src={style.image}
                         alt=""
                         fill

@@ -95,6 +95,7 @@ export function HomeWhy({
               "
             >
               <Image
+              data-a11y-grayscale-image
                 src="/images/photos/daily-support.jpg"
                 alt=""
                 fill

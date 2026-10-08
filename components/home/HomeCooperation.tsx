@@ -18,6 +18,7 @@ export function HomeCooperation({ locale }: HomeCooperationProps) {
         <div className="relative min-h-[620px] overflow-hidden rounded-[2rem] sm:min-h-[680px] lg:min-h-[720px]">
           {/* Full background image */}
           <Image
+           data-a11y-grayscale-image
             src="/images/photos/cooperation.jpg"
             alt="Des professionnels collaborant autour du projet T-IA-KI"
             fill

@@ -6,7 +6,7 @@
   },
   "panel": {
     "title": "Opciones de accesibilidad",
-      "description": "Adapta la visualización a tus necesidades",
+    "description": "Adapta la visualización a tus necesidades",
 
     "close": "Cerrar las opciones de accesibilidad",
     "reset": "Restablecer los ajustes",
@@ -41,13 +41,17 @@
           }
         }
       },
-       "visibility": {
-          "title": "Visibilidad",
-          "highContrast": {
-            "title": "Contraste reforzado",
-            "description": "Aumenta el contraste entre los textos, los fondos y los elementos interactivos."
-          }
+      "visibility": {
+        "title": "Visibilidad",
+        "highContrast": {
+          "title": "Contraste reforzado",
+          "description": "Aumenta el contraste entre los textos, los fondos y los elementos interactivos."
+        },
+        "grayscale": {
+          "title": "Escala de grises",
+          "description": "Muestra las imágenes en escala de grises para reducir las distracciones visuales."
         }
+      }
     }
   }
 }

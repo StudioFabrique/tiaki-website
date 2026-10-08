@@ -12,25 +12,34 @@ import {
 
 import { useAccessibility } from "./AccessibilityProvider"
 
+// TextScale
 import {
   TextScaleControl,
   type TextScaleControlContent,
 } from "@/components/accessibility/controls/TextScaleControl"
 
+// LineSpacing
 import {
   LineSpacingControl,
   type LineSpacingControlContent,
 } from "@/components/accessibility/controls/LineSpacingControl"
 
+// LetterSpacing
 import {
   LetterSpacingControl,
   type LetterSpacingControlContent,
 } from "@/components/accessibility/controls/LetterSpacingControl"
 
+// HighContrast
 import {
   HighContrastControl,
   type HighContrastControlContent,
 } from "@/components/accessibility/controls/HighContrastControl"
+// Graysacale
+import {
+  GrayscaleControl,
+  type GrayscaleControlContent,
+} from "@/components/accessibility/controls/GrayscaleControl"
 
 type AccessibilityPanelProps = {
   id: string
@@ -49,6 +58,8 @@ type AccessibilityPanelProps = {
   letterSpacingContent: LetterSpacingControlContent
   highContrastContent: HighContrastControlContent
 
+  grayscaleContent: GrayscaleControlContent
+
   accessibilityStatementLabel?: string
   accessibilityStatementHref?: string
 }
@@ -65,6 +76,7 @@ export function AccessibilityPanel({
   lineSpacingContent,
   letterSpacingContent,
   highContrastContent,
+  grayscaleContent,
   accessibilityStatementLabel,
   accessibilityStatementHref,
 }: AccessibilityPanelProps) {
@@ -186,7 +198,9 @@ export function AccessibilityPanel({
 
             <div className="space-y-3">
               <HighContrastControl content={highContrastContent} />
+              <GrayscaleControl content={grayscaleContent} />
             </div>
+            
           </section>
         </div>
       </div>
