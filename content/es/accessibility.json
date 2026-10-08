@@ -50,6 +50,10 @@
         "grayscale": {
           "title": "Escala de grises",
           "description": "Muestra las imágenes en escala de grises para reducir las distracciones visuales."
+        },
+        "underlineLinks": {
+          "title": "Subrayar enlaces",
+          "description": "Subraya los enlaces de texto para facilitar su identificación en las páginas."
         }
       }
     }

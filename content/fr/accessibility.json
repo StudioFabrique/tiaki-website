@@ -53,6 +53,10 @@
         "grayscale": {
           "title": "Niveaux de gris",
           "description": "Affiche les images en niveaux de gris pour réduire les distractions visuelles."
+        },
+        "underlineLinks": {
+          "title": "Souligner les liens",
+          "description": "Souligne les liens textuels pour faciliter leur identification dans les pages."
         }
       }
     }

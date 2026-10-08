@@ -35,6 +35,7 @@ export function Footer({ locale, currentRoute }: FooterProps) {
             {/* Brand */}
             <div>
               <Link
+              data-a11y-text-link
                 href={getLocalizedPath("home", locale)}
                 className="inline-block"
                 aria-label="T-IA-KI"
@@ -72,6 +73,7 @@ export function Footer({ locale, currentRoute }: FooterProps) {
               <nav className="mt-6 flex flex-col items-start gap-4">
                 {navigationRoutes.map((route) => (
                   <Link
+                  data-a11y-text-link
                     key={route}
                     href={getLocalizedPath(route, locale)}
                     data-a11y-dark-secondary
@@ -94,6 +96,7 @@ export function Footer({ locale, currentRoute }: FooterProps) {
 
               <div className="mt-6 flex flex-col items-start gap-4">
                 <Link
+                data-a11y-text-link
                   href={getLocalizedPath("platform", locale)}
                   data-a11y-dark-secondary
                   className="font-heading text-base font-medium text-white/75 transition-colors hover:text-white"
@@ -102,6 +105,7 @@ export function Footer({ locale, currentRoute }: FooterProps) {
                 </Link>
 
                 <Link
+                data-a11y-text-link
                   href={getLocalizedPath("about", locale)}
                   data-a11y-dark-secondary
                   className="font-heading text-base font-medium text-white/75 transition-colors hover:text-white"
@@ -110,6 +114,7 @@ export function Footer({ locale, currentRoute }: FooterProps) {
                 </Link>
 
                 <Link
+                data-a11y-text-link
                   href={getLocalizedPath("contact", locale)}
                   data-a11y-dark-secondary
                   className="font-heading text-base font-medium text-white/75 transition-colors hover:text-white"
@@ -168,6 +173,7 @@ export function Footer({ locale, currentRoute }: FooterProps) {
                         </span>
                       ) : (
                         <Link
+                        data-a11y-text-link
                           href={getLocalizedPath(currentRoute, itemLocale)}
                           data-a11y-dark-secondary
                           className="flex h-9 min-w-10 items-center justify-center rounded-full px-3 font-heading text-xs font-semibold text-white/55 transition-colors hover:bg-white/10 hover:text-white focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none"

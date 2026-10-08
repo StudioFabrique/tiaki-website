@@ -375,3 +375,21 @@ html[data-a11y-high-contrast][data-a11y-grayscale]
   [data-a11y-image-overlay] {
   background-color: transparent;
 }
+
+
+/* =========================================
+   Accessibility — Underline links
+   ========================================= */
+
+html[data-a11y-underline-links] a[data-a11y-text-link] {
+  text-decoration-line: underline;
+  text-decoration-thickness: 0.09em;
+  text-underline-offset: 0.2em;
+  text-decoration-skip-ink: auto;
+}
+html[data-a11y-underline-links] a[data-a11y-text-link] {
+  text-decoration-line: underline;
+  text-decoration-thickness: 0.09em;
+  text-underline-offset: 0.2em;
+  text-decoration-skip-ink: auto;
+}
