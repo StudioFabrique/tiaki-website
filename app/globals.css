@@ -393,3 +393,72 @@ html[data-a11y-underline-links] a[data-a11y-text-link] {
   text-underline-offset: 0.2em;
   text-decoration-skip-ink: auto;
 }
+
+
+/* =========================================
+   Accessibility — Enhanced Focus
+   ========================================= */
+
+html[data-a11y-enhanced-focus] {
+  --a11y-focus-color: var(--foreground);
+  --a11y-focus-halo: var(--background);
+}
+
+/* Main focus indicator */
+html[data-a11y-enhanced-focus]
+  :is(
+    a[href],
+    button,
+    input:not([type="hidden"]),
+    textarea,
+    select,
+    summary,
+    [role="button"],
+    [role="checkbox"],
+    [role="switch"],
+    [role="combobox"],
+    [tabindex]:not([tabindex="-1"])
+  ):focus-visible {
+  outline: 3px solid var(--a11y-focus-color);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 2px var(--a11y-focus-halo);
+}
+
+/* Focus on dark surfaces */
+html[data-a11y-enhanced-focus]
+  [data-a11y-dark-surface] {
+  --a11y-focus-color: #ffffff;
+  --a11y-focus-halo: #000000;
+}
+
+/* Focus inside clipped containers */
+html[data-a11y-enhanced-focus]
+  [data-a11y-focus-inset]:focus-visible {
+  outline-offset: -5px;
+  box-shadow: inset 0 0 0 2px var(--a11y-focus-halo);
+}
+
+
+/* =========================================
+   Accessibility — Enhanced Focus on switches
+   ========================================= */
+
+html[data-a11y-enhanced-focus]
+  input[type="checkbox"].peer.sr-only:focus-visible
+  + span[aria-hidden="true"] {
+  outline: 3px solid var(--a11y-focus-color);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 2px var(--a11y-focus-halo);
+}
+
+
+/* =========================================
+   Accessibility — Enhanced Focus on radio options
+   ========================================= */
+
+html[data-a11y-enhanced-focus]
+  input[type="radio"].peer.sr-only:focus-visible + span {
+  outline: 3px solid var(--a11y-focus-color);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 2px var(--a11y-focus-halo);
+}

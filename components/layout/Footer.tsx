@@ -35,7 +35,7 @@ export function Footer({ locale, currentRoute }: FooterProps) {
             {/* Brand */}
             <div>
               <Link
-              data-a11y-text-link
+          
                 href={getLocalizedPath("home", locale)}
                 className="inline-block"
                 aria-label="T-IA-KI"
@@ -173,7 +173,7 @@ export function Footer({ locale, currentRoute }: FooterProps) {
                         </span>
                       ) : (
                         <Link
-                        data-a11y-text-link
+                     
                           href={getLocalizedPath(currentRoute, itemLocale)}
                           data-a11y-dark-secondary
                           className="flex h-9 min-w-10 items-center justify-center rounded-full px-3 font-heading text-xs font-semibold text-white/55 transition-colors hover:bg-white/10 hover:text-white focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none"

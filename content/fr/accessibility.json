@@ -57,6 +57,10 @@
         "underlineLinks": {
           "title": "Souligner les liens",
           "description": "Souligne les liens textuels pour faciliter leur identification dans les pages."
+        },
+        "enhancedFocus": {
+          "title": "Focus renforcé",
+          "description": "Rend plus visible l’élément sélectionné lors de la navigation au clavier."
         }
       }
     }

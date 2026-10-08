@@ -27,7 +27,7 @@ export function HomeHero({ locale }: HomeHeroProps) {
 
                 <div className="mt-8">
                   <Link
-                  data-a11y-text-link
+                
                     href="#pourquoi"
                     className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-foreground px-7 font-heading text-sm font-semibold text-background transition-transform duration-200 hover:-translate-y-0.5"
                   >

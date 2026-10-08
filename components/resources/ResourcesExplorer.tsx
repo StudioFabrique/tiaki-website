@@ -153,6 +153,10 @@ export function ResourcesExplorer({
      --------------------------------------------------------- */
 
   const content = getResourcesUI(locale)
+  const beneficiarySelectItems = beneficiaries.map((beneficiary) => ({
+    value: beneficiary,
+    label: content.beneficiaries[beneficiary],
+  }))
 
   /* ---------------------------------------------------------
      NEXT.JS ROUTER
@@ -561,7 +565,6 @@ export function ResourcesExplorer({
                       <SelectContent>
                         {/* Entire country */}
                         <SelectGroup>
-                         
                           <SelectItem value={ALL_TERRITORIES}>
                             {content.territory.all[country]}
                           </SelectItem>
@@ -759,6 +762,7 @@ export function ResourcesExplorer({
                     </label>
 
                     <Select
+                      items={beneficiarySelectItems}
                       value={selectedBeneficiary}
                       onValueChange={(value) =>
                         setSelectedBeneficiary(

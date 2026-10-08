@@ -70,6 +70,10 @@ type AccessibilityWidgetContent = {
           title: string
           description: string
         }
+        enhancedFocus: {
+          title: string
+          description: string
+        }
       }
     }
   }
@@ -127,6 +131,7 @@ export function AccessibilityWidget({ content }: AccessibilityWidgetProps) {
         highContrastContent={content.panel.sections.visibility.highContrast}
         grayscaleContent={content.panel.sections.visibility.grayscale}
         underlineLinksContent={content.panel.sections.visibility.underlineLinks}
+        enhancedFocusContent={content.panel.sections.visibility.enhancedFocus}
       />
     </Drawer>
   )

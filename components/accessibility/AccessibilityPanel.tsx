@@ -47,6 +47,12 @@ import {
   type UnderlineLinksControlContent,
 } from "@/components/accessibility/controls/UnderlineLinksControl"
 
+// Enhanced Focus
+import {
+  EnhancedFocusControl,
+  type EnhancedFocusControlContent,
+} from "@/components/accessibility/controls/EnhancedFocusControl"
+
 type AccessibilityPanelProps = {
   id: string
 
@@ -62,10 +68,11 @@ type AccessibilityPanelProps = {
   textScaleContent: TextScaleControlContent
   lineSpacingContent: LineSpacingControlContent
   letterSpacingContent: LetterSpacingControlContent
+
   highContrastContent: HighContrastControlContent
   underlineLinksContent: UnderlineLinksControlContent
-
   grayscaleContent: GrayscaleControlContent
+  enhancedFocusContent: EnhancedFocusControlContent
 
   accessibilityStatementLabel?: string
   accessibilityStatementHref?: string
@@ -85,6 +92,7 @@ export function AccessibilityPanel({
   highContrastContent,
   grayscaleContent,
   underlineLinksContent,
+  enhancedFocusContent,
   accessibilityStatementLabel,
   accessibilityStatementHref,
 }: AccessibilityPanelProps) {
@@ -172,6 +180,7 @@ export function AccessibilityPanel({
               <HighContrastControl content={highContrastContent} />
               <GrayscaleControl content={grayscaleContent} />
               <UnderlineLinksControl content={underlineLinksContent} />
+              <EnhancedFocusControl content={enhancedFocusContent} />
             </div>
           </section>
         </div>

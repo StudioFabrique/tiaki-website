@@ -54,7 +54,11 @@
         "underlineLinks": {
           "title": "Subrayar enlaces",
           "description": "Subraya los enlaces de texto para facilitar su identificación en las páginas."
-        }
+        },
+        "enhancedFocus": {
+  "title": "Foco reforzado",
+  "description": "Hace más visible el elemento seleccionado al navegar con el teclado."
+}
       }
     }
   }
