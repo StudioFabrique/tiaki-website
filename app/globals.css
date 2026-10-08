@@ -342,3 +342,54 @@ html[data-a11y-high-contrast]
   [data-a11y-dark-border] {
   border-color: rgb(255 255 255 / 70%);
 }
+
+/* =========================================
+   Accessibility — image surfaces
+   ========================================= */
+
+html[data-a11y-high-contrast] [data-a11y-image-overlay] {
+  background-color: rgb(0 0 0 / 68%);
+}
+
+html[data-a11y-high-contrast] [data-a11y-image-card] {
+  background-color: rgb(0 0 0 / 65%);
+  border-color: rgb(255 255 255 / 70%);
+}
+
+html[data-a11y-high-contrast] [data-a11y-image-secondary-text] {
+  color: rgb(255 255 255);
+}
+
+/* =========================================
+   Accessibility — Grayscale
+   ========================================= */
+html[data-a11y-grayscale] [data-a11y-grayscale-image] {
+  filter: grayscale(100%);
+}
+
+html[data-a11y-grayscale] [data-a11y-image-overlay] {
+  background-color: transparent;
+}
+
+html[data-a11y-high-contrast][data-a11y-grayscale]
+  [data-a11y-image-overlay] {
+  background-color: transparent;
+}
+
+
+/* =========================================
+   Accessibility — Underline links
+   ========================================= */
+
+html[data-a11y-underline-links] a[data-a11y-text-link] {
+  text-decoration-line: underline;
+  text-decoration-thickness: 0.09em;
+  text-underline-offset: 0.2em;
+  text-decoration-skip-ink: auto;
+}
+html[data-a11y-underline-links] a[data-a11y-text-link] {
+  text-decoration-line: underline;
+  text-decoration-thickness: 0.09em;
+  text-underline-offset: 0.2em;
+  text-decoration-skip-ink: auto;
+}

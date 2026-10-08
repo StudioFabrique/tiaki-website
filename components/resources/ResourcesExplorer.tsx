@@ -561,6 +561,7 @@ export function ResourcesExplorer({
                       <SelectContent>
                         {/* Entire country */}
                         <SelectGroup>
+                         
                           <SelectItem value={ALL_TERRITORIES}>
                             {content.territory.all[country]}
                           </SelectItem>

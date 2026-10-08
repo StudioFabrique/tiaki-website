@@ -35,6 +35,7 @@ export function ResourcesHero({
             <div className="flex min-h-[30px] items-center justify-center px-8 pb-8 sm:min-h-[30px] sm:px-10 lg:min-h-0 lg:p-12">
               <div className="relative h-[200px] w-full sm:h-[200px] lg:h-[240px]">
                 <Image
+                data-a11y-grayscale-image
                   src="/images/pictos/picto-2.png"
                   alt=""
                   fill

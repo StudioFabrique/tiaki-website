@@ -31,6 +31,7 @@ export function HomeFinalCta({ locale }: HomeFinalCtaProps) {
 
                 <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
                   <Link
+                  data-a11y-text-link
                     href={getLocalizedPath("platform", locale)}
                     className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-tiaki-blue-foreground px-7 font-heading text-sm font-semibold text-tiaki-blue transition-transform duration-200 hover:-translate-y-0.5"
                   >
@@ -40,6 +41,7 @@ export function HomeFinalCta({ locale }: HomeFinalCtaProps) {
                   </Link>
 
                   <Link
+                  data-a11y-text-link
                     href={getLocalizedPath("contact", locale)}
                     className="inline-flex h-12 items-center justify-center rounded-full border border-tiaki-blue-foreground px-7 font-heading text-sm font-semibold text-tiaki-blue-foreground transition-colors hover:bg-tiaki-blue-foreground/10"
                   >
@@ -53,6 +55,7 @@ export function HomeFinalCta({ locale }: HomeFinalCtaProps) {
             <div className="order-1 flex min-h-[340px] items-center justify-center p-8 sm:min-h-[400px] sm:p-10 lg:order-2 lg:min-h-0 lg:p-14">
               <div className="relative h-[280px] w-full sm:h-[320px] lg:h-[380px]">
                 <Image
+                data-a11y-grayscale-image
                   src="/images/pictos/picto-10-orange.png"
                   alt=""
                   fill

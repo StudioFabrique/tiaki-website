@@ -6,7 +6,7 @@
   },
   "panel": {
     "title": "Options d’accessibilité",
-      "description": "Adaptez l’affichage à vos besoins",
+    "description": "Adaptez l’affichage à vos besoins",
     "close": "Fermer les options d’accessibilité",
     "reset": "Réinitialiser les réglages",
     "sections": {
@@ -49,6 +49,14 @@
         "highContrast": {
           "title": "Contraste renforcé",
           "description": "Augmente le contraste entre les textes, les fonds et les éléments interactifs."
+        },
+        "grayscale": {
+          "title": "Niveaux de gris",
+          "description": "Affiche les images en niveaux de gris pour réduire les distractions visuelles."
+        },
+        "underlineLinks": {
+          "title": "Souligner les liens",
+          "description": "Souligne les liens textuels pour faciliter leur identification dans les pages."
         }
       }
     }

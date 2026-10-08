@@ -27,6 +27,7 @@ export function HomeHero({ locale }: HomeHeroProps) {
 
                 <div className="mt-8">
                   <Link
+                  data-a11y-text-link
                     href="#pourquoi"
                     className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-foreground px-7 font-heading text-sm font-semibold text-background transition-transform duration-200 hover:-translate-y-0.5"
                   >
@@ -41,6 +42,7 @@ export function HomeHero({ locale }: HomeHeroProps) {
             {/* Illustration */}
             <div className="relative order-1 min-h-[360px] overflow-hidden sm:min-h-[420px] lg:order-2 lg:min-h-0">
               <Image
+              data-a11y-grayscale-image
                 src="/images/photos/hero-caregiver.jpg"
                 alt="Une aidante accompagnant une personne au quotidien"
                 fill

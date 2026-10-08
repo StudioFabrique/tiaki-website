@@ -77,8 +77,9 @@ export function HomeFeatures({
 
                 {/* Illustration */}
                 <div className="mt-auto h-[280px] px-8 pb-8 sm:h-[300px] sm:px-10">
-                  <div className="relative h-full w-full">
+                  <div className="relative h-full w-full" >
                     <Image
+                    data-a11y-grayscale-image
                       src={style.image}
                       alt=""
                       fill
