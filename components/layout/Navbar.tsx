@@ -1,5 +1,5 @@
-import Link from "next/link"
 import Image from "next/image"
+import Link from "next/link"
 import { Menu } from "lucide-react"
 
 import { Container } from "@/components/layout/Container"
@@ -24,7 +24,17 @@ type NavbarProps = {
   currentRoute: RouteKey
 }
 
-const navigationRoutes: RouteKey[] = ["home", "platform","resources", "about", "contact"]
+const navigationRoutes: RouteKey[] = [
+  "home",
+  "platform",
+  "resources",
+  "about",
+  "contact",
+]
+const navigationLocales: SiteLocale[] = [
+  "fr",
+  "es",
+];
 
 export function Navbar({ locale, currentRoute }: NavbarProps) {
   const content = getNavigationContent(locale)
@@ -62,11 +72,12 @@ export function Navbar({ locale, currentRoute }: NavbarProps) {
                 <Link
                   key={route}
                   href={getLocalizedPath(route, locale)}
+                  aria-current={isActive ? "page" : undefined}
                   className={cn(
                     "font-heading text-sm font-medium transition-colors",
                     isActive
                       ? "text-foreground"
-                      : "text-foreground/60 hover:text-foreground"
+                      : "text-muted-foreground hover:text-foreground"
                   )}
                 >
                   {content[route]}
@@ -79,7 +90,7 @@ export function Navbar({ locale, currentRoute }: NavbarProps) {
           <div className="hidden items-center gap-4 lg:flex">
             <Link
               href={languageHref}
-              className="font-heading text-sm font-medium text-foreground/60 transition-colors hover:text-foreground"
+              className="font-heading text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
             >
               {otherLocale.toUpperCase()}
             </Link>
@@ -135,21 +146,23 @@ export function Navbar({ locale, currentRoute }: NavbarProps) {
                       <Link
                         key={route}
                         href={getLocalizedPath(route, locale)}
+                        aria-current={isActive ? "page" : undefined}
                         className={cn(
                           "flex min-h-14 items-center justify-between rounded-2xl px-4 py-3 font-heading text-lg font-semibold transition-colors",
                           isActive
                             ? "bg-tiaki-blue/30 text-foreground"
-                            : "text-foreground/65 hover:bg-muted hover:text-foreground"
+                            : "text-muted-foreground hover:bg-muted hover:text-foreground"
                         )}
                       >
                         <span>{content[route]}</span>
 
                         <span
+                          aria-hidden="true"
                           className={cn(
                             "font-heading text-xs font-semibold",
                             isActive
-                              ? "text-foreground/45"
-                              : "text-foreground/25"
+                              ? "text-foreground"
+                              : "text-muted-foreground"
                           )}
                         >
                           {String(index + 1).padStart(2, "0")}
@@ -163,21 +176,50 @@ export function Navbar({ locale, currentRoute }: NavbarProps) {
                 <div className="mt-auto border-t p-4">
                   {/* Language */}
                   <div className="mb-4 flex items-center justify-between rounded-2xl bg-muted/60 px-4 py-3">
-                    <span className="font-heading text-sm font-medium text-foreground/50">
+                    <span className="font-heading text-sm font-medium text-muted-foreground">
                       {locale === "fr" ? "Langue" : "Idioma"}
                     </span>
+                    {/* Change langauges - active language - other language */}
 
                     <div className="flex items-center gap-2">
-                      <span className="flex h-9 min-w-10 items-center justify-center rounded-full bg-foreground px-3 font-heading text-xs font-semibold text-background">
-                        {locale.toUpperCase()}
-                      </span>
+                      {navigationLocales.map((itemLocale, index) => {
+                        const isActive = locale === itemLocale
 
-                      <Link
-                        href={languageHref}
-                        className="flex h-9 min-w-10 items-center justify-center rounded-full px-3 font-heading text-xs font-semibold text-foreground/50 transition-colors hover:bg-background hover:text-foreground"
-                      >
-                        {otherLocale.toUpperCase()}
-                      </Link>
+                        return (
+                          <div
+                            key={itemLocale}
+                            className="flex items-center gap-2"
+                          >
+                            {isActive ? (
+                              <span
+                                aria-current="true"
+                                className="flex h-9 min-w-10 items-center justify-center rounded-full bg-foreground px-3 font-heading text-xs font-semibold text-background"
+                              >
+                                {itemLocale.toUpperCase()}
+                              </span>
+                            ) : (
+                              <Link
+                                href={getLocalizedPath(
+                                  currentRoute,
+                                  itemLocale
+                                )}
+                                className="flex h-9 min-w-10 items-center justify-center rounded-full px-3 font-heading text-xs font-semibold text-muted-foreground transition-colors hover:bg-background hover:text-foreground"
+                              >
+                                {itemLocale.toUpperCase()}
+                              </Link>
+                            )}
+
+                            {index < navigationLocales.length - 1 && (
+                              <span
+                                aria-hidden="true"
+                                className="text-muted-foreground"
+                              >
+                                /
+                              </span>
+                            )}
+                          </div>
+                        )
+                      })}
                     </div>
                   </div>
 

@@ -6,11 +6,13 @@
   },
   "panel": {
     "title": "Options d’accessibilité",
+      "description": "Adaptez l’affichage à vos besoins",
     "close": "Fermer les options d’accessibilité",
     "reset": "Réinitialiser les réglages",
     "sections": {
       "textAndReading": {
         "title": "Texte et lecture",
+
         "textScale": {
           "title": "Taille du texte",
           "description": "Choisissez la taille qui vous convient.",
@@ -21,6 +23,7 @@
             "larger": "Très grand"
           }
         },
+
         "lineSpacing": {
           "title": "Interligne",
           "description": "Ajustez l’espace entre les lignes de texte.",
@@ -30,6 +33,7 @@
             "wide": "Large"
           }
         },
+
         "letterSpacing": {
           "title": "Espacement des lettres",
           "description": "Ajustez l’espace entre les caractères.",
@@ -37,6 +41,14 @@
             "default": "Normal",
             "wide": "Large"
           }
+        }
+      },
+
+      "visibility": {
+        "title": "Visibilité",
+        "highContrast": {
+          "title": "Contraste renforcé",
+          "description": "Augmente le contraste entre les textes, les fonds et les éléments interactifs."
         }
       }
     }

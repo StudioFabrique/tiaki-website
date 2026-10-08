@@ -1,5 +1,8 @@
 "use client"
 
+import Link from "next/link"
+import { RotateCcw } from "lucide-react"
+
 import {
   DrawerClose,
   DrawerContent,
@@ -7,93 +10,247 @@ import {
   DrawerTitle,
 } from "@/components/ui/drawer"
 
-import { RotateCcw } from "lucide-react"
 import { useAccessibility } from "./AccessibilityProvider"
 
 import {
   TextScaleControl,
   type TextScaleControlContent,
 } from "@/components/accessibility/controls/TextScaleControl"
+
 import {
   LineSpacingControl,
   type LineSpacingControlContent,
 } from "@/components/accessibility/controls/LineSpacingControl"
+
 import {
   LetterSpacingControl,
   type LetterSpacingControlContent,
 } from "@/components/accessibility/controls/LetterSpacingControl"
 
+import {
+  HighContrastControl,
+  type HighContrastControlContent,
+} from "@/components/accessibility/controls/HighContrastControl"
+
 type AccessibilityPanelProps = {
   id: string
+
   title: string
+  description: string
+
   closeLabel: string
   resetLabel: string
+
   textSectionTitle: string
+  visibilitySectionTitle: string
+
   textScaleContent: TextScaleControlContent
   lineSpacingContent: LineSpacingControlContent
   letterSpacingContent: LetterSpacingControlContent
+  highContrastContent: HighContrastControlContent
+
+  accessibilityStatementLabel?: string
+  accessibilityStatementHref?: string
 }
 
 export function AccessibilityPanel({
   id,
   title,
+  description,
   closeLabel,
   resetLabel,
   textSectionTitle,
+  visibilitySectionTitle,
   textScaleContent,
   lineSpacingContent,
   letterSpacingContent,
+  highContrastContent,
+  accessibilityStatementLabel,
+  accessibilityStatementHref,
 }: AccessibilityPanelProps) {
   const { resetPreferences } = useAccessibility()
+
   return (
     <DrawerContent
       id={id}
-      className="rounded-xl border [--drawer-height:75dvh] [--drawer-inset:8px] after:hidden sm:[--drawer-content-width:24rem] sm:[--drawer-height:auto] sm:[--drawer-inset:24px]"
+      className="
+        overflow-hidden
+        rounded-xl
+        border
+        [--drawer-height:75dvh]
+        [--drawer-inset:8px]
+        after:hidden
+        sm:[--drawer-content-width:24rem]
+        sm:[--drawer-height:auto]
+        sm:[--drawer-inset:24px]
+      "
     >
-      <DrawerHeader className="flex-row items-center justify-between gap-4">
-        <DrawerTitle>{title}</DrawerTitle>
+      {/* =====================================================
+          HEADER
+         ===================================================== */}
 
-        <DrawerClose
-          render={
-            <button
-              type="button"
-              aria-label={closeLabel}
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md border border-border text-lg hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none"
-            >
-              <span aria-hidden="true">×</span>
-            </button>
-          }
-        />
-      </DrawerHeader>
-      <div className="min-h-0 flex-1 overflow-y-auto p-4">
-        <section
-          aria-labelledby={`${id}-text-reading-title`}
-          className="space-y-3"
-        >
-          <h3
-            id={`${id}-text-reading-title`}
-            className="px-1 text-xs font-semibold tracking-[0.14em] text-muted-foreground uppercase"
-          >
-            {textSectionTitle}
-          </h3>
+      <DrawerHeader className="shrink-0 border-b border-border p-4 sm:p-5">
+        <div className="flex items-start justify-between gap-4">
+          <div className="min-w-0">
+            <DrawerTitle className="font-heading text-lg font-semibold text-foreground">
+              {title}
+            </DrawerTitle>
 
-          <TextScaleControl content={textScaleContent} />
-          <LineSpacingControl content={lineSpacingContent} />
-          <LetterSpacingControl content={letterSpacingContent} />
-
-          {/* Accessibility ResetButton  */}
-          <div className="shrink-0 border-t border-border p-4">
-            <button
-              type="button"
-              onClick={resetPreferences}
-              className="flex min-h-12 w-full items-center gap-3 rounded-2xl border border-border bg-muted/30 px-4 py-3 text-left font-heading text-sm font-semibold transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none"
-            >
-              <RotateCcw aria-hidden="true" className="size-4 shrink-0" />
-
-              <span>{resetLabel}</span>
-            </button>
+            <p className="text-sm leading-6 text-muted-foreground">
+              {description}
+            </p>
           </div>
-        </section>
+
+          <DrawerClose
+            render={
+              <button
+                type="button"
+                aria-label={closeLabel}
+                className="
+                  flex size-11 shrink-0 items-center justify-center
+                  rounded-xl border border-border
+                  text-lg text-foreground
+                  transition-colors
+                  hover:bg-muted
+                  focus-visible:outline-none
+                  focus-visible:ring-2
+                  focus-visible:ring-ring
+                  focus-visible:ring-offset-2
+                "
+              >
+                <span aria-hidden="true">×</span>
+              </button>
+            }
+          />
+        </div>
+      </DrawerHeader>
+
+      {/* =====================================================
+          SCROLLABLE CONTENT
+         ===================================================== */}
+
+      <div className="min-h-0 flex-1 overflow-y-auto">
+        <div className="space-y-8 p-4 sm:p-5">
+          {/* =================================================
+              TEXTE ET LECTURE
+             ================================================= */}
+
+          <section
+            aria-labelledby={`${id}-text-reading-title`}
+            className="space-y-3"
+          >
+            <h3
+              id={`${id}-text-reading-title`}
+              className="
+                px-1
+                text-xs
+                font-semibold
+                tracking-[0.14em]
+                text-muted-foreground
+                uppercase
+              "
+            >
+              {textSectionTitle}
+            </h3>
+
+            <div className="space-y-3">
+              <TextScaleControl content={textScaleContent} />
+
+              <LineSpacingControl content={lineSpacingContent} />
+
+              <LetterSpacingControl content={letterSpacingContent} />
+            </div>
+          </section>
+
+          {/* =================================================
+              VISIBILITÉ
+             ================================================= */}
+
+          <section
+            aria-labelledby={`${id}-visibility-title`}
+            className="space-y-3"
+          >
+            <h3
+              id={`${id}-visibility-title`}
+              className="
+                px-1
+                text-xs
+                font-semibold
+                tracking-[0.14em]
+                text-muted-foreground
+                uppercase
+              "
+            >
+              {visibilitySectionTitle}
+            </h3>
+
+            <div className="space-y-3">
+              <HighContrastControl content={highContrastContent} />
+            </div>
+          </section>
+        </div>
+      </div>
+
+      {/* =====================================================
+          FOOTER
+         ===================================================== */}
+
+      <div className="shrink-0 border-t border-border bg-background p-4 sm:p-5">
+        <div className="space-y-2">
+          <button
+            type="button"
+            onClick={resetPreferences}
+            className="
+              flex min-h-12 w-full items-center gap-3
+              rounded-2xl
+              border border-border
+              bg-muted/30
+              px-4 py-3
+              text-left
+              font-heading
+              text-sm
+              font-semibold
+              text-foreground
+              transition-colors
+              hover:bg-muted
+              focus-visible:outline-none
+              focus-visible:ring-2
+              focus-visible:ring-ring
+              focus-visible:ring-offset-2
+            "
+          >
+            <RotateCcw
+              aria-hidden="true"
+              className="size-4 shrink-0"
+            />
+
+            <span>{resetLabel}</span>
+          </button>
+
+          {accessibilityStatementLabel &&
+            accessibilityStatementHref && (
+              <Link
+                href={accessibilityStatementHref}
+                className="
+                  flex min-h-10 items-center
+                  rounded-xl
+                  px-4
+                  font-heading
+                  text-sm
+                  font-medium
+                  text-muted-foreground
+                  transition-colors
+                  hover:bg-muted
+                  hover:text-foreground
+                  focus-visible:outline-none
+                  focus-visible:ring-2
+                  focus-visible:ring-ring
+                "
+              >
+                {accessibilityStatementLabel}
+              </Link>
+            )}
+        </div>
       </div>
     </DrawerContent>
   )

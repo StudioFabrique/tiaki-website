@@ -1,18 +1,16 @@
-import Image from "next/image";
-import { Check } from "lucide-react";
+import Image from "next/image"
+import { Check } from "lucide-react"
 
-import { Container } from "@/components/layout/Container";
-import { getHomeContent } from "@/lib/content/home";
-import type { SiteLocale } from "@/lib/i18n/config";
+import { Container } from "@/components/layout/Container"
+import { getHomeContent } from "@/lib/content/home"
+import type { SiteLocale } from "@/lib/i18n/config"
 
 type HomeCooperationProps = {
-  locale: SiteLocale;
-};
+  locale: SiteLocale
+}
 
-export function HomeCooperation({
-  locale,
-}: HomeCooperationProps) {
-  const { cooperation } = getHomeContent(locale);
+export function HomeCooperation({ locale }: HomeCooperationProps) {
+  const { cooperation } = getHomeContent(locale)
 
   return (
     <section className="py-2 sm:py-2 lg:py-12">
@@ -28,17 +26,23 @@ export function HomeCooperation({
           />
 
           {/* Dark overlay */}
-          <div className="absolute inset-0 bg-black/40" />
+          <div
+            data-a11y-image-overlay
+            className="absolute inset-0 bg-black/40"
+          />
 
           {/* Content */}
           <div className="relative z-10 flex min-h-[620px] flex-col justify-between p-7 sm:min-h-[680px] sm:p-10 lg:min-h-[720px] lg:p-14">
             {/* Heading */}
             <div className="max-w-4xl">
-              <h2 className="font-heading text-4xl font-bold leading-[0.98] tracking-[-0.045em] text-white sm:text-5xl lg:text-6xl">
+              <h2 className="font-heading text-4xl leading-[0.98] font-bold tracking-[-0.045em] text-white sm:text-5xl lg:text-6xl">
                 {cooperation.title}
               </h2>
 
-              <p className="mt-6 max-w-3xl text-base leading-7 text-white/85 sm:text-lg sm:leading-8">
+              <p
+                data-a11y-image-secondary-text
+                className="mt-6 max-w-3xl text-base leading-7 text-white/85 sm:text-lg sm:leading-8"
+              >
                 {cooperation.description}
               </p>
             </div>
@@ -48,13 +52,14 @@ export function HomeCooperation({
               {cooperation.items.map((item) => (
                 <div
                   key={item}
-                  className="flex min-h-[90px] items-center gap-4 rounded-[1.5rem] border border-white/20 bg-black/20 p-5 backdrop-blur-sm sm:p-6"
+                  data-a11y-image-card
+                  className="flex min-h-[90px] items-center gap-4 rounded-[1.5rem] border border-white/20 bg-black/20 p-5 backdrop-blur-sm transition-colors sm:p-6"
                 >
-                  <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-tiaki-orange">
-                    <Check className="size-4 text-white" />
+                  <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-tiaki-orange text-tiaki-orange-foreground">
+                    <Check className="size-4" />
                   </div>
 
-                  <p className="font-heading text-base font-semibold leading-6 text-white sm:text-lg">
+                  <p className="font-heading text-base leading-6 font-semibold text-white sm:text-lg">
                     {item}
                   </p>
                 </div>
@@ -64,5 +69,5 @@ export function HomeCooperation({
         </div>
       </Container>
     </section>
-  );
+  )
 }

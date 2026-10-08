@@ -26,7 +26,8 @@
       "title": "Organizar mejor el día a día",
       "description": "Facilitar el seguimiento, las actividades, las citas y los distintos elementos relacionados con los cuidados."
     }
-  ]
+  ],
+    "aboutCta": "Descubrir el proyecto T-IA-KI"
 },
 "features": {
   "title": "Un mismo espacio para acompañar mejor en el día a día.",
@@ -158,5 +159,6 @@
   "description": "Descubre cómo T-IA-KI reúne recursos, herramientas y actores para facilitar el día a día de las personas cuidadoras.",
   "primaryCta": "Descubrir la plataforma",
   "secondaryCta": "Contactarnos"
+
 }
 }
