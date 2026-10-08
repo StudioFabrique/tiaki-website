@@ -41,6 +41,12 @@ import {
   type GrayscaleControlContent,
 } from "@/components/accessibility/controls/GrayscaleControl"
 
+// Underline links
+import {
+  UnderlineLinksControl,
+  type UnderlineLinksControlContent,
+} from "@/components/accessibility/controls/UnderlineLinksControl"
+
 type AccessibilityPanelProps = {
   id: string
 
@@ -57,6 +63,7 @@ type AccessibilityPanelProps = {
   lineSpacingContent: LineSpacingControlContent
   letterSpacingContent: LetterSpacingControlContent
   highContrastContent: HighContrastControlContent
+  underlineLinksContent: UnderlineLinksControlContent
 
   grayscaleContent: GrayscaleControlContent
 
@@ -77,6 +84,7 @@ export function AccessibilityPanel({
   letterSpacingContent,
   highContrastContent,
   grayscaleContent,
+  underlineLinksContent,
   accessibilityStatementLabel,
   accessibilityStatementHref,
 }: AccessibilityPanelProps) {
@@ -85,17 +93,7 @@ export function AccessibilityPanel({
   return (
     <DrawerContent
       id={id}
-      className="
-        overflow-hidden
-        rounded-xl
-        border
-        [--drawer-height:75dvh]
-        [--drawer-inset:8px]
-        after:hidden
-        sm:[--drawer-content-width:24rem]
-        sm:[--drawer-height:auto]
-        sm:[--drawer-inset:24px]
-      "
+      className="overflow-hidden rounded-xl border [--drawer-height:75dvh] [--drawer-inset:8px] after:hidden sm:[--drawer-content-width:24rem] sm:[--drawer-height:auto] sm:[--drawer-inset:24px]"
     >
       {/* =====================================================
           HEADER
@@ -118,17 +116,7 @@ export function AccessibilityPanel({
               <button
                 type="button"
                 aria-label={closeLabel}
-                className="
-                  flex size-11 shrink-0 items-center justify-center
-                  rounded-xl border border-border
-                  text-lg text-foreground
-                  transition-colors
-                  hover:bg-muted
-                  focus-visible:outline-none
-                  focus-visible:ring-2
-                  focus-visible:ring-ring
-                  focus-visible:ring-offset-2
-                "
+                className="flex size-11 shrink-0 items-center justify-center rounded-xl border border-border text-lg text-foreground transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none"
               >
                 <span aria-hidden="true">×</span>
               </button>
@@ -153,23 +141,14 @@ export function AccessibilityPanel({
           >
             <h3
               id={`${id}-text-reading-title`}
-              className="
-                px-1
-                text-xs
-                font-semibold
-                tracking-[0.14em]
-                text-muted-foreground
-                uppercase
-              "
+              className="px-1 text-xs font-semibold tracking-[0.14em] text-muted-foreground uppercase"
             >
               {textSectionTitle}
             </h3>
 
             <div className="space-y-3">
               <TextScaleControl content={textScaleContent} />
-
               <LineSpacingControl content={lineSpacingContent} />
-
               <LetterSpacingControl content={letterSpacingContent} />
             </div>
           </section>
@@ -184,14 +163,7 @@ export function AccessibilityPanel({
           >
             <h3
               id={`${id}-visibility-title`}
-              className="
-                px-1
-                text-xs
-                font-semibold
-                tracking-[0.14em]
-                text-muted-foreground
-                uppercase
-              "
+              className="px-1 text-xs font-semibold tracking-[0.14em] text-muted-foreground uppercase"
             >
               {visibilitySectionTitle}
             </h3>
@@ -199,8 +171,8 @@ export function AccessibilityPanel({
             <div className="space-y-3">
               <HighContrastControl content={highContrastContent} />
               <GrayscaleControl content={grayscaleContent} />
+              <UnderlineLinksControl content={underlineLinksContent} />
             </div>
-            
           </section>
         </div>
       </div>
@@ -214,56 +186,21 @@ export function AccessibilityPanel({
           <button
             type="button"
             onClick={resetPreferences}
-            className="
-              flex min-h-12 w-full items-center gap-3
-              rounded-2xl
-              border border-border
-              bg-muted/30
-              px-4 py-3
-              text-left
-              font-heading
-              text-sm
-              font-semibold
-              text-foreground
-              transition-colors
-              hover:bg-muted
-              focus-visible:outline-none
-              focus-visible:ring-2
-              focus-visible:ring-ring
-              focus-visible:ring-offset-2
-            "
+            className="flex min-h-12 w-full items-center gap-3 rounded-2xl border border-border bg-muted/30 px-4 py-3 text-left font-heading text-sm font-semibold text-foreground transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none"
           >
-            <RotateCcw
-              aria-hidden="true"
-              className="size-4 shrink-0"
-            />
+            <RotateCcw aria-hidden="true" className="size-4 shrink-0" />
 
             <span>{resetLabel}</span>
           </button>
 
-          {accessibilityStatementLabel &&
-            accessibilityStatementHref && (
-              <Link
-                href={accessibilityStatementHref}
-                className="
-                  flex min-h-10 items-center
-                  rounded-xl
-                  px-4
-                  font-heading
-                  text-sm
-                  font-medium
-                  text-muted-foreground
-                  transition-colors
-                  hover:bg-muted
-                  hover:text-foreground
-                  focus-visible:outline-none
-                  focus-visible:ring-2
-                  focus-visible:ring-ring
-                "
-              >
-                {accessibilityStatementLabel}
-              </Link>
-            )}
+          {accessibilityStatementLabel && accessibilityStatementHref && (
+            <Link
+              href={accessibilityStatementHref}
+              className="flex min-h-10 items-center rounded-xl px-4 font-heading text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+            >
+              {accessibilityStatementLabel}
+            </Link>
+          )}
         </div>
       </div>
     </DrawerContent>

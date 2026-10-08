@@ -49,6 +49,7 @@ export function Navbar({ locale, currentRoute }: NavbarProps) {
         <div className="flex h-20 items-center justify-between">
           {/* Logo */}
           <Link
+            data-a11y-text-link
             href={getLocalizedPath("home", locale)}
             className="relative block h-12 w-[150px] shrink-0"
             aria-label="T-IA-KI"
@@ -70,6 +71,7 @@ export function Navbar({ locale, currentRoute }: NavbarProps) {
 
               return (
                 <Link
+                  data-a11y-text-link
                   key={route}
                   href={getLocalizedPath(route, locale)}
                   aria-current={isActive ? "page" : undefined}
@@ -89,6 +91,7 @@ export function Navbar({ locale, currentRoute }: NavbarProps) {
           {/* Desktop actions */}
           <div className="hidden items-center gap-4 lg:flex">
             <Link
+              data-a11y-text-link
               href={languageHref}
               className="font-heading text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
             >
@@ -122,6 +125,7 @@ export function Navbar({ locale, currentRoute }: NavbarProps) {
                 <SheetTitle className="sr-only">T-IA-KI</SheetTitle>
 
                 <Link
+                  data-a11y-text-link
                   href={getLocalizedPath("home", locale)}
                   className="relative block h-12 w-[160px]"
                   aria-label="T-IA-KI"
@@ -144,6 +148,7 @@ export function Navbar({ locale, currentRoute }: NavbarProps) {
 
                     return (
                       <Link
+                        data-a11y-text-link
                         key={route}
                         href={getLocalizedPath(route, locale)}
                         aria-current={isActive ? "page" : undefined}
@@ -199,6 +204,7 @@ export function Navbar({ locale, currentRoute }: NavbarProps) {
                               </span>
                             ) : (
                               <Link
+                                data-a11y-text-link
                                 href={getLocalizedPath(
                                   currentRoute,
                                   itemLocale
