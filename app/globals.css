@@ -5,12 +5,16 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
---font-heading: var(--font-inter);
---font-sans: Arial, Helvetica, sans-serif;
+  --font-heading: var(--font-inter);
+  --font-sans: Arial, Helvetica, sans-serif;
 
   --color-tiaki-green: var(--tiaki-green);
   --color-tiaki-blue: var(--tiaki-blue);
   --color-tiaki-orange: var(--tiaki-orange);
+
+  --color-tiaki-blue-foreground: var(--tiaki-blue-foreground);
+  --color-tiaki-green-foreground: var(--tiaki-green-foreground);
+  --color-tiaki-orange-foreground: var(--tiaki-orange-foreground);
 
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -56,7 +60,11 @@
   --tiaki-green: #2bae66;
   --tiaki-blue: #94b2df;
   --tiaki-orange: #ee9626;
-  
+  /* Contrast */
+  --tiaki-blue-foreground: oklch(0.147 0.004 49.3);
+  --tiaki-green-foreground: oklch(0.147 0.004 49.3);
+  --tiaki-orange-foreground: oklch(0.147 0.004 49.3);
+
   --background: oklch(1 0 0);
   --foreground: oklch(0.147 0.004 49.3);
   --card: oklch(1 0 0);
@@ -141,7 +149,9 @@
   }
 }
 
-/* Accessibility — text scale */
+/* =========================================
+   Accessibility — Text Scaling
+   ========================================= */
 
 html[data-a11y-text-scale="0.9"] {
   font-size: 90%;
@@ -153,4 +163,182 @@ html[data-a11y-text-scale="1.125"] {
 
 html[data-a11y-text-scale="1.25"] {
   font-size: 125%;
+}
+
+/* =========================================
+   Accessibility — line spacing
+   ========================================= */
+
+html[data-a11y-line-spacing] :where(p, li, a, dd, dt, blockquote) {
+  line-height: var(--a11y-body-line-height) !important;
+}
+
+html[data-a11y-line-spacing]
+  :where(label, button, input, textarea, select, summary) {
+  line-height: 1.5 !important;
+}
+
+html[data-a11y-line-spacing="relaxed"] {
+  --a11y-body-line-height: 1.75;
+  --a11y-heading-line-height: 1.4;
+}
+
+html[data-a11y-line-spacing="wide"] {
+  --a11y-body-line-height: 2;
+  --a11y-heading-line-height: 1.55;
+}
+
+/*
+ * Some Tailwind utilities such as leading-tight or leading-7
+ * define their own line-height, so inheriting from body alone
+ * is not sufficient.
+ */
+html[data-a11y-line-spacing] body {
+  line-height: var(--a11y-body-line-height);
+}
+
+html[data-a11y-line-spacing]
+  :where(
+    p,
+    li,
+    a,
+    dd,
+    dt,
+    blockquote,
+    label,
+    button,
+    input,
+    textarea,
+    select,
+    summary
+  ) {
+  line-height: var(--a11y-body-line-height) !important;
+}
+
+html[data-a11y-line-spacing] :where(h1, h2, h3, h4, h5, h6) {
+  line-height: var(--a11y-heading-line-height) !important;
+}
+
+/* =========================================
+   Accessibility — letter spacing
+   ========================================= */
+
+html[data-a11y-letter-spacing="wide"] {
+  --a11y-letter-spacing: 0.08em;
+  --a11y-heading-letter-spacing: 0.05em;
+}
+
+html[data-a11y-letter-spacing="wide"]
+  :where(
+    p,
+    li,
+    a,
+    dd,
+    dt,
+    blockquote,
+    label,
+    button,
+    input,
+    textarea,
+    select,
+    summary
+  ) {
+  letter-spacing: var(--a11y-letter-spacing) !important;
+}
+
+html[data-a11y-letter-spacing="wide"] :where(h1, h2, h3, h4, h5, h6) {
+  letter-spacing: var(--a11y-heading-letter-spacing) !important;
+}
+
+/* =========================================
+   Accessibility — high contrast
+   ========================================= */
+
+html[data-a11y-high-contrast] {
+  /* Brand colors — darker / more contrasted variants */
+  --tiaki-green: oklch(0.38 0.13 150);
+  --tiaki-blue: oklch(0.42 0.11 255);
+  --tiaki-orange: oklch(0.48 0.15 55);
+  /* High Contrast */
+  --tiaki-blue-foreground: oklch(1 0 0);
+  --tiaki-green-foreground: oklch(1 0 0);
+  --tiaki-orange-foreground: oklch(1 0 0);
+
+  /* Main surfaces */
+  --background: oklch(1 0 0);
+  --foreground: oklch(0 0 0);
+
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0 0 0);
+
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0 0 0);
+
+  /* Interactive */
+  --primary: oklch(0 0 0);
+  --primary-foreground: oklch(1 0 0);
+
+  --secondary: oklch(0.9 0 0);
+  --secondary-foreground: oklch(0 0 0);
+
+  /* Secondary text must remain strongly readable */
+  --muted: oklch(0.93 0 0);
+  --muted-foreground: oklch(0.2 0 0);
+
+  --accent: oklch(0.88 0 0);
+  --accent-foreground: oklch(0 0 0);
+
+  --destructive: oklch(0.4 0.18 27);
+  --destructive-foreground: oklch(1 0 0);
+
+  /* Controls */
+  --border: oklch(0 0 0);
+  --input: oklch(0 0 0);
+  --ring: oklch(0 0 0);
+}
+
+html[data-a11y-high-contrast]
+  :where(button, input, textarea, select, [role="button"], [role="combobox"]) {
+  border-color: var(--border);
+}
+
+
+/* Image-based sections */
+
+html[data-a11y-high-contrast]
+  [data-a11y-image-overlay] {
+  background-color: rgb(0 0 0 / 68%);
+}
+
+html[data-a11y-high-contrast]
+  [data-a11y-image-card] {
+  background-color: rgb(0 0 0 / 65%);
+  border-color: rgb(255 255 255 / 70%);
+}
+
+html[data-a11y-high-contrast]
+  [data-a11y-image-secondary-text] {
+  color: rgb(255 255 255);
+}
+
+/* =========================================
+   Accessibility — dark surfaces
+   ========================================= */
+
+html[data-a11y-high-contrast]
+  [data-a11y-dark-surface]
+  [data-a11y-dark-secondary] {
+  color: rgb(255 255 255 / 85%);
+}
+
+html[data-a11y-high-contrast]
+  [data-a11y-dark-surface]
+  [data-a11y-dark-tertiary] {
+  color: rgb(255 255 255 / 90%);
+}
+
+html[data-a11y-high-contrast]
+  [data-a11y-dark-surface]
+  [data-a11y-dark-border] {
+  border-color: rgb(255 255 255 / 70%);
 }

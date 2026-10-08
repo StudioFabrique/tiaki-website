@@ -57,7 +57,7 @@ export function HomeAudiences({
               <article
                 key={item.title}
                 className={cn(
-                  "overflow-hidden rounded-[2rem]",
+                  "overflow-hidden rounded-[2rem] border border-border",
                   style.background
                 )}
               >
@@ -70,15 +70,15 @@ export function HomeAudiences({
                     )}
                   >
                     <div>
-                      <span className="font-heading text-sm font-semibold text-foreground/40">
+                     <span className="font-heading text-sm font-semibold text-muted-foreground">
                         {String(index + 1).padStart(2, "0")}
                       </span>
 
-                      <h3 className="mt-5 font-heading text-3xl font-semibold tracking-[-0.035em] sm:text-4xl lg:text-5xl">
+                      <h3 className="mt-5 font-heading text-3xl font-semibold tracking-[-0.035em] text-foreground sm:text-4xl lg:text-5xl">
                         {item.title}
                       </h3>
 
-                      <p className="mt-5 text-base leading-7 text-foreground/65 sm:text-lg sm:leading-8">
+                      <p className="mt-5 text-base leading-7 text-muted-foreground sm:text-lg sm:leading-8">
                         {item.description}
                       </p>
                     </div>

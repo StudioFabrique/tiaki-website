@@ -1,12 +1,12 @@
-import Image from "next/image"
+import Image from "next/image";
 
-import { Container } from "@/components/layout/Container"
-import { getHomeContent } from "@/lib/content/home"
-import type { SiteLocale } from "@/lib/i18n/config"
+import { Container } from "@/components/layout/Container";
+import { getHomeContent } from "@/lib/content/home";
+import type { SiteLocale } from "@/lib/i18n/config";
 
 type HomeFeaturesProps = {
-  locale: SiteLocale
-}
+  locale: SiteLocale;
+};
 
 const featureStyles = [
   {
@@ -25,16 +25,18 @@ const featureStyles = [
     className: "bg-muted",
     image: "/images/pictos/picto-7-orange.png",
   },
-]
+];
 
-export function HomeFeatures({ locale }: HomeFeaturesProps) {
-  const { features } = getHomeContent(locale)
+export function HomeFeatures({
+  locale,
+}: HomeFeaturesProps) {
+  const { features } = getHomeContent(locale);
 
   return (
     <section className="py-8 sm:py-8 lg:py-12">
       <Container>
         <div className="max-w-4xl">
-          <h2 className="font-heading text-4xl leading-[0.98] font-bold tracking-[-0.045em] sm:text-5xl lg:text-6xl">
+          <h2 className="font-heading text-4xl leading-[0.98] font-bold tracking-[-0.045em] text-foreground sm:text-5xl lg:text-6xl">
             {features.title}
           </h2>
 
@@ -45,27 +47,30 @@ export function HomeFeatures({ locale }: HomeFeaturesProps) {
 
         <div className="mt-12 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {features.items.map((item, index) => {
-            const style = featureStyles[index]
+            const style = featureStyles[index];
 
             return (
               <article
                 key={item.title}
                 className={[
-                  "flex min-h-[520px] flex-col overflow-hidden rounded-[2rem]",
+                  "flex min-h-[520px] flex-col overflow-hidden rounded-[2rem] border border-border",
                   style.className,
                 ].join(" ")}
               >
                 {/* Text */}
                 <div className="p-7 sm:p-9 lg:p-10">
-                  <span className="font-heading text-sm font-semibold text-foreground/45">
-                    {String(index + 1).padStart(2, "0")}
+                  <span className="font-heading text-sm font-semibold text-muted-foreground">
+                    {String(index + 1).padStart(
+                      2,
+                      "0"
+                    )}
                   </span>
 
-                  <h3 className="mt-5 font-heading text-3xl font-semibold tracking-[-0.035em] sm:text-4xl">
+                  <h3 className="mt-5 font-heading text-3xl font-semibold tracking-[-0.035em] text-foreground sm:text-4xl">
                     {item.title}
                   </h3>
 
-                  <p className="mt-4 leading-7 text-foreground/65">
+                  <p className="mt-4 leading-7 text-muted-foreground">
                     {item.description}
                   </p>
                 </div>
@@ -83,10 +88,10 @@ export function HomeFeatures({ locale }: HomeFeaturesProps) {
                   </div>
                 </div>
               </article>
-            )
+            );
           })}
         </div>
       </Container>
     </section>
-  )
+  );
 }

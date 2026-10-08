@@ -6,6 +6,8 @@
   },
   "panel": {
     "title": "Opciones de accesibilidad",
+      "description": "Adapta la visualización a tus necesidades",
+
     "close": "Cerrar las opciones de accesibilidad",
     "reset": "Restablecer los ajustes",
     "sections": {
@@ -20,8 +22,32 @@
             "large": "Grande",
             "larger": "Muy grande"
           }
+        },
+        "lineSpacing": {
+          "title": "Interlineado",
+          "description": "Ajusta el espacio entre las líneas de texto.",
+          "options": {
+            "default": "Normal",
+            "relaxed": "Cómodo",
+            "wide": "Amplio"
+          }
+        },
+        "letterSpacing": {
+          "title": "Espaciado de letras",
+          "description": "Ajusta el espacio entre los caracteres.",
+          "options": {
+            "default": "Normal",
+            "wide": "Amplio"
+          }
         }
-      }
+      },
+       "visibility": {
+          "title": "Visibilidad",
+          "highContrast": {
+            "title": "Contraste reforzado",
+            "description": "Aumenta el contraste entre los textos, los fondos y los elementos interactivos."
+          }
+        }
     }
   }
 }

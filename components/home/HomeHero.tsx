@@ -19,9 +19,9 @@ export function HomeHero({ locale }: HomeHeroProps) {
         <div className="overflow-hidden rounded-[2rem] bg-tiaki-blue/35">
           <div className="grid min-h-[750px] lg:grid-cols-[0.95fr_1.05fr]">
             {/* Content */}
-            <div className="order-2 flex items-center p-7 sm:p-10 lg:order-1 lg:p-14">
-              <div className="max-w-3xl">
-                <h1 className="font-heading text-5xl leading-[0.94] font-bold tracking-[-0.055em] sm:text-6xl lg:text-7xl xl:text-[3.5rem]">
+            <div className="order-2 flex min-w-0 items-center p-7 sm:p-10 lg:order-1 lg:p-14">
+              <div className="max-w-3xl min-w-0">
+                <h1 className="max-w-full font-heading text-4xl leading-[0.94] font-bold tracking-[-0.055em] text-foreground sm:text-5xl lg:text-7xl xl:text-[3.5rem]">
                   {hero.title}
                 </h1>
 

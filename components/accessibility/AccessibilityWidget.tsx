@@ -1,73 +1,97 @@
-"use client";
+"use client"
 
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "react"
 
-import { AccessibilityPanel } from "./AccessibilityPanel";
-import { AccessibilityTrigger } from "./AccessibilityTrigger";
+import { AccessibilityPanel } from "./AccessibilityPanel"
+import { AccessibilityTrigger } from "./AccessibilityTrigger"
 
-import {
-  Drawer,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
+import { Drawer, DrawerTrigger } from "@/components/ui/drawer"
 
 type AccessibilityWidgetContent = {
   trigger: {
-    open: string;
-    close: string;
-  };
+    open: string
+    close: string
+  }
   panel: {
-    title: string;
-    close: string;
-    reset: string;
+    title: string
+    description: string
+    close: string
+    reset: string
     sections: {
       textAndReading: {
-        title: string;
+        title: string
+
+        // TextResizing
         textScale: {
-          title: string;
-          description: string;
+          title: string
+          description: string
           options: {
-            smaller: string;
-            default: string;
-            large: string;
-            larger: string;
-          };
-        };
-      };
-    };
-  };
-};
+            smaller: string
+            default: string
+            large: string
+            larger: string
+          }
+        }
+        // lineSpacing
+        lineSpacing: {
+          title: string
+          description: string
+          options: {
+            default: string
+            relaxed: string
+            wide: string
+          }
+        }
+        // Letter Spacing
+        letterSpacing: {
+          title: string
+          description: string
+          options: {
+            default: string
+            wide: string
+          }
+        }
+      }
+
+      visibility: {
+        title: string
+
+        highContrast: {
+          title: string
+          description: string
+        }
+      }
+    }
+  }
+}
 
 type AccessibilityWidgetProps = {
-  content: AccessibilityWidgetContent;
-};
+  content: AccessibilityWidgetContent
+}
 
-const ACCESSIBILITY_PANEL_ID = "accessibility-panel";
+const ACCESSIBILITY_PANEL_ID = "accessibility-panel"
 
-export function AccessibilityWidget({
-  content,
-}: AccessibilityWidgetProps) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isDesktop, setIsDesktop] = useState(false);
+export function AccessibilityWidget({ content }: AccessibilityWidgetProps) {
+  const [isOpen, setIsOpen] = useState(false)
+  const [isDesktop, setIsDesktop] = useState(false)
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia("(min-width: 640px)");
+    const mediaQuery = window.matchMedia("(min-width: 640px)")
 
     const updateViewport = () => {
-      setIsDesktop(mediaQuery.matches);
-    };
+      setIsDesktop(mediaQuery.matches)
+    }
 
-    updateViewport();
+    updateViewport()
 
-    mediaQuery.addEventListener("change", updateViewport);
+    mediaQuery.addEventListener("change", updateViewport)
 
     return () => {
-      mediaQuery.removeEventListener("change", updateViewport);
-    };
-  }, []);
+      mediaQuery.removeEventListener("change", updateViewport)
+    }
+  }, [])
 
-  const triggerLabel = isOpen
-    ? content.trigger.close
-    : content.trigger.open;
+  const triggerLabel = isOpen ? content.trigger.close : content.trigger.open
 
   return (
     <Drawer
@@ -75,26 +99,23 @@ export function AccessibilityWidget({
       onOpenChange={setIsOpen}
       swipeDirection={isDesktop ? "right" : "down"}
     >
-      <DrawerTrigger
-        render={
-          <AccessibilityTrigger
-            label={triggerLabel}
-          />
-        }
-      />
+      <DrawerTrigger render={<AccessibilityTrigger label={triggerLabel} />} />
 
       <AccessibilityPanel
         id={ACCESSIBILITY_PANEL_ID}
         title={content.panel.title}
+        description={content.panel.description}
         closeLabel={content.panel.close}
         resetLabel={content.panel.reset}
-        textSectionTitle={
-          content.panel.sections.textAndReading.title
+        textSectionTitle={content.panel.sections.textAndReading.title}
+        textScaleContent={content.panel.sections.textAndReading.textScale}
+        lineSpacingContent={content.panel.sections.textAndReading.lineSpacing}
+        letterSpacingContent={
+          content.panel.sections.textAndReading.letterSpacing
         }
-        textScaleContent={
-          content.panel.sections.textAndReading.textScale
-        }
+        visibilitySectionTitle={content.panel.sections.visibility.title}
+        highContrastContent={content.panel.sections.visibility.highContrast}
       />
     </Drawer>
-  );
+  )
 }

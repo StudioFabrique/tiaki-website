@@ -1,49 +1,45 @@
-"use client";
+"use client"
 
 import {
   BadgePercent,
   CalendarRange,
   Euro,
   type LucideIcon,
-} from "lucide-react";
-import {
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+} from "lucide-react"
+import { useEffect, useRef, useState } from "react"
 
-import { Container } from "@/components/layout/Container";
-import { getHomeContent } from "@/lib/content/home";
-import type { SiteLocale } from "@/lib/i18n/config";
+import { Container } from "@/components/layout/Container"
+import { getHomeContent } from "@/lib/content/home"
+import type { SiteLocale } from "@/lib/i18n/config"
 
 type HomeStatsProps = {
-  locale: SiteLocale;
-};
+  locale: SiteLocale
+}
 
 type NumberStat = {
-  type: "number";
-  value: number;
-  decimals: number;
-  suffix: string;
-  label: string;
-  icon: string;
-};
+  type: "number"
+  value: number
+  decimals: number
+  suffix: string
+  label: string
+  icon: string
+}
 
 type RangeStat = {
-  type: "range";
-  start: number;
-  end: number;
-  label: string;
-  icon: string;
-};
+  type: "range"
+  start: number
+  end: number
+  label: string
+  icon: string
+}
 
-type StatItem = NumberStat | RangeStat;
+type StatItem = NumberStat | RangeStat
 
 const icons: Record<string, LucideIcon> = {
   calendar: CalendarRange,
   euro: Euro,
   percent: BadgePercent,
-};
+}
 
 function useAnimatedNumber(
   from: number,
@@ -51,56 +47,50 @@ function useAnimatedNumber(
   start: boolean,
   duration = 1400
 ) {
-  const [value, setValue] = useState(from);
+  const [value, setValue] = useState(from)
 
   useEffect(() => {
     if (!start) {
-      return;
+      return
     }
 
     const reducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
-    ).matches;
+    ).matches
 
     if (reducedMotion) {
-      setValue(to);
-      return;
+      setValue(to)
+      return
     }
 
-    let frameId = 0;
-    let startTime: number | null = null;
+    let frameId = 0
+    let startTime: number | null = null
 
     const animate = (time: number) => {
       if (startTime === null) {
-        startTime = time;
+        startTime = time
       }
 
-      const progress = Math.min(
-        (time - startTime) / duration,
-        1
-      );
+      const progress = Math.min((time - startTime) / duration, 1)
 
       // Ease-out cubic
-      const eased =
-        1 - Math.pow(1 - progress, 3);
+      const eased = 1 - Math.pow(1 - progress, 3)
 
-      setValue(
-        from + (to - from) * eased
-      );
+      setValue(from + (to - from) * eased)
 
       if (progress < 1) {
-        frameId = requestAnimationFrame(animate);
+        frameId = requestAnimationFrame(animate)
       }
-    };
+    }
 
-    frameId = requestAnimationFrame(animate);
+    frameId = requestAnimationFrame(animate)
 
     return () => {
-      cancelAnimationFrame(frameId);
-    };
-  }, [from, to, start, duration]);
+      cancelAnimationFrame(frameId)
+    }
+  }, [from, to, start, duration])
 
-  return value;
+  return value
 }
 
 function AnimatedNumber({
@@ -110,33 +100,28 @@ function AnimatedNumber({
   locale,
   start,
 }: {
-  value: number;
-  decimals: number;
-  suffix: string;
-  locale: SiteLocale;
-  start: boolean;
+  value: number
+  decimals: number
+  suffix: string
+  locale: SiteLocale
+  start: boolean
 }) {
-  const animatedValue = useAnimatedNumber(
-    0,
-    value,
-    start
-  );
+  const animatedValue = useAnimatedNumber(0, value, start)
 
-  const formattedValue =
-    new Intl.NumberFormat(
-      locale === "fr" ? "fr-FR" : "es-ES",
-      {
-        minimumFractionDigits: decimals,
-        maximumFractionDigits: decimals,
-      }
-    ).format(animatedValue);
+  const formattedValue = new Intl.NumberFormat(
+    locale === "fr" ? "fr-FR" : "es-ES",
+    {
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals,
+    }
+  ).format(animatedValue)
 
   return (
     <>
       {formattedValue}
       {suffix}
     </>
-  );
+  )
 }
 
 function AnimatedRange({
@@ -144,72 +129,59 @@ function AnimatedRange({
   endYear,
   start,
 }: {
-  startYear: number;
-  endYear: number;
-  start: boolean;
+  startYear: number
+  endYear: number
+  start: boolean
 }) {
-  const animatedEnd = useAnimatedNumber(
-    startYear,
-    endYear,
-    start,
-    1200
-  );
+  const animatedEnd = useAnimatedNumber(startYear, endYear, start, 1200)
 
   return (
     <>
       {startYear}–{Math.round(animatedEnd)}
     </>
-  );
+  )
 }
 
-export function HomeStats({
-  locale,
-}: HomeStatsProps) {
-  const { stats } = getHomeContent(locale);
+export function HomeStats({ locale }: HomeStatsProps) {
+  const { stats } = getHomeContent(locale)
 
-  const sectionRef =
-    useRef<HTMLElement | null>(null);
+  const sectionRef = useRef<HTMLElement | null>(null)
 
-  const [isVisible, setIsVisible] =
-    useState(false);
+  const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
-    const element = sectionRef.current;
+    const element = sectionRef.current
 
     if (!element) {
-      return;
+      return
     }
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
+          setIsVisible(true)
+          observer.disconnect()
         }
       },
       {
         threshold: 0.25,
       }
-    );
+    )
 
-    observer.observe(element);
+    observer.observe(element)
 
     return () => {
-      observer.disconnect();
-    };
-  }, []);
+      observer.disconnect()
+    }
+  }, [])
 
-  const items =
-    stats.items as StatItem[];
+  const items = stats.items as StatItem[]
 
   return (
-    <section
-      ref={sectionRef}
-      className="py-10 sm:py-12 lg:py-10"
-    >
+    <section ref={sectionRef} className="py-10 sm:py-12 lg:py-10">
       <Container>
         <div className="max-w-5xl">
-          <h2 className="font-heading text-4xl font-bold leading-[0.98] tracking-[-0.045em] sm:text-5xl lg:text-6xl">
+          <h2 className="font-heading text-4xl leading-[0.98] font-bold tracking-[-0.045em] sm:text-5xl lg:text-6xl">
             {stats.title}
           </h2>
 
@@ -221,22 +193,22 @@ export function HomeStats({
         <div className="mt-12 overflow-hidden rounded-[2rem] border">
           <div className="grid md:grid-cols-3">
             {items.map((item, index) => {
-              const Icon =
-                icons[item.icon];
+              const Icon = icons[item.icon]
 
               return (
                 <article
                   key={item.label}
-                  className="flex min-h-[300px] flex-col border-b p-7 last:border-b-0 md:border-b-0 md:border-r md:last:border-r-0 sm:p-9 lg:p-10"
+                  className="flex min-h-[300px] flex-col border-b p-7 transition-colors duration-200 hover:bg-tiaki-green/10 last:border-b-0 sm:p-9 md:border-r md:border-b-0 md:last:border-r-0 lg:p-10"
                 >
                   <div className="flex size-12 items-center justify-center rounded-full bg-tiaki-green/10">
-                    {Icon && (
-                      <Icon className="size-5 text-tiaki-green" />
-                    )}
+                    {Icon && <Icon className="size-5 text-tiaki-green" />}
                   </div>
 
                   <div className="mt-auto pt-14">
-                    <div className="font-heading text-4xl font-bold tracking-[-0.05em] sm:text-5xl lg:text-6xl">
+                    <p className="mb-4 font-heading text-base font-medium text-muted-foreground">
+                      {item.label}
+                    </p>
+                    <div className=" font-heading text-5xl font-bold tracking-[-0.05em] text-foreground sm:text-5xl lg:text-6xl">
                       {item.type === "number" ? (
                         <AnimatedNumber
                           value={item.value}
@@ -254,10 +226,6 @@ export function HomeStats({
                       )}
                     </div>
 
-                    <p className="mt-4 font-heading text-base font-medium text-foreground/60">
-                      {item.label}
-                    </p>
-
                     {/* <span className="mt-8 block font-heading text-xs font-semibold text-foreground/25">
                       {String(index + 1).padStart(
                         2,
@@ -266,11 +234,11 @@ export function HomeStats({
                     </span> */}
                   </div>
                 </article>
-              );
+              )
             })}
           </div>
         </div>
       </Container>
     </section>
-  );
+  )
 }
