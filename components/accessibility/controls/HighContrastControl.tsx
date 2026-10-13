@@ -75,6 +75,9 @@ export function HighContrastControl({
             peer-focus-visible:ring-ring
             peer-focus-visible:ring-offset-2
 
+            peer-checked:hover:bg-foreground
+peer-checked:hover:text-background
+
             after:absolute
             after:left-1
             after:top-1

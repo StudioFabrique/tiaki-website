@@ -34,3 +34,23 @@ export default function RootLayout({
     </html>
   );
 }
+
+// #ffffff
+// #9fdaba
+// #52bd82
+// #259a5a
+// #1d7746
+// #155633
+// #0d341f
+// #bccfeb
+// #8eabd6
+// #7289ab
+// #586984
+// #404c60
+// #272e3a
+// #f9c481
+// #f1931d
+// #c07617
+// #955b12
+// #6b420d
+// #422808

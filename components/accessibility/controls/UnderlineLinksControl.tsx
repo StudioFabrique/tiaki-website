@@ -43,7 +43,9 @@ export function UnderlineLinksControl({
 
         <span
           aria-hidden="true"
-          className="block h-7 w-12 rounded-full border border-border bg-background transition-colors peer-checked:border-foreground peer-checked:bg-foreground peer-focus-visible:outline-none peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2 after:absolute after:top-1 after:left-1 after:size-5 after:rounded-full after:bg-foreground after:transition-transform peer-checked:after:translate-x-5 peer-checked:after:bg-background"
+          className="block h-7 w-12 rounded-full border border-border bg-background transition-colors peer-checked:border-foreground peer-checked:bg-foreground peer-focus-visible:outline-none 
+          peer-checked:hover:bg-foreground
+peer-checked:hover:text-background peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2 after:absolute after:top-1 after:left-1 after:size-5 after:rounded-full after:bg-foreground after:transition-transform peer-checked:after:translate-x-5 peer-checked:after:bg-background"
         />
       </span>
     </label>

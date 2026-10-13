@@ -54,7 +54,9 @@ export function LetterSpacingControl({ content }: LetterSpacingControlProps) {
                 className="peer sr-only"
               />
 
-              <span className="flex min-h-10 flex-col items-center justify-center gap-1 rounded-xl border border-border bg-background px-3 py-2 text-center transition-colors peer-checked:border-foreground peer-checked:bg-foreground peer-checked:text-background peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2 peer-focus-visible:outline-none hover:bg-muted">
+              <span className="flex min-h-10 flex-col items-center justify-center gap-1 rounded-xl border border-border bg-background px-3 py-2 text-center transition-colors peer-checked:border-foreground peer-checked:bg-foreground peer-checked:text-background
+              peer-checked:hover:bg-foreground
+peer-checked:hover:text-background peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2 peer-focus-visible:outline-none hover:bg-muted">
                 <span aria-hidden="true" className="text-lg font-semibold">
                   {LETTER_SPACING_PREVIEW[option.value]}
                 </span>

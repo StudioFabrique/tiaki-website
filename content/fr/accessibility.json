@@ -62,6 +62,17 @@
           "title": "Focus renforcé",
           "description": "Rend plus visible l’élément sélectionné lors de la navigation au clavier."
         }
+      },
+      "motion": {
+        "title": "Mouvement et confort",
+        "reduceMotion": {
+          "title": "Réduire les animations",
+          "description": "Limite les animations et les mouvements non essentiels. Le mode Système respecte les préférences de votre appareil.",
+          "options": {
+            "system": "Système",
+            "reduce": "Réduire"
+          }
+        }
       }
     }
   }
