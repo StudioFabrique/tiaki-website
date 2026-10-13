@@ -50,9 +50,10 @@ export function ComingSoonPage({
                 <div className="mt-9">
                   <Link
                     href={getLocalizedPath("home", locale)}
+                    data-a11y-motion-effect
                     className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-foreground px-7 font-heading text-sm font-semibold text-background transition-transform duration-200 hover:-translate-y-0.5"
                   >
-                    <ArrowLeft className="size-4" />
+                    <ArrowLeft className="size-4"/>
                     {content.backHome}
                   </Link>
                 </div>

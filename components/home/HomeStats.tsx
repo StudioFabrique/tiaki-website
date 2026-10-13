@@ -12,6 +12,8 @@ import { Container } from "@/components/layout/Container"
 import { getHomeContent } from "@/lib/content/home"
 import type { SiteLocale } from "@/lib/i18n/config"
 
+import { useAccessibility } from "@/components/accessibility/AccessibilityProvider"
+
 type HomeStatsProps = {
   locale: SiteLocale
 }
@@ -41,25 +43,49 @@ const icons: Record<string, LucideIcon> = {
   percent: BadgePercent,
 }
 
+function useShouldReduceMotion() {
+  const { preferences } = useAccessibility()
+  const [systemReducedMotion, setSystemReducedMotion] = useState(false)
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)")
+
+    const updatePreference = () => {
+      setSystemReducedMotion(mediaQuery.matches)
+    }
+    updatePreference()
+
+    mediaQuery.addEventListener("change", updatePreference)
+
+    return () => {
+      mediaQuery.removeEventListener("change", updatePreference)
+    }
+  }, [])
+
+  return preferences.reduceMotion === "reduce" || systemReducedMotion
+}
+
 function useAnimatedNumber(
   from: number,
   to: number,
   start: boolean,
+  reduceMotion: boolean,
   duration = 1400
 ) {
   const [value, setValue] = useState(from)
+  const completedRef = useRef(false)
 
   useEffect(() => {
-    if (!start) {
+    // Reduced motion: immediately display final value.
+    if (reduceMotion) {
+      setValue(to)
+      completedRef.current = true
       return
     }
 
-    const reducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches
-
-    if (reducedMotion) {
-      setValue(to)
+    // Do not animate before becoming visible.
+    // Do not replay an animation already completed.
+    if (!start || completedRef.current) {
       return
     }
 
@@ -80,6 +106,9 @@ function useAnimatedNumber(
 
       if (progress < 1) {
         frameId = requestAnimationFrame(animate)
+      } else {
+        setValue(to)
+        completedRef.current = true
       }
     }
 
@@ -88,7 +117,7 @@ function useAnimatedNumber(
     return () => {
       cancelAnimationFrame(frameId)
     }
-  }, [from, to, start, duration])
+  }, [from, to, start, reduceMotion, duration])
 
   return value
 }
@@ -99,14 +128,16 @@ function AnimatedNumber({
   suffix,
   locale,
   start,
+  reduceMotion,
 }: {
   value: number
   decimals: number
   suffix: string
   locale: SiteLocale
   start: boolean
+  reduceMotion: boolean
 }) {
-  const animatedValue = useAnimatedNumber(0, value, start)
+  const animatedValue = useAnimatedNumber(0, value, start, reduceMotion)
 
   const formattedValue = new Intl.NumberFormat(
     locale === "fr" ? "fr-FR" : "es-ES",
@@ -128,12 +159,20 @@ function AnimatedRange({
   startYear,
   endYear,
   start,
+  reduceMotion,
 }: {
   startYear: number
   endYear: number
   start: boolean
+  reduceMotion: boolean
 }) {
-  const animatedEnd = useAnimatedNumber(startYear, endYear, start, 1200)
+  const animatedEnd = useAnimatedNumber(
+    startYear,
+    endYear,
+    start,
+    reduceMotion,
+    1200
+  )
 
   return (
     <>
@@ -143,6 +182,8 @@ function AnimatedRange({
 }
 
 export function HomeStats({ locale }: HomeStatsProps) {
+  const reduceMotion = useShouldReduceMotion()
+
   const { stats } = getHomeContent(locale)
 
   const sectionRef = useRef<HTMLElement | null>(null)
@@ -198,7 +239,7 @@ export function HomeStats({ locale }: HomeStatsProps) {
               return (
                 <article
                   key={item.label}
-                  className="flex min-h-[300px] flex-col border-b p-7 transition-colors duration-200 hover:bg-tiaki-green/10 last:border-b-0 sm:p-9 md:border-r md:border-b-0 md:last:border-r-0 lg:p-10"
+                  className="flex min-h-[300px] flex-col border-b p-7 transition-colors duration-200 last:border-b-0 hover:bg-tiaki-green/10 sm:p-9 md:border-r md:border-b-0 md:last:border-r-0 lg:p-10"
                 >
                   <div className="flex size-12 items-center justify-center rounded-full bg-tiaki-green/10">
                     {Icon && <Icon className="size-5 text-tiaki-green" />}
@@ -208,7 +249,7 @@ export function HomeStats({ locale }: HomeStatsProps) {
                     <p className="mb-4 font-heading text-base font-medium text-muted-foreground">
                       {item.label}
                     </p>
-                    <div className=" font-heading text-5xl font-bold tracking-[-0.05em] text-foreground sm:text-5xl lg:text-6xl">
+                    <div className="font-heading text-5xl font-bold tracking-[-0.05em] text-foreground sm:text-5xl lg:text-6xl">
                       {item.type === "number" ? (
                         <AnimatedNumber
                           value={item.value}
@@ -216,22 +257,17 @@ export function HomeStats({ locale }: HomeStatsProps) {
                           suffix={item.suffix}
                           locale={locale}
                           start={isVisible}
+                          reduceMotion={reduceMotion}
                         />
                       ) : (
                         <AnimatedRange
                           startYear={item.start}
                           endYear={item.end}
                           start={isVisible}
+                          reduceMotion={reduceMotion}
                         />
                       )}
                     </div>
-
-                    {/* <span className="mt-8 block font-heading text-xs font-semibold text-foreground/25">
-                      {String(index + 1).padStart(
-                        2,
-                        "0"
-                      )}
-                    </span> */}
                   </div>
                 </article>
               )

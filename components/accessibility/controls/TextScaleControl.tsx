@@ -99,6 +99,8 @@ export function TextScaleControl({
                   peer-checked:border-foreground
                   peer-checked:bg-foreground
                   peer-checked:text-background
+                  peer-checked:hover:bg-foreground
+peer-checked:hover:text-background
 
                   peer-focus-visible:outline-none
                   peer-focus-visible:ring-2

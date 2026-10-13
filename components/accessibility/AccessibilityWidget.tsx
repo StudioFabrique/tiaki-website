@@ -55,7 +55,6 @@ type AccessibilityWidgetContent = {
 
       visibility: {
         title: string
-
         highContrast: {
           title: string
           description: string
@@ -75,9 +74,21 @@ type AccessibilityWidgetContent = {
           description: string
         }
       }
+        motion: {
+          title: string
+          reduceMotion: {
+            title: string
+            description: string
+            options: {
+              system: string
+              reduce: string
+            }
+          }
+        }
+      }
     }
   }
-}
+
 
 type AccessibilityWidgetProps = {
   content: AccessibilityWidgetContent
@@ -132,6 +143,8 @@ export function AccessibilityWidget({ content }: AccessibilityWidgetProps) {
         grayscaleContent={content.panel.sections.visibility.grayscale}
         underlineLinksContent={content.panel.sections.visibility.underlineLinks}
         enhancedFocusContent={content.panel.sections.visibility.enhancedFocus}
+        motionSectionTitle={content.panel.sections.motion.title}
+        reduceMotionContent={content.panel.sections.motion.reduceMotion}
       />
     </Drawer>
   )

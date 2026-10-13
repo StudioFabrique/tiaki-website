@@ -53,6 +53,11 @@ import {
   type EnhancedFocusControlContent,
 } from "@/components/accessibility/controls/EnhancedFocusControl"
 
+import {
+  ReduceMotionControl,
+  type ReduceMotionControlContent,
+} from "@/components/accessibility/controls/ReduceMotionControl"
+
 type AccessibilityPanelProps = {
   id: string
 
@@ -76,6 +81,9 @@ type AccessibilityPanelProps = {
 
   accessibilityStatementLabel?: string
   accessibilityStatementHref?: string
+
+  motionSectionTitle: string
+  reduceMotionContent: ReduceMotionControlContent
 }
 
 export function AccessibilityPanel({
@@ -95,6 +103,8 @@ export function AccessibilityPanel({
   enhancedFocusContent,
   accessibilityStatementLabel,
   accessibilityStatementHref,
+  motionSectionTitle,
+  reduceMotionContent,
 }: AccessibilityPanelProps) {
   const { resetPreferences } = useAccessibility()
 
@@ -181,6 +191,23 @@ export function AccessibilityPanel({
               <GrayscaleControl content={grayscaleContent} />
               <UnderlineLinksControl content={underlineLinksContent} />
               <EnhancedFocusControl content={enhancedFocusContent} />
+            </div>
+          </section>
+
+          {/* =========================================
+    MOUVEMENT ET CONFORT
+    ========================================= */}
+
+          <section aria-labelledby={`${id}-motion-title`} className="space-y-4">
+            <h3
+              id={`${id}-motion-title`}
+              className="font-heading text-sm font-semibold tracking-wide text-muted-foreground uppercase"
+            >
+              {motionSectionTitle}
+            </h3>
+
+            <div className="space-y-3">
+              <ReduceMotionControl content={reduceMotionContent} />
             </div>
           </section>
         </div>
