@@ -51,11 +51,11 @@ export function Navbar({ locale, currentRoute }: NavbarProps) {
           <Link
             data-a11y-text-link
             href={getLocalizedPath("home", locale)}
-            className="relative block h-12 w-[150px] shrink-0"
+            className="relative block h-12 w-[100px] shrink-0"
             aria-label="T-IA-KI"
           >
             <Image
-              src="/images/logos/tiaki.png"
+              src="/images/logos/tiaki-logo.png"
               alt="T-IA-KI"
               fill
               priority
