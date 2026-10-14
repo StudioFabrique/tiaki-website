@@ -12,57 +12,20 @@ import {
 
 import { useAccessibility } from "./AccessibilityProvider"
 
-// TextScale
-import {
-  TextScaleControl,
-  type TextScaleControlContent,
-} from "@/components/accessibility/controls/TextScaleControl"
+import { ChoicePreferenceControl } from "@/components/accessibility/controls/ChoicePreferenceControl"
 
-// LineSpacing
-import {
-  LineSpacingControl,
-  type LineSpacingControlContent,
-} from "@/components/accessibility/controls/LineSpacingControl"
-
-// LetterSpacing
-import {
-  LetterSpacingControl,
-  type LetterSpacingControlContent,
-} from "@/components/accessibility/controls/LetterSpacingControl"
-
-// HighContrast
-import {
-  HighContrastControl,
-  type HighContrastControlContent,
-} from "@/components/accessibility/controls/HighContrastControl"
-// Graysacale
-import {
-  GrayscaleControl,
-  type GrayscaleControlContent,
-} from "@/components/accessibility/controls/GrayscaleControl"
-
-// Underline links
-import {
-  UnderlineLinksControl,
-  type UnderlineLinksControlContent,
-} from "@/components/accessibility/controls/UnderlineLinksControl"
-
-// Enhanced Focus
-import {
-  EnhancedFocusControl,
-  type EnhancedFocusControlContent,
-} from "@/components/accessibility/controls/EnhancedFocusControl"
+// Boolean Preferences
+import { BooleanPreferenceControl } from "@/components/accessibility/controls/BooleanPreferenceControl"
 
 import {
-  ReduceMotionControl,
-  type ReduceMotionControlContent,
-} from "@/components/accessibility/controls/ReduceMotionControl"
-
-// Hide Decorative Images
-import {
-  HideDecorativeImagesControl,
-  type HideDecorativeImagesControlContent,
-} from "@/components/accessibility/controls/HideDecorativeImagesControl"
+  VISIBILITY_CONTROLS,
+  CHOICE_CONTROLS,
+  CHOICE_CONTROL_SECTIONS,
+  type VisibilitySectionContent,
+  type ChoiceControlContent,
+  type ChoiceControlKey,
+  type ChoiceSectionContent,
+} from "@/lib/accessibility/registry"
 
 type AccessibilityPanelProps = {
   id: string
@@ -73,24 +36,13 @@ type AccessibilityPanelProps = {
   closeLabel: string
   resetLabel: string
 
-  textSectionTitle: string
-  visibilitySectionTitle: string
+  textAndReadingContent: ChoiceSectionContent<"textAndReading">
+  motionContent: ChoiceSectionContent<"motion">
 
-  textScaleContent: TextScaleControlContent
-  lineSpacingContent: LineSpacingControlContent
-  letterSpacingContent: LetterSpacingControlContent
-
-  highContrastContent: HighContrastControlContent
-  underlineLinksContent: UnderlineLinksControlContent
-  grayscaleContent: GrayscaleControlContent
-  enhancedFocusContent: EnhancedFocusControlContent
-  hideDecorativeImagesContent: HideDecorativeImagesControlContent
+  visibilityContent: VisibilitySectionContent
 
   accessibilityStatementLabel?: string
   accessibilityStatementHref?: string
-
-  motionSectionTitle: string
-  reduceMotionContent: ReduceMotionControlContent
 }
 
 export function AccessibilityPanel({
@@ -99,31 +51,55 @@ export function AccessibilityPanel({
   description,
   closeLabel,
   resetLabel,
-  textSectionTitle,
-  visibilitySectionTitle,
-  textScaleContent,
-  lineSpacingContent,
-  letterSpacingContent,
-  highContrastContent,
-  grayscaleContent,
-  underlineLinksContent,
-  enhancedFocusContent,
-  hideDecorativeImagesContent,
+
+  textAndReadingContent,
+  visibilityContent,
+  motionContent,
+
   accessibilityStatementLabel,
   accessibilityStatementHref,
-  motionSectionTitle,
-  reduceMotionContent,
 }: AccessibilityPanelProps) {
-  const { resetPreferences } = useAccessibility()
+  const { preferences, updatePreference, resetPreferences } = useAccessibility()
+
+  const choiceContent = {
+    textScale: textAndReadingContent.textScale,
+    lineSpacing: textAndReadingContent.lineSpacing,
+    letterSpacing: textAndReadingContent.letterSpacing,
+    reduceMotion: motionContent.reduceMotion,
+  } satisfies {
+    [K in ChoiceControlKey]: ChoiceControlContent<K>
+  }
+
+  const renderChoiceControl = (preference: ChoiceControlKey) => {
+    const config = CHOICE_CONTROLS[preference]
+
+    return (
+      <ChoicePreferenceControl<string | number, string>
+        key={preference}
+        name={config.name}
+        content={choiceContent[preference]}
+        options={config.options}
+        value={preferences[preference]}
+        onChange={(value) => {
+          const selectedOption = config.options.find(
+            (option) => option.value === value
+          )
+
+          if (selectedOption) {
+            updatePreference(preference, selectedOption.value)
+          }
+        }}
+        density={"density" in config ? config.density : undefined}
+      />
+    )
+  }
 
   return (
     <DrawerContent
       id={id}
-      className="overflow-hidden rounded-xl border [--drawer-height:75dvh] [--drawer-inset:8px] after:hidden sm:[--drawer-content-width:24rem] sm:[--drawer-height:auto] sm:[--drawer-inset:24px]"
+      className="overflow-clip rounded-xl border [--drawer-height:75dvh] [--drawer-inset:8px] after:hidden sm:[--drawer-content-width:24rem] sm:[--drawer-height:auto] sm:[--drawer-inset:24px]"
     >
-      {/* =====================================================
-          HEADER
-         ===================================================== */}
+      {/* ========HEADER=============================== */}
 
       <DrawerHeader className="shrink-0 border-b border-border p-4 sm:p-5">
         <div className="flex items-start justify-between gap-4">
@@ -169,13 +145,11 @@ export function AccessibilityPanel({
               id={`${id}-text-reading-title`}
               className="px-1 text-xs font-semibold tracking-[0.14em] text-muted-foreground uppercase"
             >
-              {textSectionTitle}
+              {textAndReadingContent.title}
             </h3>
 
             <div className="space-y-3">
-              <TextScaleControl content={textScaleContent} />
-              <LineSpacingControl content={lineSpacingContent} />
-              <LetterSpacingControl content={letterSpacingContent} />
+              {CHOICE_CONTROL_SECTIONS.textAndReading.map(renderChoiceControl)}
             </div>
           </section>
 
@@ -191,33 +165,34 @@ export function AccessibilityPanel({
               id={`${id}-visibility-title`}
               className="px-1 text-xs font-semibold tracking-[0.14em] text-muted-foreground uppercase"
             >
-              {visibilitySectionTitle}
+              {visibilityContent.title}
             </h3>
 
             <div className="space-y-3">
-              <HighContrastControl content={highContrastContent} />
-              <GrayscaleControl content={grayscaleContent} />
-              <HideDecorativeImagesControl content={hideDecorativeImagesContent} />
-              <UnderlineLinksControl content={underlineLinksContent} />
-              <EnhancedFocusControl content={enhancedFocusContent} />
-              
+              {VISIBILITY_CONTROLS.map((preference) => (
+                <BooleanPreferenceControl
+                  key={preference}
+                  preference={preference}
+                  content={visibilityContent[preference]}
+                />
+              ))}
             </div>
           </section>
 
           {/* =========================================
-    MOUVEMENT ET CONFORT
-    ========================================= */}
+              MOUVEMENT ET CONFORT
+              ========================================= */}
 
           <section aria-labelledby={`${id}-motion-title`} className="space-y-4">
             <h3
               id={`${id}-motion-title`}
               className="font-heading text-sm font-semibold tracking-wide text-muted-foreground uppercase"
             >
-              {motionSectionTitle}
+              {motionContent.title}
             </h3>
 
             <div className="space-y-3">
-              <ReduceMotionControl content={reduceMotionContent} />
+              {CHOICE_CONTROL_SECTIONS.motion.map(renderChoiceControl)}
             </div>
           </section>
         </div>

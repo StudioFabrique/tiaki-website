@@ -50,7 +50,7 @@ export function HomeFeatures({ locale }: HomeFeaturesProps) {
             return (
               <article
                 key={item.title}
-                data-a11y-feature-card
+                data-a11y-layout="card"
                 className={[
                   "flex min-h-[520px] flex-col overflow-hidden rounded-[2rem] border border-border",
                   style.className,
@@ -73,7 +73,7 @@ export function HomeFeatures({ locale }: HomeFeaturesProps) {
 
                 {/* Illustration */}
                 <div
-                  data-a11y-feature-illustration
+                  data-a11y-decorative-media
                   className="mt-auto h-[280px] px-8 pb-8 sm:h-[300px] sm:px-10"
                 >
                   <div className="relative h-full w-full">
