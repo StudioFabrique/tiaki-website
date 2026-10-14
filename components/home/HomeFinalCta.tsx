@@ -17,7 +17,7 @@ export function HomeFinalCta({ locale }: HomeFinalCtaProps) {
     <section className="py-2 sm:py-8 lg:py-12">
       <Container>
         <div className="overflow-hidden rounded-[2rem] bg-tiaki-blue text-tiaki-blue-foreground">
-          <div className="grid min-h-[520px] lg:grid-cols-[1.05fr_0.95fr]">
+          <div data-a11y-final-cta-grid className="grid min-h-[520px] lg:grid-cols-[1.05fr_0.95fr]">
             {/* Content */}
             <div className="order-2 flex items-center p-7 sm:p-10 lg:order-1 lg:p-14">
               <div>
@@ -51,10 +51,11 @@ export function HomeFinalCta({ locale }: HomeFinalCtaProps) {
             </div>
 
             {/* Illustration */}
-            <div className="order-1 flex min-h-[340px] items-center justify-center p-8 sm:min-h-[400px] sm:p-10 lg:order-2 lg:min-h-0 lg:p-14">
+            <div   data-a11y-final-cta-illustration className="order-1 flex min-h-[340px] items-center justify-center p-8 sm:min-h-[400px] sm:p-10 lg:order-2 lg:min-h-0 lg:p-14">
               <div className="relative h-[280px] w-full sm:h-[320px] lg:h-[380px]">
                 <Image
                 data-a11y-grayscale-image
+                data-a11y-decorative-image
                   src="/images/pictos/picto-10-orange.png"
                   alt=""
                   fill

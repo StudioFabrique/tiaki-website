@@ -61,7 +61,7 @@ export function HomeAudiences({
                   style.background
                 )}
               >
-                <div className="grid min-h-[420px] lg:grid-cols-2">
+                <div data-a11y-audience-grid className="grid min-h-[420px] lg:grid-cols-2">
                   {/* Text */}
                   <div
                     className={cn(
@@ -86,6 +86,7 @@ export function HomeAudiences({
 
                   {/* Illustration */}
                   <div
+                  data-a11y-audience-illustration
                     className={cn(
                       "flex min-h-[320px] items-center justify-center p-8 sm:p-10 lg:min-h-0 lg:p-12",
                       reversed && "lg:order-1"
@@ -94,6 +95,7 @@ export function HomeAudiences({
                     <div className="relative h-[280px] w-full sm:h-[320px] lg:h-[340px]">
                       <Image
                       data-a11y-grayscale-image
+                      data-a11y-decorative-image
                         src={style.image}
                         alt=""
                         fill

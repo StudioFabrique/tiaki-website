@@ -73,22 +73,25 @@ type AccessibilityWidgetContent = {
           title: string
           description: string
         }
-      }
-        motion: {
+        hideDecorativeImages: {
           title: string
-          reduceMotion: {
-            title: string
-            description: string
-            options: {
-              system: string
-              reduce: string
-            }
+          description: string
+        }
+      }
+      motion: {
+        title: string
+        reduceMotion: {
+          title: string
+          description: string
+          options: {
+            system: string
+            reduce: string
           }
         }
       }
     }
   }
-
+}
 
 type AccessibilityWidgetProps = {
   content: AccessibilityWidgetContent
@@ -141,6 +144,7 @@ export function AccessibilityWidget({ content }: AccessibilityWidgetProps) {
         visibilitySectionTitle={content.panel.sections.visibility.title}
         highContrastContent={content.panel.sections.visibility.highContrast}
         grayscaleContent={content.panel.sections.visibility.grayscale}
+        hideDecorativeImagesContent={content.panel.sections.visibility.hideDecorativeImages}
         underlineLinksContent={content.panel.sections.visibility.underlineLinks}
         enhancedFocusContent={content.panel.sections.visibility.enhancedFocus}
         motionSectionTitle={content.panel.sections.motion.title}

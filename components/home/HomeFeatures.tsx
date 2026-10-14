@@ -1,12 +1,12 @@
-import Image from "next/image";
+import Image from "next/image"
 
-import { Container } from "@/components/layout/Container";
-import { getHomeContent } from "@/lib/content/home";
-import type { SiteLocale } from "@/lib/i18n/config";
+import { Container } from "@/components/layout/Container"
+import { getHomeContent } from "@/lib/content/home"
+import type { SiteLocale } from "@/lib/i18n/config"
 
 type HomeFeaturesProps = {
-  locale: SiteLocale;
-};
+  locale: SiteLocale
+}
 
 const featureStyles = [
   {
@@ -25,12 +25,10 @@ const featureStyles = [
     className: "bg-muted",
     image: "/images/pictos/picto-7-orange.png",
   },
-];
+]
 
-export function HomeFeatures({
-  locale,
-}: HomeFeaturesProps) {
-  const { features } = getHomeContent(locale);
+export function HomeFeatures({ locale }: HomeFeaturesProps) {
+  const { features } = getHomeContent(locale)
 
   return (
     <section className="py-8 sm:py-8 lg:py-12">
@@ -47,11 +45,12 @@ export function HomeFeatures({
 
         <div className="mt-12 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {features.items.map((item, index) => {
-            const style = featureStyles[index];
+            const style = featureStyles[index]
 
             return (
               <article
                 key={item.title}
+                data-a11y-feature-card
                 className={[
                   "flex min-h-[520px] flex-col overflow-hidden rounded-[2rem] border border-border",
                   style.className,
@@ -60,10 +59,7 @@ export function HomeFeatures({
                 {/* Text */}
                 <div className="p-7 sm:p-9 lg:p-10">
                   <span className="font-heading text-sm font-semibold text-muted-foreground">
-                    {String(index + 1).padStart(
-                      2,
-                      "0"
-                    )}
+                    {String(index + 1).padStart(2, "0")}
                   </span>
 
                   <h3 className="mt-5 font-heading text-3xl font-semibold tracking-[-0.035em] text-foreground sm:text-4xl">
@@ -76,10 +72,14 @@ export function HomeFeatures({
                 </div>
 
                 {/* Illustration */}
-                <div className="mt-auto h-[280px] px-8 pb-8 sm:h-[300px] sm:px-10">
-                  <div className="relative h-full w-full" >
+                <div
+                  data-a11y-feature-illustration
+                  className="mt-auto h-[280px] px-8 pb-8 sm:h-[300px] sm:px-10"
+                >
+                  <div className="relative h-full w-full">
                     <Image
-                    data-a11y-grayscale-image
+                      data-a11y-decorative-image
+                      data-a11y-grayscale-image
                       src={style.image}
                       alt=""
                       fill
@@ -89,10 +89,10 @@ export function HomeFeatures({
                   </div>
                 </div>
               </article>
-            );
+            )
           })}
         </div>
       </Container>
     </section>
-  );
+  )
 }

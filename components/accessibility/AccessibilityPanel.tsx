@@ -58,6 +58,12 @@ import {
   type ReduceMotionControlContent,
 } from "@/components/accessibility/controls/ReduceMotionControl"
 
+// Hide Decorative Images
+import {
+  HideDecorativeImagesControl,
+  type HideDecorativeImagesControlContent,
+} from "@/components/accessibility/controls/HideDecorativeImagesControl"
+
 type AccessibilityPanelProps = {
   id: string
 
@@ -78,6 +84,7 @@ type AccessibilityPanelProps = {
   underlineLinksContent: UnderlineLinksControlContent
   grayscaleContent: GrayscaleControlContent
   enhancedFocusContent: EnhancedFocusControlContent
+  hideDecorativeImagesContent: HideDecorativeImagesControlContent
 
   accessibilityStatementLabel?: string
   accessibilityStatementHref?: string
@@ -101,6 +108,7 @@ export function AccessibilityPanel({
   grayscaleContent,
   underlineLinksContent,
   enhancedFocusContent,
+  hideDecorativeImagesContent,
   accessibilityStatementLabel,
   accessibilityStatementHref,
   motionSectionTitle,
@@ -189,8 +197,10 @@ export function AccessibilityPanel({
             <div className="space-y-3">
               <HighContrastControl content={highContrastContent} />
               <GrayscaleControl content={grayscaleContent} />
+              <HideDecorativeImagesControl content={hideDecorativeImagesContent} />
               <UnderlineLinksControl content={underlineLinksContent} />
               <EnhancedFocusControl content={enhancedFocusContent} />
+              
             </div>
           </section>
 

@@ -17,7 +17,10 @@ export function HomeHero({ locale }: HomeHeroProps) {
     <section className="pt-4 sm:pt-6">
       <Container>
         <div className="overflow-hidden rounded-[2rem] bg-tiaki-blue/35">
-          <div className="grid min-h-[750px] lg:grid-cols-[0.95fr_1.05fr]">
+          <div
+            data-a11y-hero-grid
+            className="grid min-h-[750px] lg:grid-cols-[0.95fr_1.05fr]"
+          >
             {/* Content */}
             <div className="order-2 flex min-w-0 items-center p-7 sm:p-10 lg:order-1 lg:p-14">
               <div className="max-w-3xl min-w-0">
@@ -27,7 +30,6 @@ export function HomeHero({ locale }: HomeHeroProps) {
 
                 <div className="mt-8">
                   <Link
-                
                     href="#pourquoi"
                     className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-foreground px-7 font-heading text-sm font-semibold text-background transition-transform duration-200 hover:-translate-y-0.5"
                   >
@@ -40,9 +42,13 @@ export function HomeHero({ locale }: HomeHeroProps) {
             </div>
 
             {/* Illustration */}
-            <div className="relative order-1 min-h-[360px] overflow-hidden sm:min-h-[420px] lg:order-2 lg:min-h-0">
+            <div
+              data-a11y-hero-illustration
+              className="relative order-1 min-h-[360px] overflow-hidden sm:min-h-[420px] lg:order-2 lg:min-h-0"
+            >
               <Image
-              data-a11y-grayscale-image
+                data-a11y-grayscale-image
+                data-a11y-decorative-image
                 src="/images/photos/hero-caregiver.jpg"
                 alt="Une aidante accompagnant une personne au quotidien"
                 fill

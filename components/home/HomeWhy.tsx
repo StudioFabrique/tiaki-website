@@ -56,12 +56,13 @@ export function HomeWhy({ locale }: HomeWhyProps) {
 
             {/* About CTA */}
             <Link
-            data-a11y-focus-inset
+            data-a11y-focus-inset data-a11y-decorative-fallback
               href={getLocalizedPath("about", locale)}
               className="group relative min-h-[250px] overflow-hidden rounded-[1.5rem] focus-visible:ring-2 focus-visible:ring-tiaki-green-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-tiaki-green focus-visible:outline-none sm:min-h-[270px]"
             >
               <Image
                 data-a11y-grayscale-image
+                data-a11y-decorative-image
                 src="/images/photos/daily-support.jpg"
                 alt=""
                 fill
