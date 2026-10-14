@@ -15,10 +15,11 @@ export function HomeCooperation({ locale }: HomeCooperationProps) {
   return (
     <section className="py-2 sm:py-2 lg:py-12">
       <Container>
-        <div className="relative min-h-[620px] overflow-hidden rounded-[2rem] sm:min-h-[680px] lg:min-h-[720px]">
+        <div data-a11y-layout="overlay" className="relative min-h-[620px] overflow-hidden rounded-[2rem] sm:min-h-[680px] lg:min-h-[720px]">
           {/* Full background image */}
           <Image
            data-a11y-grayscale-image
+           data-a11y-decorative-image
             src="/images/photos/cooperation.jpg"
             alt="Des professionnels collaborant autour du projet T-IA-KI"
             fill
@@ -33,7 +34,7 @@ export function HomeCooperation({ locale }: HomeCooperationProps) {
           />
 
           {/* Content */}
-          <div className="relative z-10 flex min-h-[620px] flex-col justify-between p-7 sm:min-h-[680px] sm:p-10 lg:min-h-[720px] lg:p-14">
+          <div data-a11y-overlay-content className="relative z-10 flex min-h-[620px] flex-col justify-between p-7 sm:min-h-[680px] sm:p-10 lg:min-h-[720px] lg:p-14">
             {/* Heading */}
             <div className="max-w-4xl">
               <h2 className="font-heading text-4xl leading-[0.98] font-bold tracking-[-0.045em] text-white sm:text-5xl lg:text-6xl">

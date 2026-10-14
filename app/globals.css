@@ -230,15 +230,6 @@ html[data-a11y-text-scale="1.25"] {
 
    ========================================= */
 
-html[data-a11y-line-spacing] :where(p, li, a, dd, dt, blockquote) {
-  line-height: var(--a11y-body-line-height) !important;
-}
-
-html[data-a11y-line-spacing]
-  :where(label, button, input, textarea, select, summary) {
-  line-height: 1.5 !important;
-}
-
 html[data-a11y-line-spacing="relaxed"] {
   --a11y-body-line-height: 1.75;
   --a11y-heading-line-height: 1.4;
@@ -402,7 +393,7 @@ html[data-a11y-high-contrast] [data-a11y-dark-surface] [data-a11y-dark-border] {
 /* =========================================
    Accessibility — image surfaces
    ========================================= */
-
+/* 
 html[data-a11y-high-contrast] [data-a11y-image-overlay] {
   background-color: rgb(0 0 0 / 68%);
 }
@@ -414,34 +405,31 @@ html[data-a11y-high-contrast] [data-a11y-image-card] {
 
 html[data-a11y-high-contrast] [data-a11y-image-secondary-text] {
   color: rgb(255 255 255);
-}
+} */
 
 /* =========================================
    Accessibility — Grayscale
    ========================================= */
 
+/* Apply grayscale to marked images */
 html[data-a11y-grayscale] [data-a11y-grayscale-image] {
   filter: grayscale(100%);
 }
 
+/* Grayscale alone keeps overlays transparent */
 html[data-a11y-grayscale] [data-a11y-image-overlay] {
   background-color: transparent;
 }
 
-html[data-a11y-high-contrast][data-a11y-grayscale] [data-a11y-image-overlay] {
-  background-color: transparent;
+/* High contrast takes priority when both are enabled */
+html[data-a11y-high-contrast][data-a11y-grayscale]
+  [data-a11y-image-overlay] {
+  background-color: rgb(0 0 0 / 68%);
 }
 
 /* =========================================
    Accessibility — Underline links
    ========================================= */
-
-html[data-a11y-underline-links] a[data-a11y-text-link] {
-  text-decoration-line: underline;
-  text-decoration-thickness: 0.09em;
-  text-underline-offset: 0.2em;
-  text-decoration-skip-ink: auto;
-}
 
 html[data-a11y-underline-links] a[data-a11y-text-link] {
   text-decoration-line: underline;
@@ -569,4 +557,61 @@ html[data-a11y-reduce-motion] [data-a11y-motion-effect] {
   transform: none !important;
   translate: none !important;
   scale: none !important;
+}
+
+/* =========================================
+   Accessibility — Hide Decorative Images
+   ========================================= */
+
+/* Hide only explicitly identified decorative images */
+html[data-a11y-hide-decorative-images]
+  [data-a11y-decorative-image] {
+  display: none !important;
+}
+
+/* =========================================
+   Accessibility — Reusable Layout Behaviors
+   ========================================= */
+
+/* Hide explicitly marked decorative media */
+html[data-a11y-hide-decorative-images]
+  [data-a11y-decorative-media] {
+  display: none !important;
+}
+
+/* Reflow split layouts into a single column */
+html[data-a11y-hide-decorative-images]
+  [data-a11y-layout="split"] {
+  grid-template-columns: minmax(0, 1fr) !important;
+  min-height: 0 !important;
+}
+
+
+/* =========================================
+   Accessibility — Overlay Layout
+   ========================================= */
+
+/* Replace decorative background images */
+html[data-a11y-hide-decorative-images]
+  [data-a11y-layout="overlay"] {
+  background-color: #171717;
+  min-height: 0 !important;
+}
+
+/* Remove unnecessary minimum heights */
+html[data-a11y-hide-decorative-images]
+  [data-a11y-layout="overlay"]
+  [data-a11y-overlay-content] {
+  min-height: 0 !important;
+}
+
+
+/* =========================================
+   Accessibility — Card Layout
+   ========================================= */
+
+/* Allow cards to shrink when decorative media is hidden */
+html[data-a11y-hide-decorative-images]
+  [data-a11y-layout="card"] {
+  min-height: 0 !important;
 }

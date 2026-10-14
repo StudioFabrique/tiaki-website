@@ -2,22 +2,23 @@
 "use client"
 
 import { useAccessibility } from "../AccessibilityProvider"
+import type { BooleanPreferenceKey } from "@/lib/accessibility/registry"
 
-export type EnhancedFocusControlContent = {
+export type BooleanPreferenceControlContent = {
   title: string
   description: string
 }
 
-type EnhancedFocusControlProps = {
-  content: EnhancedFocusControlContent
+type BooleanPreferenceControlProps = {
+  preference: BooleanPreferenceKey
+  content: BooleanPreferenceControlContent
 }
 
-export function EnhancedFocusControl({
+export function BooleanPreferenceControl({
+  preference,
   content,
-}: EnhancedFocusControlProps) {
+}: BooleanPreferenceControlProps) {
   const { preferences, updatePreference } = useAccessibility()
-
-  const isEnabled = preferences.enhancedFocus
 
   return (
     <label className="flex cursor-pointer items-center justify-between gap-4 rounded-2xl border border-border bg-muted/30 p-4 transition-colors hover:bg-muted/50">
@@ -34,10 +35,10 @@ export function EnhancedFocusControl({
       <span className="relative shrink-0">
         <input
           type="checkbox"
-          checked={isEnabled}
-          onChange={(event) => {
-            updatePreference("enhancedFocus", event.target.checked)
-          }}
+          checked={preferences[preference]}
+          onChange={(event) =>
+            updatePreference(preference, event.target.checked)
+          }
           className="peer sr-only"
         />
 

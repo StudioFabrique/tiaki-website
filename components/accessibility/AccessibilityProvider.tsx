@@ -1,89 +1,102 @@
-"use client";
+"use client"
 
 import {
   createContext,
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
+  useSyncExternalStore,
   type ReactNode,
-} from "react";
+} from "react"
 
-import { applyAccessibilityPreferences } from "@/lib/accessibility/apply";
-import { DEFAULT_ACCESSIBILITY_PREFERENCES } from "@/lib/accessibility/defaults";
-import { getInitialAccessibilityPreferences } from "@/lib/accessibility/initial";
-import {
-  writeAccessibilityPreferences,
-} from "@/lib/accessibility/storage";
+import { applyAccessibilityPreferences } from "@/lib/accessibility/apply"
+import { DEFAULT_ACCESSIBILITY_PREFERENCES } from "@/lib/accessibility/defaults"
+import { getInitialAccessibilityPreferences } from "@/lib/accessibility/initial"
+import { writeAccessibilityPreferences } from "@/lib/accessibility/storage"
 
-import type { AccessibilityPreferences } from "@/lib/accessibility/types";
+import type { AccessibilityPreferences } from "@/lib/accessibility/types"
 
 type AccessibilityContextValue = {
-  preferences: AccessibilityPreferences;
+  preferences: AccessibilityPreferences
 
   updatePreference: <K extends keyof AccessibilityPreferences>(
     key: K,
-    value: AccessibilityPreferences[K],
-  ) => void;
+    value: AccessibilityPreferences[K]
+  ) => void
 
-  resetPreferences: () => void;
-};
+  resetPreferences: () => void
+}
 
-const AccessibilityContext =
-  createContext<AccessibilityContextValue | null>(null);
+const AccessibilityContext = createContext<AccessibilityContextValue | null>(
+  null
+)
 
 type AccessibilityProviderProps = {
-  children: ReactNode;
-};
+  children: ReactNode
+}
+
+const subscribe = () => () => {}
+
+const getClientSnapshot = () => true
+const getServerSnapshot = () => false
 
 export function AccessibilityProvider({
   children,
 }: AccessibilityProviderProps) {
-  const [preferences, setPreferences] =
-    useState<AccessibilityPreferences>(
-      DEFAULT_ACCESSIBILITY_PREFERENCES,
-    );
+  const hydrated = useSyncExternalStore(
+    subscribe,
+    getClientSnapshot,
+    getServerSnapshot
+  )
 
-  const [initialized, setInitialized] = useState(false);
+  const initialPreferences = useMemo(
+    () =>
+      hydrated
+        ? getInitialAccessibilityPreferences()
+        : DEFAULT_ACCESSIBILITY_PREFERENCES,
+    [hydrated]
+  )
+
+  const [updatedPreferences, setUpdatedPreferences] =
+    useState<AccessibilityPreferences | null>(null)
+
+  const preferences =
+    updatedPreferences ?? initialPreferences
 
   useEffect(() => {
-    const initialPreferences = getInitialAccessibilityPreferences();
+    if (!hydrated) return
 
-    setPreferences(initialPreferences);
-    applyAccessibilityPreferences(initialPreferences);
-    setInitialized(true);
-  }, []);
-
-  useEffect(() => {
-    if (!initialized) {
-      return;
+   
+    applyAccessibilityPreferences(preferences)
+    // Persist only user-initiated changes.
+    if (updatedPreferences !== null) {
+      writeAccessibilityPreferences(preferences)
     }
-
-    applyAccessibilityPreferences(preferences);
-    writeAccessibilityPreferences(preferences);
-  }, [preferences, initialized]);
+  }, [hydrated, preferences, updatedPreferences])
 
   const updatePreference = useCallback(
     <K extends keyof AccessibilityPreferences>(
       key: K,
-      value: AccessibilityPreferences[K],
+      value: AccessibilityPreferences[K]
     ) => {
-      setPreferences((current) => ({
-        ...current,
+      setUpdatedPreferences((current) => ({
+        ...(current ?? initialPreferences),
         [key]: value,
-      }));
+      }))
     },
-    [],
-  );
+    [initialPreferences]
+  )
 
-const resetPreferences = useCallback(() => {
-  setPreferences({
-    ...DEFAULT_ACCESSIBILITY_PREFERENCES,
-  });
-}, []);
+  const resetPreferences = useCallback(() => {
+    setUpdatedPreferences({
+      ...DEFAULT_ACCESSIBILITY_PREFERENCES,
+    })
+  }, [])
 
   return (
-    <AccessibilityContext.Provider
+     <AccessibilityContext.Provider
       value={{
         preferences,
         updatePreference,
@@ -92,21 +105,20 @@ const resetPreferences = useCallback(() => {
     >
       {children}
     </AccessibilityContext.Provider>
-  );
+  )
 }
 
 export function useAccessibility() {
-  const context = useContext(AccessibilityContext);
+  const context = useContext(AccessibilityContext)
 
   if (!context) {
     throw new Error(
-      "useAccessibility must be used inside AccessibilityProvider",
-    );
+      "useAccessibility must be used inside AccessibilityProvider"
+    )
   }
 
-  return context;
+  return context
 }
-
 
 // //
 

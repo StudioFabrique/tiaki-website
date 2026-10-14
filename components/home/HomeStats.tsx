@@ -6,7 +6,7 @@ import {
   Euro,
   type LucideIcon,
 } from "lucide-react"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState, useSyncExternalStore } from "react"
 
 import { Container } from "@/components/layout/Container"
 import { getHomeContent } from "@/lib/content/home"
@@ -43,27 +43,38 @@ const icons: Record<string, LucideIcon> = {
   percent: BadgePercent,
 }
 
+const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)"
+
+function subscribeToReducedMotion(callback: () => void) {
+  const mediaQuery = window.matchMedia(REDUCED_MOTION_QUERY)
+
+  mediaQuery.addEventListener("change", callback)
+
+  return () => {
+    mediaQuery.removeEventListener("change", callback)
+  }
+}
+
+function getReducedMotionSnapshot() {
+  return window.matchMedia(REDUCED_MOTION_QUERY).matches
+}
+
+function getReducedMotionServerSnapshot() {
+  return false
+}
+
 function useShouldReduceMotion() {
   const { preferences } = useAccessibility()
-  const [systemReducedMotion, setSystemReducedMotion] = useState(false)
 
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)")
-
-    const updatePreference = () => {
-      setSystemReducedMotion(mediaQuery.matches)
-    }
-    updatePreference()
-
-    mediaQuery.addEventListener("change", updatePreference)
-
-    return () => {
-      mediaQuery.removeEventListener("change", updatePreference)
-    }
-  }, [])
+  const systemReducedMotion = useSyncExternalStore(
+    subscribeToReducedMotion,
+    getReducedMotionSnapshot,
+    getReducedMotionServerSnapshot
+  )
 
   return preferences.reduceMotion === "reduce" || systemReducedMotion
 }
+
 
 function useAnimatedNumber(
   from: number,
@@ -76,15 +87,19 @@ function useAnimatedNumber(
   const completedRef = useRef(false)
 
   useEffect(() => {
-    // Reduced motion: immediately display final value.
     if (reduceMotion) {
-      setValue(to)
       completedRef.current = true
-      return
+
+      // Keep internal state synchronized without a
+      // synchronous state update inside the effect.
+      const frameId = requestAnimationFrame(() => {
+        setValue(to)
+      })
+
+      return () => cancelAnimationFrame(frameId)
     }
 
-    // Do not animate before becoming visible.
-    // Do not replay an animation already completed.
+    // Wait until visible and never replay a completed animation.
     if (!start || completedRef.current) {
       return
     }
@@ -97,7 +112,10 @@ function useAnimatedNumber(
         startTime = time
       }
 
-      const progress = Math.min((time - startTime) / duration, 1)
+      const progress = Math.min(
+        (time - startTime) / duration,
+        1
+      )
 
       // Ease-out cubic
       const eased = 1 - Math.pow(1 - progress, 3)
@@ -119,8 +137,10 @@ function useAnimatedNumber(
     }
   }, [from, to, start, reduceMotion, duration])
 
-  return value
+  // Display the final value immediately when motion is reduced.
+  return reduceMotion ? to : value
 }
+
 
 function AnimatedNumber({
   value,
@@ -233,7 +253,7 @@ export function HomeStats({ locale }: HomeStatsProps) {
 
         <div className="mt-12 overflow-hidden rounded-[2rem] border">
           <div className="grid md:grid-cols-3">
-            {items.map((item, index) => {
+            {items.map((item) => {
               const Icon = icons[item.icon]
 
               return (
