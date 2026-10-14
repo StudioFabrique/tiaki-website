@@ -570,3 +570,128 @@ html[data-a11y-reduce-motion] [data-a11y-motion-effect] {
   translate: none !important;
   scale: none !important;
 }
+
+/* =========================================
+   Accessibility — Hide Decorative Images
+   ========================================= */
+
+/* Hide only explicitly identified decorative images */
+html[data-a11y-hide-decorative-images]
+  [data-a11y-decorative-image] {
+  display: none !important;
+}
+
+/* Preserve readability on image-based cards */
+html[data-a11y-hide-decorative-images]
+  [data-a11y-decorative-fallback] {
+  background-color: #171717;
+}
+
+
+/* =========================================
+   Accessibility — Decorative Hero Image
+   ========================================= */
+
+/* Hide the entire illustration area */
+html[data-a11y-hide-decorative-images]
+  [data-a11y-hero-illustration] {
+  display: none !important;
+}
+
+/* Restore a single-column layout */
+html[data-a11y-hide-decorative-images]
+  [data-a11y-hero-grid] {
+  grid-template-columns: minmax(0, 1fr) !important;
+  min-height: 0 !important;
+}
+
+
+/* =========================================
+   Accessibility — Cooperation Section
+   ========================================= */
+
+/* Allow the section to adapt to its content
+   when the background photograph is hidden */
+html[data-a11y-hide-decorative-images]
+  [data-a11y-cooperation-container],
+html[data-a11y-hide-decorative-images]
+  [data-a11y-cooperation-content] {
+  min-height: 0 !important;
+}
+
+
+/* =========================================
+   Accessibility — Home Features
+   ========================================= */
+
+/* Hide the entire illustration container */
+html[data-a11y-hide-decorative-images]
+  [data-a11y-feature-illustration] {
+  display: none !important;
+}
+
+/* Allow feature cards to fit their text content */
+html[data-a11y-hide-decorative-images]
+  [data-a11y-feature-card] {
+  min-height: 0 !important;
+}
+
+/* =========================================
+   Accessibility — Home Audiences
+   ========================================= */
+
+/* Hide audience illustrations and their containers */
+html[data-a11y-hide-decorative-images]
+  [data-a11y-audience-illustration] {
+  display: none !important;
+}
+
+/* Use a single-column layout without fixed height */
+html[data-a11y-hide-decorative-images]
+  [data-a11y-audience-grid] {
+  grid-template-columns: minmax(0, 1fr) !important;
+  min-height: 0 !important;
+}
+
+/* Keep paragraphs at a comfortable reading width */
+html[data-a11y-hide-decorative-images]
+  [data-a11y-audience-grid] > div:not(
+    [data-a11y-audience-illustration]
+  ) > div {
+  max-width: 56rem;
+}
+
+/* =========================================
+   Accessibility — Home Final CTA
+   ========================================= */
+
+/* Hide the illustration container */
+html[data-a11y-hide-decorative-images]
+  [data-a11y-final-cta-illustration] {
+  display: none !important;
+}
+
+/* Restore a single-column layout */
+html[data-a11y-hide-decorative-images]
+  [data-a11y-final-cta-grid] {
+  grid-template-columns: minmax(0, 1fr) !important;
+  min-height: 0 !important;
+}
+
+
+/* =========================================
+   Accessibility — Resources Hero
+   ========================================= */
+
+/* Hide the decorative pictogram container */
+html[data-a11y-hide-decorative-images]
+  [data-a11y-resources-hero-illustration] {
+  display: none !important;
+}
+
+/* Restore a single-column layout */
+html[data-a11y-hide-decorative-images]
+  [data-a11y-resources-hero-grid] {
+  grid-template-columns: minmax(0, 1fr) !important;
+  min-height: 0 !important;
+}

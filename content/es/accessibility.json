@@ -58,20 +58,24 @@
         "enhancedFocus": {
           "title": "Foco reforzado",
           "description": "Hace más visible el elemento seleccionado al navegar con el teclado."
+        },
+
+        "hideDecorativeImages": {
+          "title": "Ocultar imágenes decorativas",
+          "description": "Oculta las fotos e ilustraciones no esenciales para simplificar la visualización de las páginas."
         }
       },
-        "motion": {
-          "title": "Movimiento y confort",
-          "reduceMotion": {
-            "title": "Reducir las animaciones",
-            "description": "Limita las animaciones y los movimientos no esenciales. El modo Sistema respeta las preferencias de tu dispositivo.",
-            "options": {
-              "system": "Sistema",
-              "reduce": "Reducir"
-            }
+      "motion": {
+        "title": "Movimiento y confort",
+        "reduceMotion": {
+          "title": "Reducir las animaciones",
+          "description": "Limita las animaciones y los movimientos no esenciales. El modo Sistema respeta las preferencias de tu dispositivo.",
+          "options": {
+            "system": "Sistema",
+            "reduce": "Reducir"
           }
         }
       }
     }
   }
-
+}

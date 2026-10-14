@@ -61,6 +61,10 @@
         "enhancedFocus": {
           "title": "Focus renforcé",
           "description": "Rend plus visible l’élément sélectionné lors de la navigation au clavier."
+        },
+        "hideDecorativeImages": {
+          "title": "Masquer les images décoratives",
+          "description": "Masque les photos et illustrations non essentielles pour simplifier l’affichage des pages."
         }
       },
       "motion": {
