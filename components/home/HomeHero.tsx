@@ -18,13 +18,13 @@ export function HomeHero({ locale }: HomeHeroProps) {
       <Container>
         <div className="overflow-hidden rounded-[2rem] bg-tiaki-blue/35">
           <div
-            data-a11y-hero-grid
+            data-a11y-layout="split"
             className="grid min-h-[750px] lg:grid-cols-[0.95fr_1.05fr]"
           >
             {/* Content */}
             <div className="order-2 flex min-w-0 items-center p-7 sm:p-10 lg:order-1 lg:p-14">
               <div className="max-w-3xl min-w-0">
-                <h1 className="max-w-full font-heading text-4xl leading-[0.94] font-bold tracking-[-0.055em] text-foreground sm:text-5xl lg:text-7xl xl:text-[3.5rem]">
+                <h1 className="max-w-full font-heading text-4xl leading-[0.94] font-bold tracking-[-0.055em] text-foreground sm:text-5xl lg:text-7xl xl:text-[4.5rem]">
                   {hero.title}
                 </h1>
 
@@ -43,7 +43,7 @@ export function HomeHero({ locale }: HomeHeroProps) {
 
             {/* Illustration */}
             <div
-              data-a11y-hero-illustration
+              data-a11y-decorative-media
               className="relative order-1 min-h-[360px] overflow-hidden sm:min-h-[420px] lg:order-2 lg:min-h-0"
             >
               <Image

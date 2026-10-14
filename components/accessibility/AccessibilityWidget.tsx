@@ -5,6 +5,11 @@ import { useEffect, useState } from "react"
 import { AccessibilityPanel } from "./AccessibilityPanel"
 import { AccessibilityTrigger } from "./AccessibilityTrigger"
 
+import type {
+  ChoiceSectionContent,
+  VisibilitySectionContent,
+} from "@/lib/accessibility/registry"
+
 import { Drawer, DrawerTrigger } from "@/components/ui/drawer"
 
 type AccessibilityWidgetContent = {
@@ -17,78 +22,11 @@ type AccessibilityWidgetContent = {
     description: string
     close: string
     reset: string
+
     sections: {
-      textAndReading: {
-        title: string
-
-        // TextResizing
-        textScale: {
-          title: string
-          description: string
-          options: {
-            smaller: string
-            default: string
-            large: string
-            larger: string
-          }
-        }
-        // lineSpacing
-        lineSpacing: {
-          title: string
-          description: string
-          options: {
-            default: string
-            relaxed: string
-            wide: string
-          }
-        }
-        // Letter Spacing
-        letterSpacing: {
-          title: string
-          description: string
-          options: {
-            default: string
-            wide: string
-          }
-        }
-      }
-
-      visibility: {
-        title: string
-        highContrast: {
-          title: string
-          description: string
-        }
-
-        grayscale: {
-          title: string
-          description: string
-        }
-
-        underlineLinks: {
-          title: string
-          description: string
-        }
-        enhancedFocus: {
-          title: string
-          description: string
-        }
-        hideDecorativeImages: {
-          title: string
-          description: string
-        }
-      }
-      motion: {
-        title: string
-        reduceMotion: {
-          title: string
-          description: string
-          options: {
-            system: string
-            reduce: string
-          }
-        }
-      }
+      textAndReading: ChoiceSectionContent<"textAndReading">
+      visibility: VisibilitySectionContent
+      motion: ChoiceSectionContent<"motion">
     }
   }
 }
@@ -135,20 +73,9 @@ export function AccessibilityWidget({ content }: AccessibilityWidgetProps) {
         description={content.panel.description}
         closeLabel={content.panel.close}
         resetLabel={content.panel.reset}
-        textSectionTitle={content.panel.sections.textAndReading.title}
-        textScaleContent={content.panel.sections.textAndReading.textScale}
-        lineSpacingContent={content.panel.sections.textAndReading.lineSpacing}
-        letterSpacingContent={
-          content.panel.sections.textAndReading.letterSpacing
-        }
-        visibilitySectionTitle={content.panel.sections.visibility.title}
-        highContrastContent={content.panel.sections.visibility.highContrast}
-        grayscaleContent={content.panel.sections.visibility.grayscale}
-        hideDecorativeImagesContent={content.panel.sections.visibility.hideDecorativeImages}
-        underlineLinksContent={content.panel.sections.visibility.underlineLinks}
-        enhancedFocusContent={content.panel.sections.visibility.enhancedFocus}
-        motionSectionTitle={content.panel.sections.motion.title}
-        reduceMotionContent={content.panel.sections.motion.reduceMotion}
+        textAndReadingContent={content.panel.sections.textAndReading}
+        visibilityContent={content.panel.sections.visibility}
+        motionContent={content.panel.sections.motion}
       />
     </Drawer>
   )

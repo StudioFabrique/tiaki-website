@@ -61,7 +61,7 @@ export function HomeAudiences({
                   style.background
                 )}
               >
-                <div data-a11y-audience-grid className="grid min-h-[420px] lg:grid-cols-2">
+                <div data-a11y-layout="split" className="grid min-h-[420px] lg:grid-cols-2">
                   {/* Text */}
                   <div
                     className={cn(
@@ -69,7 +69,7 @@ export function HomeAudiences({
                       reversed && "lg:order-2"
                     )}
                   >
-                    <div>
+                    <div className="max-w-4xl">
                      <span className="font-heading text-sm font-semibold text-muted-foreground">
                         {String(index + 1).padStart(2, "0")}
                       </span>
@@ -86,7 +86,7 @@ export function HomeAudiences({
 
                   {/* Illustration */}
                   <div
-                  data-a11y-audience-illustration
+                  data-a11y-decorative-media
                     className={cn(
                       "flex min-h-[320px] items-center justify-center p-8 sm:p-10 lg:min-h-0 lg:p-12",
                       reversed && "lg:order-1"

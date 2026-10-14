@@ -2,22 +2,23 @@
 "use client"
 
 import { useAccessibility } from "../AccessibilityProvider"
+import type { BooleanPreferenceKey } from "@/lib/accessibility/registry"
 
-export type HideDecorativeImagesControlContent = {
+export type BooleanPreferenceControlContent = {
   title: string
   description: string
 }
 
-type HideDecorativeImagesControlProps = {
-  content: HideDecorativeImagesControlContent
+type BooleanPreferenceControlProps = {
+  preference: BooleanPreferenceKey
+  content: BooleanPreferenceControlContent
 }
 
-export function HideDecorativeImagesControl({
+export function BooleanPreferenceControl({
+  preference,
   content,
-}: HideDecorativeImagesControlProps) {
+}: BooleanPreferenceControlProps) {
   const { preferences, updatePreference } = useAccessibility()
-
-  const isEnabled = preferences.hideDecorativeImages
 
   return (
     <label className="flex cursor-pointer items-center justify-between gap-4 rounded-2xl border border-border bg-muted/30 p-4 transition-colors hover:bg-muted/50">
@@ -34,13 +35,10 @@ export function HideDecorativeImagesControl({
       <span className="relative shrink-0">
         <input
           type="checkbox"
-          checked={isEnabled}
-          onChange={(event) => {
-            updatePreference(
-              "hideDecorativeImages",
-              event.target.checked
-            )
-          }}
+          checked={preferences[preference]}
+          onChange={(event) =>
+            updatePreference(preference, event.target.checked)
+          }
           className="peer sr-only"
         />
 
