@@ -40,13 +40,13 @@ export function Footer({ locale, currentRoute }: FooterProps) {
                 className="inline-block"
                 aria-label="T-IA-KI"
               >
-                <div className="flex min-h-[86px] w-[210px] items-center rounded-[1.25rem] bg-white p-4">
+                <div className="flex min-h-[86px] w-[280px] items-center rounded-[1.25rem] bg-white p-4">
                   <div className="relative h-[54px] w-full">
                     <Image
                       src="/images/logos/tiaki.png"
                       alt="T-IA-KI"
                       fill
-                      sizes="210px"
+                      sizes="280px"
                       className="object-contain object-left"
                     />
                   </div>
