@@ -12,19 +12,23 @@
   },
   "why": {
     "title": "Prendre soin d’un proche ne devrait pas vouloir dire tout gérer seul",
-    "description": "Les aidant(e)s font face à de nombreuses situations au quotidien : trouver la bonne information, comprendre les démarches, se former, coordonner les intervenants ou simplement savoir vers qui se tourner.",
+    "description": "Accompagner un proche, c’est faire face à de nombreux défis : un quotidien complexe à organiser, des informations difficiles à trouver, une fatigue grandissante et parfois un sentiment d’isolement.",
     "items": [
       {
-        "title": "Trouver la bonne information",
-        "description": "Accéder plus facilement à des ressources utiles, compréhensibles et adaptées à chaque situation."
+        "title": "Un quotidien complexe à organiser",
+        "description": "Entre les soins, les rendez-vous et les démarches administratives, les aidant(e)s doivent jongler avec de nombreuses responsabilités."
       },
       {
-        "title": "Être mieux accompagné.e",
-        "description": "Identifier les ressources, les services et les professionnels qui peuvent apporter un soutien."
+        "title": "Des informations difficiles à trouver et à comprendre",
+        "description": "Les aides, les droits et les conseils pratiques sont souvent dispersés et difficiles à identifier."
       },
       {
-        "title": "Mieux organiser le quotidien",
-        "description": "Faciliter le suivi, les activités, les rendez-vous et les différents éléments liés à l’accompagnement."
+        "title": "Une fatigue et une charge mentale qui s'accumulent",
+        "description": "Concilier l'accompagnement d'un proche avec sa vie personnelle et professionnelle pourrait devenir épuisant."
+      },
+            {
+        "title": "Un sentiment d'isolement",
+        "description": "Le manque de soutien, de relais et d'échanges peut laisser les aidant(e)s seul(e)s face aux difficultés du quotidien."
       }
     ],
       "aboutCta": "Découvrir le projet T-IA-KI"
@@ -57,7 +61,7 @@
   "items": [
     {
       "title": "aidant(e)s",
-      "description": "Trouver des ressources, mieux organiser le quotidien, se former et accéder plus facilement aux informations utiles."
+      "description": "Accéder facilement à des ressources, mieux organiser son quotidien et échanger avec la communauté."
     },
     {
       "title": "Professionnel(le)s",
@@ -69,19 +73,21 @@
     },
     {
       "title": "Personnes accompagnées",
-      "description": "Bénéficier indirectement d’un accompagnement mieux coordonné et de ressources plus accessibles pour leur entourage."
+      "description": "Bénéficie de ressources favorisant son autonomie et son bien-être grâce à un accompagnement mieux coordonné."
     }
   ]
 },
+
 "cooperation": {
-  "title": "Deux territoires. Une ambition commune",
-  "description": "T-IA-KI réunit des acteurs français et espagnols pour partager les connaissances, rapprocher les pratiques et développer ensemble de nouvelles solutions au service des aidant·e·s.",
+  "title": "Des deux côtés des Pyrénées, une ambition commune",
+  "description": "Ancré dans la coopération entre les Pyrénées-Atlantiques et la Navarre, T-IA-KI rassemble des partenaires de plusieurs territoires français et espagnols. Ensemble, ils partagent leurs savoir-faire et développent des solutions communes pour mieux accompagner les aidant(e)s.",
   "items": [
-    "Partager les bonnes pratiques",
-    "Rapprocher les acteurs du territoire",
-    "Construire des solutions communes"
+    "Partager les connaissances et les bonnes pratiques",
+    "Renforcer la coopération entre les acteurs",
+    "Développer ensemble des solutions adaptées aux aidant(e)s"
   ]
-},
+}
+,
 "stats": {
   "title": "T-IA-KI en quelques chiffres",
   "description": "Un projet transfrontalier soutenu par l’Union européenne pour développer de nouvelles solutions au service des aidant(e)s.",

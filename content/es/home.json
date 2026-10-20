@@ -8,19 +8,23 @@
   },
   "why": {
     "title": "Cuidar de una persona cercana no debería significar tener que gestionarlo todo solo",
-    "description": "Las personas cuidadoras afrontan numerosas situaciones en su día a día: encontrar la información adecuada, comprender los trámites, formarse, coordinar a los profesionales o simplemente saber a quién acudir.",
+    "description": "Cuidar de un ser querido implica afrontar numerosos desafíos: organizar un día a día complejo, encontrar información útil, gestionar el cansancio creciente y, en ocasiones, afrontar la soledad.",
     "items": [
       {
-        "title": "Encontrar la información adecuada",
-        "description": "Acceder más fácilmente a recursos útiles, comprensibles y adaptados a cada situación."
+        "title": "Un día a día difícil de organizar",
+        "description": "Entre los cuidados, las citas y los trámites administrativos, las personas cuidadoras deben asumir numerosas responsabilidades."
       },
       {
-        "title": "Recibir un mejor acompañamiento",
-        "description": "Identificar los recursos, servicios y profesionales que pueden ofrecer apoyo."
+        "title": "Información difícil de encontrar y comprender",
+        "description": "Las ayudas, los derechos y los consejos prácticos suelen estar dispersos y ser difíciles de localizar."
       },
       {
-        "title": "Organizar mejor el día a día",
-        "description": "Facilitar el seguimiento, las actividades, las citas y los distintos elementos relacionados con los cuidados."
+        "title": "Un cansancio y una carga mental que se acumulan",
+        "description": "Compaginar el cuidado de un ser querido con la vida personal y profesional puede resultar agotador."
+      },
+      {
+        "title": "Un sentimiento de soledad",
+        "description": "La falta de apoyo, de personas que puedan relevarlas y de espacios de intercambio puede hacer que las personas cuidadoras afronten solas las dificultades del día a día."
       }
     ],
     "aboutCta": "Descubrir el proyecto T-IA-KI"
@@ -54,7 +58,7 @@
     "items": [
       {
         "title": "Personas cuidadoras",
-        "description": "Encontrar recursos, organizar mejor el día a día, formarse y acceder más fácilmente a información útil."
+        "description": "Acceda fácilmente a recursos, organice mejor su vida diaria e interactúe con la comunidad."
       },
       {
         "title": "Profesionales",
@@ -66,17 +70,18 @@
       },
       {
         "title": "Personas acompañadas",
-        "description": "Beneficiarse indirectamente de un acompañamiento mejor coordinado y de recursos más accesibles para su entorno."
+        "description": "Beneficiarse de recursos que promueven su autonomía y bienestar gracias a un apoyo mejor coordinado."
       }
     ]
   },
+
   "cooperation": {
-    "title": "Dos territorios. Una ambición común",
-    "description": "T-IA-KI reúne a actores franceses y españoles para compartir conocimientos, acercar las prácticas y desarrollar conjuntamente nuevas soluciones al servicio de las personas cuidadoras.",
+    "title": "A ambos lados de los Pirineos, una ambición común",
+    "description": "Basado en la cooperación entre los Pirineos Atlánticos y Navarra, T-IA-KI reúne a entidades de diferentes territorios franceses y españoles. Juntas, comparten sus conocimientos y experiencias y desarrollan soluciones comunes para mejorar el apoyo a las personas cuidadoras.",
     "items": [
-      "Compartir buenas prácticas",
-      "Acercar a los actores del territorio",
-      "Construir soluciones comunes"
+      "Compartir conocimientos y buenas prácticas",
+      "Reforzar la cooperación entre los diferentes actores",
+      "Desarrollar juntos soluciones adaptadas a las personas cuidadoras"
     ]
   },
   "stats": {
