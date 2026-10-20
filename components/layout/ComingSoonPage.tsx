@@ -11,9 +11,14 @@ import {
   type SiteLocale,
 } from "@/lib/i18n/config";
 
+type NavigationRoute = Extract<
+  RouteKey,
+  keyof ReturnType<typeof getNavigationContent>
+>;
+
 type ComingSoonPageProps = {
   locale: SiteLocale;
-  route: RouteKey;
+  route: NavigationRoute;
 };
 
 export function ComingSoonPage({
