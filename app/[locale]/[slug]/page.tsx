@@ -1,61 +1,75 @@
-import { notFound } from "next/navigation";
+import { notFound } from "next/navigation"
 
-import { ComingSoonPage } from "@/components/layout/ComingSoonPage";
-import { LocalizedPageShell } from "@/components/layout/LocalizedPageShell";
-import { ResourcesPage } from "@/components/resources/ResourcesPage";
+import { ComingSoonPage } from "@/components/layout/ComingSoonPage"
+import { LocalizedPageShell } from "@/components/layout/LocalizedPageShell"
+import { ResourcesPage } from "@/components/resources/ResourcesPage"
 
-import {
-  getRouteKeyFromSlug,
-  isSiteLocale,
-} from "@/lib/i18n/config";
+import { GlossaryPage } from "@/components/glossary/GlossaryPage"
+import { LegalNoticePage } from "@/components/legal/LegalNoticePage"
+import { TermsPage } from "@/components/legal/TermsPage"
+
+import { getRouteKeyFromSlug, isSiteLocale } from "@/lib/i18n/config"
 
 type LocalizedPageProps = {
   params: Promise<{
-    locale: string;
-    slug: string;
-  }>;
+    locale: string
+    slug: string
+  }>
 
   searchParams: Promise<{
-    country?: string;
-  }>;
-};
+    country?: string
+  }>
+}
 
 export default async function LocalizedPage({
   params,
   searchParams,
 }: LocalizedPageProps) {
-  const { locale, slug } = await params;
-  const { country } = await searchParams;
+  const { locale, slug } = await params
+  const { country } = await searchParams
 
   if (!isSiteLocale(locale)) {
-    notFound();
+    notFound()
   }
 
-  const routeKey = getRouteKeyFromSlug(
-    locale,
-    slug
+  const routeKey = getRouteKeyFromSlug(locale, slug)
+
+if (routeKey === "glossary") {
+  return (
+    <LocalizedPageShell locale={locale} currentRoute="glossary">
+      <GlossaryPage locale={locale} />
+    </LocalizedPageShell>
   );
+}
+
+if (routeKey === "terms") {
+  return (
+    <LocalizedPageShell locale={locale} currentRoute="terms">
+      <TermsPage locale={locale} />
+    </LocalizedPageShell>
+  );
+}
+
+if (routeKey === "legal") {
+  return (
+    <LocalizedPageShell locale={locale} currentRoute="legal">
+      <LegalNoticePage locale={locale} />
+    </LocalizedPageShell>
+  );
+}
+
 
   if (!routeKey) {
-    notFound();
+    notFound()
   }
 
   return (
-    <LocalizedPageShell
-      locale={locale}
-      currentRoute={routeKey}
-    >
+    <LocalizedPageShell locale={locale} currentRoute={routeKey}>
       {routeKey === "resources" ? (
-        <ResourcesPage
-          locale={locale}
-          country={country}
-        />
+        <ResourcesPage locale={locale} country={country} />
       ) : (
-        <ComingSoonPage
-          locale={locale}
-          route={routeKey}
-        />
+        <ComingSoonPage locale={locale} route={routeKey} />
       )}
     </LocalizedPageShell>
-  );
+  )
 }

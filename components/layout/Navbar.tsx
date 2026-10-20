@@ -28,13 +28,14 @@ type NavbarProps = {
   currentRoute: RouteKey
 }
 
-const navigationRoutes: RouteKey[] = [
+const navigationRoutes = [
   "home",
   "resources",
   "platform",
   "about",
   "contact",
-]
+] as const satisfies readonly RouteKey[]
+
 const navigationLocales: SiteLocale[] = [
   "fr",
   "es",

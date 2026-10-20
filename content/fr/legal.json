@@ -1,0 +1,38 @@
+
+{
+  "title": "Mentions légales",
+  "description": "Informations relatives à l'édition, à l'hébergement et aux responsabilités associées au site T-IA-KI.",
+  "notice": "Ces informations sont provisoires. Les coordonnées et les responsabilités juridiques doivent être confirmées avant publication.",
+  "sections": [
+    {
+      "id": "editeur",
+      "title": "Éditeur du site",
+      "description": "À compléter : raison sociale de l'organisme éditeur, forme juridique, adresse du siège social et coordonnées."
+    },
+    {
+      "id": "publication",
+      "title": "Responsable de la publication",
+      "description": "À compléter : identité et fonction de la personne responsable de la publication."
+    },
+    {
+      "id": "hebergement",
+      "title": "Hébergement du site",
+      "description": "À compléter : identité, adresse et coordonnées de l'hébergeur effectif du site."
+    },
+    {
+      "id": "propriete",
+      "title": "Propriété intellectuelle",
+      "description": "À compléter : titulaires des droits sur les contenus et conditions de réutilisation."
+    },
+    {
+      "id": "donnees",
+      "title": "Protection des données personnelles",
+      "description": "À compléter : identité du responsable de traitement, moyens de contact et lien vers la politique de confidentialité."
+    },
+    {
+      "id": "contact",
+      "title": "Contact",
+      "description": "À compléter : adresse électronique ou coordonnées du contact officiel."
+    }
+  ]
+}

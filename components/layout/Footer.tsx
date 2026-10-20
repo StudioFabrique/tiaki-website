@@ -15,9 +15,31 @@ type FooterProps = {
   currentRoute: RouteKey
 }
 
-const navigationRoutes: RouteKey[] = ["home", "resources", "contact"]
+const navigationRoutes = [
+  "home",
+  "resources",
+  "contact",
+] as const satisfies readonly RouteKey[]
 
 const footerLocales = ["fr", "es"] as const satisfies readonly SiteLocale[]
+
+const utilityLinks = [
+  {
+    route: "glossary",
+    labels: { fr: "Glossaire", es: "Glosario" },
+  },
+  {
+    route: "terms",
+    labels: { fr: "CGU", es: "Condiciones de uso" },
+  },
+  {
+    route: "legal",
+    labels: { fr: "Mentions légales", es: "Aviso legal" },
+  },
+] as const satisfies ReadonlyArray<{
+  route: RouteKey
+  labels: Record<SiteLocale, string>
+}>
 
 export function Footer({ locale, currentRoute }: FooterProps) {
   const content = getFooterContent(locale)
@@ -156,6 +178,26 @@ export function Footer({ locale, currentRoute }: FooterProps) {
               <p data-a11y-dark-tertiary className="text-sm text-white/40">
                 © {new Date().getFullYear()} {content.copyright}
               </p>
+
+              {/* Glossary and legal pages */}
+              <nav
+                aria-label={
+                  locale === "fr" ? "Informations utiles" : "Información útil"
+                }
+                className="flex flex-wrap items-center gap-x-5 gap-y-3"
+              >
+                {utilityLinks.map((item) => (
+                  <Link
+                    key={item.route}
+                    href={getLocalizedPath(item.route, locale)}
+                    data-a11y-text-link
+                    data-a11y-dark-secondary
+                    className="font-heading text-sm text-white/70 transition-colors hover:text-white"
+                  >
+                    {item.labels[locale]}
+                  </Link>
+                ))}
+              </nav>
 
               {/* Languages */}
               <div className="flex items-center gap-2">

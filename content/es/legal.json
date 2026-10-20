@@ -1,0 +1,38 @@
+
+{
+  "title": "Aviso legal",
+  "description": "Información sobre la titularidad, el alojamiento y las responsabilidades relacionadas con el sitio web T-IA-KI.",
+  "notice": "Esta información es provisional. Los datos de contacto y las responsabilidades jurídicas deben confirmarse antes de su publicación.",
+  "sections": [
+    {
+      "id": "editeur",
+      "title": "Titular del sitio web",
+      "description": "Pendiente de completar: razón social de la entidad titular, forma jurídica, domicilio social y datos de contacto."
+    },
+    {
+      "id": "publication",
+      "title": "Responsable de la publicación",
+      "description": "Pendiente de completar: identidad y cargo de la persona responsable de la publicación."
+    },
+    {
+      "id": "hebergement",
+      "title": "Alojamiento del sitio web",
+      "description": "Pendiente de completar: identidad, dirección y datos de contacto del proveedor de alojamiento efectivo."
+    },
+    {
+      "id": "propriete",
+      "title": "Propiedad intelectual",
+      "description": "Pendiente de completar: titulares de los derechos sobre los contenidos y condiciones de reutilización."
+    },
+    {
+      "id": "donnees",
+      "title": "Protección de datos personales",
+      "description": "Pendiente de completar: identidad del responsable del tratamiento, datos de contacto y enlace a la política de privacidad."
+    },
+    {
+      "id": "contact",
+      "title": "Contacto",
+      "description": "Pendiente de completar: dirección de correo electrónico o datos del contacto oficial."
+    }
+  ]
+}

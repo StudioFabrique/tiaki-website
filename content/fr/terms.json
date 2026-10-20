@@ -1,0 +1,38 @@
+
+{
+  "title": "Conditions générales d'utilisation",
+  "description": "Informations relatives à l'accès et à l'utilisation du site et de la plateforme T-IA-KI.",
+  "notice": "Document en cours de rédaction et de validation. Les dispositions définitives seront publiées après validation juridique.",
+  "sections": [
+    {
+      "id": "objet",
+      "title": "Objet des conditions générales",
+      "description": "Cette section précisera l'objet et le champ d'application des conditions générales d'utilisation du site T-IA-KI."
+    },
+    {
+      "id": "acces",
+      "title": "Accès et utilisation du site",
+      "description": "À compléter : conditions d'accès au site public, disponibilité des services et règles générales d'utilisation."
+    },
+    {
+      "id": "informations",
+      "title": "Informations et contenus proposés",
+      "description": "À préciser : portée des informations, ressources et contenus pédagogiques publiés, notamment ceux concernant la santé et l'accompagnement."
+    },
+    {
+      "id": "propriete",
+      "title": "Propriété intellectuelle",
+      "description": "À compléter : droits d'utilisation et de reproduction des textes, images, vidéos, logos et autres contenus."
+    },
+    {
+      "id": "donnees",
+      "title": "Données personnelles",
+      "description": "À compléter : informations relatives au traitement des données personnelles et renvoi vers la politique de confidentialité."
+    },
+    {
+      "id": "modifications",
+      "title": "Modification des conditions",
+      "description": "À préciser : modalités de mise à jour des conditions générales d'utilisation."
+    }
+  ]
+}
