@@ -22,10 +22,7 @@ export default async function HomePage({
   const { locale } = await params;
 
   return (
-    <LocalizedPageShell
-      locale={locale}
-      currentRoute="home"
-    >
+    <>
       <HomeHero locale={locale} />
       <HomeWhy locale={locale} />
       <HomeFeatures locale={locale} />
@@ -34,6 +31,6 @@ export default async function HomePage({
       <HomeFunding locale={locale} />
       <HomeStats locale={locale} />
       <HomeFinalCta locale={locale} />
-    </LocalizedPageShell>
+    </>
   );
 }

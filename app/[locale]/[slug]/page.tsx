@@ -1,14 +1,17 @@
+
 import { notFound } from "next/navigation"
 
 import { ComingSoonPage } from "@/components/layout/ComingSoonPage"
-import { LocalizedPageShell } from "@/components/layout/LocalizedPageShell"
 import { ResourcesPage } from "@/components/resources/ResourcesPage"
 
 import { GlossaryPage } from "@/components/glossary/GlossaryPage"
 import { LegalNoticePage } from "@/components/legal/LegalNoticePage"
 import { TermsPage } from "@/components/legal/TermsPage"
 
-import { getRouteKeyFromSlug, isSiteLocale } from "@/lib/i18n/config"
+import {
+  getRouteKeyFromSlug,
+  isSiteLocale,
+} from "@/lib/i18n/config"
 
 type LocalizedPageProps = {
   params: Promise<{
@@ -28,48 +31,48 @@ export default async function LocalizedPage({
   const { locale, slug } = await params
   const { country } = await searchParams
 
+  // Validate locale
   if (!isSiteLocale(locale)) {
     notFound()
   }
 
+  // Identify current route
   const routeKey = getRouteKeyFromSlug(locale, slug)
-
-if (routeKey === "glossary") {
-  return (
-    <LocalizedPageShell locale={locale} currentRoute="glossary">
-      <GlossaryPage locale={locale} />
-    </LocalizedPageShell>
-  );
-}
-
-if (routeKey === "terms") {
-  return (
-    <LocalizedPageShell locale={locale} currentRoute="terms">
-      <TermsPage locale={locale} />
-    </LocalizedPageShell>
-  );
-}
-
-if (routeKey === "legal") {
-  return (
-    <LocalizedPageShell locale={locale} currentRoute="legal">
-      <LegalNoticePage locale={locale} />
-    </LocalizedPageShell>
-  );
-}
-
 
   if (!routeKey) {
     notFound()
   }
 
+  // Resources
+  if (routeKey === "resources") {
+    return (
+      <ResourcesPage
+        locale={locale}
+        country={country}
+      />
+    )
+  }
+
+  // Glossary
+  if (routeKey === "glossary") {
+    return <GlossaryPage locale={locale} />
+  }
+
+  // Terms and conditions
+  if (routeKey === "terms") {
+    return <TermsPage locale={locale} />
+  }
+
+  // Legal notice
+  if (routeKey === "legal") {
+    return <LegalNoticePage locale={locale} />
+  }
+
+  // Pages under development
   return (
-    <LocalizedPageShell locale={locale} currentRoute={routeKey}>
-      {routeKey === "resources" ? (
-        <ResourcesPage locale={locale} country={country} />
-      ) : (
-        <ComingSoonPage locale={locale} route={routeKey} />
-      )}
-    </LocalizedPageShell>
+    <ComingSoonPage
+      locale={locale}
+      route={routeKey}
+    />
   )
 }
