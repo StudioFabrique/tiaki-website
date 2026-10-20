@@ -15,7 +15,7 @@ type FooterProps = {
   currentRoute: RouteKey
 }
 
-const navigationRoutes: RouteKey[] = ["home", "platform", "about", "contact"]
+const navigationRoutes: RouteKey[] = ["home", "resources", "contact"]
 
 const footerLocales = ["fr", "es"] as const satisfies readonly SiteLocale[]
 
@@ -113,14 +113,14 @@ export function Footer({ locale, currentRoute }: FooterProps) {
                   {content.projectLinks.about}
                 </Link>
 
-                <Link
+                {/* <Link
                 data-a11y-text-link
                   href={getLocalizedPath("contact", locale)}
                   data-a11y-dark-secondary
                   className="font-heading text-base font-medium text-white/75 transition-colors hover:text-white"
                 >
                   {content.projectLinks.contact}
-                </Link>
+                </Link> */}
               </div>
             </div>
           </div>

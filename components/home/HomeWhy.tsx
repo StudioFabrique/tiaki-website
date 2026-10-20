@@ -16,7 +16,7 @@ export function HomeWhy({ locale }: HomeWhyProps) {
   return (
     <section id="pourquoi" className="py-6 sm:py-8 lg:py-12">
       <Container>
-        <div className="overflow-hidden rounded-[2rem] bg-tiaki-green text-tiaki-green-foreground">
+        <div className="overflow-hidden rounded-[2rem] bg-tiaki-green/10 text-tiaki-green-foreground">
           {/* Introduction */}
           <div className="max-w-7xl px-7 pt-9 sm:px-10 sm:pt-11 lg:px-12 lg:pt-12">
             <h2 className="font-heading text-4xl leading-[0.98] font-bold tracking-[-0.045em] sm:text-5xl lg:text-6xl">
@@ -33,7 +33,7 @@ export function HomeWhy({ locale }: HomeWhyProps) {
             {why.items.map((item, index) => (
               <article
                 key={item.title}
-                className="flex min-h-[250px] flex-col justify-between rounded-[1.5rem] border border-tiaki-green-foreground/15 bg-background/85 p-6 text-foreground sm:min-h-[270px] sm:p-7 lg:p-8"
+                className="flex min-h-[250px] flex-col justify-between rounded-[1.5rem] border border-tiaki-green-foreground/15 bg-tiaki-green/20  p-6 text-foreground sm:min-h-[270px] sm:p-7 lg:p-8"
               >
                 <span
                   aria-hidden="true"

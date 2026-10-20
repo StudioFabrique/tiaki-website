@@ -26,8 +26,8 @@ type NavbarProps = {
 
 const navigationRoutes: RouteKey[] = [
   "home",
-  "platform",
   "resources",
+  "platform",
   "about",
   "contact",
 ]

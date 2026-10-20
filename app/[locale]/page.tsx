@@ -31,8 +31,8 @@ export default async function HomePage({
       <HomeFeatures locale={locale} />
       <HomeAudiences locale={locale} />
       <HomeCooperation locale={locale} />
-      <HomeStats locale={locale} />
       <HomeFunding locale={locale} />
+      <HomeStats locale={locale} />
       <HomeFinalCta locale={locale} />
     </LocalizedPageShell>
   );
