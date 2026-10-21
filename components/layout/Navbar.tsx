@@ -1,3 +1,7 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
 import Image from "next/image"
 import Link from "next/link"
 import { Menu } from "lucide-react"
@@ -24,19 +28,40 @@ type NavbarProps = {
   currentRoute: RouteKey
 }
 
-const navigationRoutes: RouteKey[] = [
+const navigationRoutes = [
   "home",
-  "platform",
   "resources",
+  "platform",
   "about",
   "contact",
-]
+] as const satisfies readonly RouteKey[]
+
 const navigationLocales: SiteLocale[] = [
   "fr",
   "es",
 ];
 
 export function Navbar({ locale, currentRoute }: NavbarProps) {
+
+  const [isScrolled, setIsScrolled] = useState(false);
+
+useEffect(() => {
+  const handleScroll = () => {
+    setIsScrolled(window.scrollY > 12);
+  };
+
+  handleScroll();
+
+  window.addEventListener("scroll", handleScroll, {
+    passive: true,
+  });
+
+  return () => {
+    window.removeEventListener("scroll", handleScroll);
+  };
+}, []);
+
+
   const content = getNavigationContent(locale)
 
   const otherLocale: SiteLocale = locale === "fr" ? "es" : "fr"
@@ -44,7 +69,14 @@ export function Navbar({ locale, currentRoute }: NavbarProps) {
   const languageHref = getLocalizedPath(currentRoute, otherLocale)
 
   return (
-    <header className="border-b bg-background">
+    <header  className={cn(
+    "tiaki-navbar sticky top-0 z-40 w-full",
+    "border-b transition-[background-color,box-shadow,border-color] duration-300",
+    "motion-reduce:transition-none",
+    isScrolled
+      ? "border-border/50 bg-background/70 shadow-lg backdrop-blur-xl backdrop-saturate-250"
+      : "border-transparent bg-background"
+  )}>
       <Container>
         <div className="flex h-20 items-center justify-between">
           {/* Logo */}

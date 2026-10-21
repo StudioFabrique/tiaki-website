@@ -1,9 +1,11 @@
+
 import { notFound } from "next/navigation";
 
 import { AccessibilityProvider } from "@/components/accessibility/AccessibilityProvider";
 import { SkipToContent } from "@/components/accessibility/SkipToContent";
-
 import { AccessibilityWidget } from "@/components/accessibility/AccessibilityWidget";
+
+import { RouteAwareLocalizedShell } from "@/components/layout/RouteAwareLocalizedShell";
 
 import accessibilityFr from "@/content/fr/accessibility.json";
 import accessibilityEs from "@/content/es/accessibility.json";
@@ -47,11 +49,13 @@ export default async function LocaleLayout({
         label={accessibilityContent.skipToContent}
       />
 
-       <AccessibilityWidget
-      content={accessibilityContent}
-    />
+      <AccessibilityWidget
+        content={accessibilityContent}
+      />
 
-      {children}
+      <RouteAwareLocalizedShell locale={locale}>
+        {children}
+      </RouteAwareLocalizedShell>
     </AccessibilityProvider>
   );
 }

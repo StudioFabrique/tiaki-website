@@ -4,7 +4,7 @@ import { ArrowRight } from "lucide-react"
 
 import { Container } from "@/components/layout/Container"
 import { getHomeContent } from "@/lib/content/home"
-import type { SiteLocale } from "@/lib/i18n/config"
+import { getLocalizedPath, type SiteLocale } from "@/lib/i18n/config"
 
 type HomeHeroProps = {
   locale: SiteLocale
@@ -30,7 +30,7 @@ export function HomeHero({ locale }: HomeHeroProps) {
 
                 <div className="mt-8">
                   <Link
-                    href="#pourquoi"
+                    href={getLocalizedPath("platform", locale)}
                     className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-foreground px-7 font-heading text-sm font-semibold text-background transition-transform duration-200 hover:-translate-y-0.5"
                   >
                     {hero.primaryCta}

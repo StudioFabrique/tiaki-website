@@ -70,16 +70,16 @@
     "local": "Local"
   },
   "territory": {
-    "label": "Où recherchez-vous des ressources ?",
+    "label": "¿Dónde busca recursos?",
     "all": {
-      "france": "Toute la France",
-      "spain": "Toute l’Espagne"
+      "france": "Toda Francia",
+      "spain": "Toda España"
     },
     "whole": {
-      "france": "Toute la région",
-      "spain": "Toute la communauté autonome"
+      "france": "Toda la región",
+      "spain": "Toda la comunidad autónoma"
     },
-    "help": "Les ressources nationales restent affichées avec les ressources disponibles dans le territoire sélectionné."
+    "help": "Los recursos nacionales permanecen visibles junto con los recursos disponibles en el territorio seleccionado"
   },
   "providerTypes": {
     "public": "Organismo público",

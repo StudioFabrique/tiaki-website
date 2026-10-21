@@ -25,6 +25,10 @@ const featureStyles = [
     className: "bg-muted",
     image: "/images/pictos/picto-7-orange.png",
   },
+   {
+    className: "bg-muted",
+    image: "/images/pictos/picto-7-orange.png",
+  },
 ]
 
 export function HomeFeatures({ locale }: HomeFeaturesProps) {
@@ -38,7 +42,7 @@ export function HomeFeatures({ locale }: HomeFeaturesProps) {
             {features.title}
           </h2>
 
-          <p className="mt-6 max-w-3xl text-lg leading-8 text-muted-foreground">
+          <p className="mt-5 max-w-3xl text-lg leading-8 text-muted-foreground">
             {features.description}
           </p>
         </div>
@@ -58,11 +62,8 @@ export function HomeFeatures({ locale }: HomeFeaturesProps) {
               >
                 {/* Text */}
                 <div className="p-7 sm:p-9 lg:p-10">
-                  <span className="font-heading text-sm font-semibold text-muted-foreground">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
 
-                  <h3 className="mt-5 font-heading text-3xl font-semibold tracking-[-0.035em] text-foreground sm:text-4xl">
+                  <h3 className="mt-5 font-heading text-2xl font-semibold tracking-[-0.035em] text-foreground sm:text-4xl">
                     {item.title}
                   </h3>
 
@@ -74,7 +75,7 @@ export function HomeFeatures({ locale }: HomeFeaturesProps) {
                 {/* Illustration */}
                 <div
                   data-a11y-decorative-media
-                  className="mt-auto h-[280px] px-8 pb-8 sm:h-[300px] sm:px-10"
+                  className="mt-auto h-[230px] px-8 pb-8 sm:h-[300px] sm:px-10"
                 >
                   <div className="relative h-full w-full">
                     <Image

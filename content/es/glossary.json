@@ -1,0 +1,41 @@
+
+
+{
+  "title": "Glosario",
+  "description": "Consulta las definiciones de los términos utilizados en T-IA-KI para comprender mejor los cuidados y el acompañamiento.",
+  "searchPlaceholder": "Buscar un término...",
+  "alphabetLabel": "Explorar por letra",
+  "noResults": "No se han encontrado términos que coincidan con tu búsqueda.",
+  "entries": [
+    {
+      "id": "aidant",
+      "term": "Persona cuidadora",
+      "definition": "Persona que presta apoyo de manera habitual y no profesional a alguien que lo necesita debido a su edad, una enfermedad, una discapacidad o una situación de dependencia.",
+      "keywords": ["cuidador", "cuidadora", "cuidados", "apoyo"]
+    },
+    {
+      "id": "aidant-proche",
+      "term": "Persona cuidadora del entorno cercano",
+      "definition": "Persona que cuida y apoya habitualmente a un familiar, una amistad u otra persona de su entorno cercano.",
+      "keywords": ["familia", "cuidador familiar", "entorno"]
+    },
+    {
+      "id": "personne-aidee",
+      "term": "Persona que recibe cuidados",
+      "definition": "Persona que necesita y recibe ayuda en su vida cotidiana debido a una enfermedad, una discapacidad o una pérdida de autonomía.",
+      "keywords": ["persona cuidada", "dependencia", "autonomía"]
+    },
+    {
+      "id": "personne-accompagnee",
+      "term": "Persona acompañada",
+      "definition": "Persona que recibe apoyo o atención social, sociosanitaria o sanitaria adaptada a sus necesidades.",
+      "keywords": ["acompañamiento", "apoyo", "atención"]
+    },
+    {
+      "id": "professionnel-sante",
+      "term": "Profesional sanitario",
+      "definition": "Persona que ejerce una profesión sanitaria regulada, como medicina, enfermería o fisioterapia, y que participa en la prevención, la atención o el seguimiento de la salud.",
+      "keywords": ["médico", "enfermería", "fisioterapia", "salud"]
+    }
+  ]
+}

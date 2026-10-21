@@ -1,0 +1,40 @@
+
+{
+  "title": "Glossaire",
+  "description": "Retrouvez les définitions des termes utilisés sur T-IA-KI pour mieux comprendre l'accompagnement et les différents acteurs impliqués.",
+  "searchPlaceholder": "Rechercher un terme...",
+  "alphabetLabel": "Parcourir par lettre",
+  "noResults": "Aucun terme ne correspond à votre recherche.",
+  "entries": [
+    {
+      "id": "aidant",
+      "term": "Aidant(e)",
+      "definition": "Personne qui apporte régulièrement, à titre non professionnel, une aide à quelqu'un qui en a besoin en raison de son âge, d'une maladie, d'un handicap ou d'une perte d'autonomie.",
+      "keywords": ["aidants", "aide", "soins", "accompagnement"]
+    },
+    {
+      "id": "aidant-proche",
+      "term": "Aidant proche",
+      "definition": "Personne qui accompagne et soutient régulièrement un membre de sa famille, un ami ou une autre personne de son entourage. On parle aussi de proche aidant.",
+      "keywords": ["proche aidant", "famille", "entourage"]
+    },
+    {
+      "id": "personne-aidee",
+      "term": "Personne aidée",
+      "definition": "Personne qui bénéficie d'une aide dans sa vie quotidienne en raison d'une maladie, d'un handicap ou d'une perte d'autonomie.",
+      "keywords": ["aidée", "dépendance", "autonomie"]
+    },
+    {
+      "id": "personne-accompagnee",
+      "term": "Personne accompagnée",
+      "definition": "Personne bénéficiant d'un accompagnement social, médico-social ou sanitaire adapté à ses besoins.",
+      "keywords": ["accompagnée", "suivi", "médico-social"]
+    },
+    {
+      "id": "professionnel-sante",
+      "term": "Professionnel de santé",
+      "definition": "Personne exerçant une profession de santé réglementée, comme médecin, infirmier ou kinésithérapeute, et intervenant dans la prévention, les soins ou le suivi de la santé.",
+      "keywords": ["médecin", "infirmier", "kinésithérapeute", "soins"]
+    }
+  ]
+}

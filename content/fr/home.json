@@ -1,63 +1,67 @@
 {
   "hero": {
-    "title": "Une plateforme pour accompagner celles et ceux qui prennent soin des autres.",
+    "title": "Une plateforme pour accompagner celles et ceux qui prennent soin des autres",
     "description": "T-IA-KI accompagne les aidant(e)s au quotidien grâce à des ressources, des contenus de formation et des outils numériques conçus avec les professionnels du secteur médico-social.",
     "primaryCta": "Découvrir T-IA-KI",
     "secondaryCta": "Accéder à la plateforme",
     "benefits": [
       "S'informer",
-      "Être accompagné·e",
+      "Être accompagné.e",
       "Mieux prendre soin"
     ]
   },
   "why": {
-    "title": "Prendre soin d’un proche ne devrait pas vouloir dire tout gérer seul.",
-    "description": "Les aidant(e)s font face à de nombreuses situations au quotidien : trouver la bonne information, comprendre les démarches, se former, coordonner les intervenants ou simplement savoir vers qui se tourner.",
+    "title": "Prendre soin d’un proche ne devrait pas vouloir dire tout gérer seul",
+    "description": "Accompagner un proche, c’est faire face à de nombreux défis : un quotidien complexe à organiser, des informations difficiles à trouver, une fatigue grandissante et parfois un sentiment d’isolement.",
     "items": [
       {
-        "title": "Trouver la bonne information",
-        "description": "Accéder plus facilement à des ressources utiles, compréhensibles et adaptées à chaque situation."
+        "title": "Un quotidien complexe à organiser",
+        "description": "Entre les soins, les rendez-vous et les démarches administratives, les aidant(e)s doivent jongler avec de nombreuses responsabilités."
       },
       {
-        "title": "Être mieux accompagné·e",
-        "description": "Identifier les ressources, les services et les professionnels qui peuvent apporter un soutien."
+        "title": "Des informations difficiles à trouver et à comprendre",
+        "description": "Les aides, les droits et les conseils pratiques sont souvent dispersés et difficiles à identifier."
       },
       {
-        "title": "Mieux organiser le quotidien",
-        "description": "Faciliter le suivi, les activités, les rendez-vous et les différents éléments liés à l’accompagnement."
+        "title": "Une fatigue et une charge mentale qui s'accumulent",
+        "description": "Concilier l'accompagnement d'un proche avec sa vie personnelle et professionnelle pourrait devenir épuisant."
+      },
+            {
+        "title": "Un sentiment d'isolement",
+        "description": "Le manque de soutien, de relais et d'échanges peut laisser les aidant(e)s seul(e)s face aux difficultés du quotidien."
       }
     ],
       "aboutCta": "Découvrir le projet T-IA-KI"
   },
   "features": {
-  "title": "Un même espace pour mieux accompagner au quotidien.",
+  "title": "Un même espace pour mieux accompagner au quotidien",
   "description": "T-IA-KI rassemble des outils et des ressources pensés pour faciliter le quotidien des aidant(e)s et améliorer la coordination avec les personnes qui les accompagnent.",
   "items": [
+     {
+      "title": "Ressources & accompagnement",
+      "description": "Accéder à des contenus pratiques, tutoriels, informations et ressources utiles selon les besoins validés par des professionnels."
+    },
     {
       "title": "Organisation du quotidien",
       "description": "Centraliser les rendez-vous, activités, événements et éléments de suivi liés à la vie quotidienne."
     },
     {
-      "title": "Ressources & accompagnement",
-      "description": "Accéder à des contenus pratiques, tutoriels, informations et ressources utiles selon les besoins."
-    },
-    {
       "title": "Expérience personnalisée",
-      "description": "Proposer progressivement des contenus et services adaptés au profil et aux besoins de chaque utilisateur."
+      "description": "Proposer de contenus adaptés au profil et aux besoins de chaque utilisateur."
     },
     {
-      "title": "Coordination facilitée",
-      "description": "Fluidifier les échanges entre aidant(e)s, professionnel(le)s et autres acteurs de l’accompagnement."
+      "title": "Échange & Partage",
+      "description": "Échanger avec les autres aidants pour partager vos expérience dans un espace sécurisé et privé"
     }
   ]
 },
 "audiences": {
-  "title": "Pensé pour celles et ceux qui accompagnent, soutiennent et coordonnent.",
+  "title": "Pour celles et ceux qui accompagnent, soutiennent et coordonnent",
   "description": "T-IA-KI s’adresse à l’ensemble des acteurs impliqués dans l’accompagnement au quotidien.",
   "items": [
     {
       "title": "aidant(e)s",
-      "description": "Trouver des ressources, mieux organiser le quotidien, se former et accéder plus facilement aux informations utiles."
+      "description": "Accéder facilement à des ressources, mieux organiser son quotidien et échanger avec la communauté."
     },
     {
       "title": "Professionnel(le)s",
@@ -69,21 +73,23 @@
     },
     {
       "title": "Personnes accompagnées",
-      "description": "Bénéficier indirectement d’un accompagnement mieux coordonné et de ressources plus accessibles pour leur entourage."
+      "description": "Bénéficie de ressources favorisant son autonomie et son bien-être grâce à un accompagnement mieux coordonné."
     }
   ]
 },
+
 "cooperation": {
-  "title": "Deux territoires. Une ambition commune.",
-  "description": "T-IA-KI réunit des acteurs français et espagnols pour partager les connaissances, rapprocher les pratiques et développer ensemble de nouvelles solutions au service des aidant·e·s.",
+  "title": "Des deux côtés des Pyrénées, une ambition commune",
+  "description": "Ancré dans la coopération entre les Pyrénées-Atlantiques et la Navarre, T-IA-KI rassemble des partenaires de plusieurs territoires français et espagnols. Ensemble, ils partagent leurs savoir-faire et développent des solutions communes pour mieux accompagner les aidant(e)s.",
   "items": [
-    "Partager les bonnes pratiques",
-    "Rapprocher les acteurs du territoire",
-    "Construire des solutions communes"
+    "Partager les connaissances et les bonnes pratiques",
+    "Renforcer la coopération entre les acteurs",
+    "Développer ensemble des solutions adaptées aux aidant(e)s"
   ]
-},
+}
+,
 "stats": {
-  "title": "T-IA-KI en quelques chiffres.",
+  "title": "T-IA-KI en quelques chiffres",
   "description": "Un projet transfrontalier soutenu par l’Union européenne pour développer de nouvelles solutions au service des aidant(e)s.",
   "items": [
     {
@@ -112,7 +118,7 @@
   ]
 },
 "funding": {
-  "title": "Un projet européen et transfrontalier.",
+  "title": "Un projet européen et transfrontalier",
   "description": "Le projet T-IA-KI est cofinancé à 65 % par l’Union européenne dans le cadre du programme Interreg VI-A Espagne-France-Andorre (POCTEFA 2021-2027). L’objectif de POCTEFA est de renforcer l’intégration économique et sociale de la région frontalière franco-espagnole-andorrane.",
   "partnersTitle": "Les partenaires du projet",
   "partners": [
@@ -155,7 +161,7 @@
   ]
 },
 "finalCta": {
-  "title": "Mieux accompagner commence par mieux connecter.",
+  "title": "Mieux accompagner commence par mieux connecter",
   "description": "Découvrez comment T-IA-KI rassemble ressources, outils et acteurs pour faciliter le quotidien des aidant(e)s.",
   "primaryCta": "Découvrir la plateforme",
   "secondaryCta": "Nous contacter"

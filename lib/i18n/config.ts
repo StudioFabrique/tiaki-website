@@ -1,8 +1,8 @@
-export const locales = ["fr", "es"] as const;
+export const locales = ["fr", "es"] as const
 
-export type SiteLocale = (typeof locales)[number];
+export type SiteLocale = (typeof locales)[number]
 
-export const defaultLocale: SiteLocale = "fr";
+export const defaultLocale: SiteLocale = "fr"
 
 export const routes = {
   home: {
@@ -13,7 +13,7 @@ export const routes = {
     fr: "plateforme",
     es: "plataforma",
   },
-   resources: {
+  resources: {
     fr: "ressources",
     es: "recursos",
   },
@@ -25,21 +25,30 @@ export const routes = {
     fr: "contact",
     es: "contacto",
   },
-} as const;
+  glossary: {
+    fr: "glossaire",
+    es: "glosario",
+  },
+  terms: {
+    fr: "cgu",
+    es: "condiciones-de-uso",
+  },
+  legal: {
+    fr: "mentions-legales",
+    es: "aviso-legal",
+  },
+} as const
 
-export type RouteKey = keyof typeof routes;
+export type RouteKey = keyof typeof routes
 
 export function isSiteLocale(value: string): value is SiteLocale {
-  return locales.includes(value as SiteLocale);
+  return locales.includes(value as SiteLocale)
 }
 
-export function getLocalizedPath(
-  route: RouteKey,
-  locale: SiteLocale
-) {
-  const slug = routes[route][locale];
+export function getLocalizedPath(route: RouteKey, locale: SiteLocale) {
+  const slug = routes[route][locale]
 
-  return slug ? `/${locale}/${slug}` : `/${locale}`;
+  return slug ? `/${locale}/${slug}` : `/${locale}`
 }
 
 export function getRouteKeyFromSlug(
@@ -48,9 +57,9 @@ export function getRouteKeyFromSlug(
 ): RouteKey | null {
   for (const routeKey of Object.keys(routes) as RouteKey[]) {
     if (routes[routeKey][locale] === slug) {
-      return routeKey;
+      return routeKey
     }
   }
 
-  return null;
+  return null
 }

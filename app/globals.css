@@ -209,6 +209,17 @@
 }
 
 /* =========================================
+   Navbar — Glass effect accessibility
+   ========================================= */
+
+html[data-a11y-high-contrast] .tiaki-navbar {
+  background-color: var(--background) !important;
+  border-color: var(--border) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* =========================================
    Accessibility — Text Scaling
    ========================================= */
 
