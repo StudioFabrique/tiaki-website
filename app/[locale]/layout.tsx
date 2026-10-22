@@ -64,7 +64,7 @@ export async function generateMetadata({ // récupère la langue courante depuis
   const isFrench = locale === "fr";
 
   return {
-    metadataBase: new URL("https://mytiaki.eu"),
+    metadataBase: new URL("https://www.mytiaki.eu"),
 
     title: {
       default: isFrench //définit le titre par défaut pour chaque langue
