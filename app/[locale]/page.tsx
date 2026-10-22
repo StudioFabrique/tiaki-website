@@ -1,5 +1,16 @@
-import { LocalizedPageShell } from "@/components/layout/LocalizedPageShell";
 import type { SiteLocale } from "@/lib/i18n/config";
+
+// Metadata + SEO
+import type { Metadata } from "next";
+import { getSeoAlternates } from "@/lib/seo/metadata";
+
+import { notFound } from "next/navigation";
+
+import {
+
+  isSiteLocale,
+
+} from "@/lib/i18n/config";
 
 import { HomeHero } from "@/components/home/HomeHero";
 import { HomeWhy } from "@/components/home/HomeWhy";
@@ -15,6 +26,22 @@ type HomePageProps = {
     locale: SiteLocale;
   }>;
 };
+
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+
+  if (!isSiteLocale(locale)) notFound();
+
+  return {
+  alternates: getSeoAlternates("home", locale),
+  }
+}
+
 
 export default async function HomePage({
   params,

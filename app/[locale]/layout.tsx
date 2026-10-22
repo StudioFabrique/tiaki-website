@@ -1,3 +1,8 @@
+// Police
+import "./../globals.css";
+import { Inter } from "next/font/google";
+import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
 
 import { notFound } from "next/navigation";
 
@@ -15,6 +20,24 @@ import {
   locales,
 } from "@/lib/i18n/config";
 
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+});
+
+
+// export const metadata: Metadata = {
+//   metadataBase: new URL("https://mytiaki.eu"),
+//   title: "T-IA-KI",
+//   description: "Une plateforme pour les aidant(e)s",
+
+//    icons: {
+//     icon: "/images/logos/tiaki-icon.svg",
+//     shortcut: "/images/logos/tiaki-icon.svg",
+//     apple: "/images/logos/tiaki-icon.svg",
+//   },
+// };
+
 type LocaleLayoutProps = {
   children: React.ReactNode;
   params: Promise<{
@@ -27,6 +50,41 @@ export function generateStaticParams() {
     locale,
   }));
 }
+
+
+export async function generateMetadata({ // récupère la langue courante depuis les paramètres de la route
+  params,
+}: LocaleLayoutProps): Promise<Metadata> {
+  const { locale } = await params;
+
+  if (!isSiteLocale(locale)) {
+    notFound();
+  }
+
+  const isFrench = locale === "fr";
+
+  return {
+    metadataBase: new URL("https://mytiaki.eu"),
+
+    title: {
+      default: isFrench //définit le titre par défaut pour chaque langue
+        ? "T-IA-KI — Une plateforme pour les aidant(e)s"
+        : "T-IA-KI — Una plataforma para personas cuidadoras",
+      template: "%s | T-IA-KI", // permettra plus tard de générer automatiquement des titres tels que Ressources
+    },
+
+    description: isFrench //fournit une description adaptée au français ou à l'espagnol
+      ? "T-IA-KI est un projet franco-espagnol dédié au soutien des aidant(e)s. Découvrez des ressources et des informations pour accompagner vos proches."
+      : "T-IA-KI es un proyecto franco-español dedicado al apoyo de las personas cuidadoras. Descubre recursos e información para acompañar a tus seres queridos.",
+
+    icons: { // conserve les icônes du site.
+      icon: "/images/logos/tiaki-icon.svg",
+      shortcut: "/images/logos/tiaki-icon.svg",
+      apple: "/images/logos/tiaki-icon.svg",
+    },
+  };
+}
+
 
 export default async function LocaleLayout({
   children,
@@ -43,19 +101,49 @@ export default async function LocaleLayout({
       ? accessibilityFr
       : accessibilityEs;
 
-  return (
-    <AccessibilityProvider>
-      <SkipToContent
-        label={accessibilityContent.skipToContent}
-      />
+ 
+return (
+  <html lang={locale} className={inter.variable}>
+    <body>
+      <AccessibilityProvider>
+        <SkipToContent
+          label={accessibilityContent.skipToContent}
+        />
 
-      <AccessibilityWidget
-        content={accessibilityContent}
-      />
+        <AccessibilityWidget
+          content={accessibilityContent}
+        />
 
-      <RouteAwareLocalizedShell locale={locale}>
-        {children}
-      </RouteAwareLocalizedShell>
-    </AccessibilityProvider>
-  );
+        <RouteAwareLocalizedShell locale={locale}>
+          {children}
+        </RouteAwareLocalizedShell>
+      </AccessibilityProvider>
+
+      <Analytics />
+    </body>
+  </html>
+);
+
 }
+
+
+
+// // #ffffff
+// // #9fdaba
+// // #52bd82
+// // #259a5a
+// // #1d7746
+// // #155633
+// // #0d341f
+// // #bccfeb
+// // #8eabd6
+// // #7289ab
+// // #586984
+// // #404c60
+// // #272e3a
+// // #f9c481
+// // #f1931d
+// // #c07617
+// // #955b12
+// // #6b420d
+// // #422808
