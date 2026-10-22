@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://mytiaki.eu/sitemap.xml",
+    sitemap: "https://www.mytiaki.eu/sitemap.xml",
   };
 }
