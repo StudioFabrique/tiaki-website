@@ -12,7 +12,7 @@ import {
   isIndexablePage,
 } from "@/lib/seo/pages";
 
-const baseUrl = "https://mytiaki.eu";
+const baseUrl = "https://www.mytiaki.eu";
 
 const sitemapRoutes: RouteKey[] = [
   "home",
