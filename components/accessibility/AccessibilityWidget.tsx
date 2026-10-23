@@ -2,6 +2,9 @@
 
 import { useEffect, useState } from "react"
 
+import { useAccessibility } from "./AccessibilityProvider"
+import { DEFAULT_ACCESSIBILITY_PREFERENCES } from "@/lib/accessibility/defaults"
+
 import { AccessibilityPanel } from "./AccessibilityPanel"
 import { AccessibilityTrigger } from "./AccessibilityTrigger"
 
@@ -16,6 +19,7 @@ type AccessibilityWidgetContent = {
   trigger: {
     open: string
     close: string
+    active: string
   }
   panel: {
     title: string
@@ -41,6 +45,8 @@ export function AccessibilityWidget({ content }: AccessibilityWidgetProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [isDesktop, setIsDesktop] = useState(false)
 
+  const { preferences } = useAccessibility()
+
   useEffect(() => {
     const mediaQuery = window.matchMedia("(min-width: 640px)")
 
@@ -59,13 +65,30 @@ export function AccessibilityWidget({ content }: AccessibilityWidgetProps) {
 
   const triggerLabel = isOpen ? content.trigger.close : content.trigger.open
 
+  const hasActivePreferences = (
+    Object.keys(DEFAULT_ACCESSIBILITY_PREFERENCES) as Array<
+      keyof typeof DEFAULT_ACCESSIBILITY_PREFERENCES
+    >
+  ).some((key) => preferences[key] !== DEFAULT_ACCESSIBILITY_PREFERENCES[key])
+
+    const accessibleTriggerLabel = hasActivePreferences
+    ? `${triggerLabel} — ${content.trigger.active}`
+    : triggerLabel
+
   return (
     <Drawer
       open={isOpen}
       onOpenChange={setIsOpen}
       swipeDirection={isDesktop ? "right" : "down"}
     >
-      <DrawerTrigger render={<AccessibilityTrigger label={triggerLabel} />} />
+      <DrawerTrigger
+        render={
+          <AccessibilityTrigger
+            label={accessibleTriggerLabel}
+            hasActivePreferences={hasActivePreferences}
+          />
+        }
+      />
 
       <AccessibilityPanel
         id={ACCESSIBILITY_PANEL_ID}
