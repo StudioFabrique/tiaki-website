@@ -1,0 +1,40 @@
+{
+  "links": [
+    {
+      "id": "linkedin",
+      "platform": "linkedin",
+      "label": "LinkedIn",
+      "icon": "/icons/social/linkedin.svg",
+      "url": "https://www.linkedin.com/company/t-ia-ki/home/",
+      "enabled": true,
+      "order": 1
+    },
+    {
+      "id": "instagram",
+      "platform": "instagram",
+      "label": "Instagram",
+      "icon": "/icons/social/instagram.svg",
+      "url": "",
+      "enabled": false,
+      "order": 2
+    },
+    {
+      "id": "facebook",
+      "platform": "facebook",
+      "label": "Facebook",
+      "icon": "/icons/social/facebook.svg",
+      "url": "",
+      "enabled": false,
+      "order": 3
+    },
+    {
+      "id": "youtube",
+      "platform": "youtube",
+      "label": "YouTube",
+      "icon": "/icons/social/youtube.svg",
+      "url": "",
+      "enabled": false,
+      "order": 4
+    }
+  ]
+}
