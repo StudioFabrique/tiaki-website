@@ -30,7 +30,7 @@ export function HomeWhy({ locale }: HomeWhyProps) {
 
           {/* Grid */}
           <div className="grid gap-3 p-4 sm:p-5 md:grid-cols-2 lg:p-8">
-            {why.items.map((item, index) => (
+            {why.items.map((item) => (
               <article
                 key={item.title}
                 className="flex min-h-[200px] flex-col justify-between rounded-[1.5rem] border border-tiaki-green-foreground/15 bg-tiaki-green/20 p-6 text-foreground sm:min-h-[200px] sm:p-7 lg:p-8"

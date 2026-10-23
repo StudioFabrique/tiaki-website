@@ -626,3 +626,29 @@ html[data-a11y-hide-decorative-images]
   [data-a11y-layout="card"] {
   min-height: 0 !important;
 }
+
+
+/* =========================================
+   Accessibility — Active Trigger
+   High Contrast
+   ========================================= */
+
+html[data-a11y-high-contrast]
+  [data-a11y-preferences-active] {
+  background-color: var(--foreground);
+  color: var(--background);
+  border-color: var(--foreground);
+}
+
+html[data-a11y-high-contrast]
+  [data-a11y-preferences-active]:hover {
+  background-color: var(--foreground);
+  color: var(--background);
+}
+
+html[data-a11y-high-contrast]
+  [data-a11y-preferences-active]
+  [data-a11y-status-dot] {
+  background-color: var(--background);
+  border-color: var(--foreground);
+}

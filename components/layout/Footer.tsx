@@ -1,8 +1,6 @@
 import Image from "next/image"
 import Link from "next/link"
 
-import { Globe, type LucideIcon } from "lucide-react"
-
 import { Container } from "@/components/layout/Container"
 import { getFooterContent } from "@/lib/content/footer"
 import { getNavigationContent } from "@/lib/content/navigation"

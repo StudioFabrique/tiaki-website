@@ -2,7 +2,8 @@
   "skipToContent": "Aller au contenu principal",
   "trigger": {
     "open": "Ouvrir les options d’accessibilité",
-    "close": "Fermer les options d’accessibilité"
+    "close": "Fermer les options d’accessibilité",
+    "active": "Réglages personnalisés actifs"
   },
   "panel": {
     "title": "Options d’accessibilité",
