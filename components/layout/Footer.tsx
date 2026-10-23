@@ -1,6 +1,8 @@
 import Image from "next/image"
 import Link from "next/link"
 
+import { Globe, type LucideIcon } from "lucide-react"
+
 import { Container } from "@/components/layout/Container"
 import { getFooterContent } from "@/lib/content/footer"
 import { getNavigationContent } from "@/lib/content/navigation"
@@ -9,6 +11,8 @@ import {
   type RouteKey,
   type SiteLocale,
 } from "@/lib/i18n/config"
+
+import { getSocialLinks } from "@/lib/content/social-links"
 
 type FooterProps = {
   locale: SiteLocale
@@ -44,6 +48,7 @@ const utilityLinks = [
 export function Footer({ locale, currentRoute }: FooterProps) {
   const content = getFooterContent(locale)
   const navigation = getNavigationContent(locale)
+  const socialLinks = getSocialLinks()
 
   return (
     <footer className="pt-8 pb-6">
@@ -57,7 +62,6 @@ export function Footer({ locale, currentRoute }: FooterProps) {
             {/* Brand */}
             <div>
               <Link
-          
                 href={getLocalizedPath("home", locale)}
                 className="inline-block"
                 aria-label="T-IA-KI"
@@ -81,6 +85,47 @@ export function Footer({ locale, currentRoute }: FooterProps) {
               >
                 {content.description}
               </p>
+
+              {/* Social networks */}
+              {socialLinks.length > 0 && (
+                <nav
+                  aria-label={
+                    locale === "fr" ? "Réseaux sociaux" : "Redes sociales"
+                  }
+                  className="mt-7"
+                >
+                  <h2 className="font-heading text-sm font-semibold text-white/75">
+                    {locale === "fr" ? "Suivez-nous" : "Síguenos"}
+                  </h2>
+
+                  <ul className="mt-4 flex flex-wrap items-center gap-3">
+                    {socialLinks.map((social) => (
+                      <li key={social.id}>
+                        <a
+                          href={social.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label={
+                            locale === "fr"
+                              ? `T-IA-KI sur ${social.label} (nouvel onglet)`
+                              : `T-IA-KI en ${social.label} (nueva pestaña)`
+                          }
+                          className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-white/30 bg-white/10 transition-colors hover:border-white/80 hover:bg-white/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                        >
+                          <Image
+                            src={social.icon}
+                            alt=""
+                            width={20}
+                            height={20}
+                            aria-hidden="true"
+                            className="h-5 w-5"
+                          />
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </nav>
+              )}
             </div>
 
             {/* Navigation */}
@@ -95,7 +140,7 @@ export function Footer({ locale, currentRoute }: FooterProps) {
               <nav className="mt-6 flex flex-col items-start gap-4">
                 {navigationRoutes.map((route) => (
                   <Link
-                  data-a11y-text-link
+                    data-a11y-text-link
                     key={route}
                     href={getLocalizedPath(route, locale)}
                     data-a11y-dark-secondary
@@ -118,7 +163,7 @@ export function Footer({ locale, currentRoute }: FooterProps) {
 
               <div className="mt-6 flex flex-col items-start gap-4">
                 <Link
-                data-a11y-text-link
+                  data-a11y-text-link
                   href={getLocalizedPath("platform", locale)}
                   data-a11y-dark-secondary
                   className="font-heading text-base font-medium text-white/75 transition-colors hover:text-white"
@@ -127,7 +172,7 @@ export function Footer({ locale, currentRoute }: FooterProps) {
                 </Link>
 
                 <Link
-                data-a11y-text-link
+                  data-a11y-text-link
                   href={getLocalizedPath("about", locale)}
                   data-a11y-dark-secondary
                   className="font-heading text-base font-medium text-white/75 transition-colors hover:text-white"
@@ -215,7 +260,6 @@ export function Footer({ locale, currentRoute }: FooterProps) {
                         </span>
                       ) : (
                         <Link
-                     
                           href={getLocalizedPath(currentRoute, itemLocale)}
                           data-a11y-dark-secondary
                           className="flex h-9 min-w-10 items-center justify-center rounded-full px-3 font-heading text-xs font-semibold text-white/55 transition-colors hover:bg-white/10 hover:text-white focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none"
