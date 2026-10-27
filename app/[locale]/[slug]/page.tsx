@@ -14,6 +14,8 @@ import { GlossaryPage } from "@/components/glossary/GlossaryPage"
 import { LegalNoticePage } from "@/components/legal/LegalNoticePage"
 import { TermsPage } from "@/components/legal/TermsPage"
 
+import { ContactPage } from "@/components/contact/ContactPage"
+
 import {
   getRouteKeyFromSlug,
   isSiteLocale
@@ -106,6 +108,11 @@ export default async function LocalizedPage({
   // Legal notice
   if (routeKey === "legal") {
     return <LegalNoticePage locale={locale} />
+  }
+
+    // Contact
+  if (routeKey === "contact") {
+    return <ContactPage locale={locale} />
   }
 
   // Pages under development
