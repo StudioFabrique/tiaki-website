@@ -16,7 +16,8 @@ export function ContactHero({
       className="pt-12 pb-14 sm:pt-16 sm:pb-20"
     >
       <Container>
-        <div className="mx-auto max-w-3xl text-center">
+        {/* <div className="mx-auto max-w-5xl text-center"> */}
+            <div className="w-full text-center">
           <h1
             id="contact-page-title"
             className="font-heading text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl lg:text-6xl"
