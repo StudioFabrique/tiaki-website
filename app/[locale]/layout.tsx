@@ -25,19 +25,6 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
-
-// export const metadata: Metadata = {
-//   metadataBase: new URL("https://mytiaki.eu"),
-//   title: "T-IA-KI",
-//   description: "Une plateforme pour les aidant(e)s",
-
-//    icons: {
-//     icon: "/images/logos/tiaki-icon.svg",
-//     shortcut: "/images/logos/tiaki-icon.svg",
-//     apple: "/images/logos/tiaki-icon.svg",
-//   },
-// };
-
 type LocaleLayoutProps = {
   children: React.ReactNode;
   params: Promise<{
