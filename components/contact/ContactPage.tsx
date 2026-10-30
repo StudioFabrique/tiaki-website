@@ -8,6 +8,11 @@ import { ContactHero } from "@/components/contact/ContactHero"
 import { ContactForm } from "@/components/contact/ContactForm"
 import { ContactFAQ } from "@/components/contact/ContactFAQ"
 import { ContactResources } from "@/components/contact/ContactResources"
+import { ContactParticipation } from "@/components/contact/ContactParticipation"
+import {
+  participationAudiences,
+  participationActivities,
+} from "@/lib/contact/participation"
 
 type ContactPageProps = {
   locale: SiteLocale
@@ -46,6 +51,12 @@ export function ContactPage({ locale }: ContactPageProps) {
           </div>
         </Container>
       </section>
+
+      <ContactParticipation
+        locale={locale}
+        audiences={participationAudiences[locale]}
+        activities={participationActivities[locale]}
+      />
     </>
   )
 }
