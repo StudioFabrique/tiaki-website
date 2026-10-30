@@ -27,7 +27,7 @@ export function getContactUI(locale: SiteLocale) {
 
 export const contactSubjects = {
   fr: [
-    { value: "general", label: "Question générale sur T·IA·KI" },
+    { value: "general", label: "Question générale sur T-IA-KI" },
     { value: "platform", label: "Informations sur la plateforme" },
     { value: "resources", label: "Ressources et accompagnement" },
     { value: "content", label: "Proposer une ressource ou un contenu" },
@@ -38,7 +38,7 @@ export const contactSubjects = {
     { value: "other", label: "Autre demande" },
   ],
   es: [
-    { value: "general", label: "Consulta general sobre T·IA·KI" },
+    { value: "general", label: "Consulta general sobre T-IA-KI" },
     { value: "platform", label: "Información sobre la plataforma" },
     { value: "resources", label: "Recursos y acompañamiento" },
     { value: "content", label: "Proponer un recurso o contenido" },
