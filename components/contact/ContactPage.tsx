@@ -1,5 +1,4 @@
 import type { SiteLocale } from "@/lib/i18n/config"
-import { Separator } from "@/components/ui/separator"
 
 import { getContactUI } from "@/lib/contact/contact"
 
@@ -27,21 +26,15 @@ export function ContactPage({ locale }: ContactPageProps) {
         title={content.hero.title}
         description={content.hero.description}
       />
+      <ContactFAQ locale={locale} />
 
       <section className="pb-16 sm:pb-24">
         <Container>
           <div className="grid items-stretch gap-6 lg:grid-cols-3">
             {/* Colonne gauche : FAQ + formulaire */}
             <div className="min-w-0 rounded-2xl border border-border bg-background p-5 sm:p-8 lg:col-span-2">
-              {/* FAQ */}
-              <ContactFAQ locale={locale} />
-
               {/* Formulaire */}
               <section aria-labelledby="contact-form-title" className="mt-10">
-                <Separator
-                  orientation="horizontal"
-                  className="my-8 h-px w-full bg-border"
-                />
                 <ContactForm locale={locale} />
               </section>
             </div>
