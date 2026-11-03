@@ -1,5 +1,8 @@
 import type { SiteLocale } from "@/lib/i18n/config"
-import { contactFaq } from "@/lib/contact/faq"
+// import { contactFaq } from "@/lib/contact/faq"
+
+// import FAQ from the backoffice
+import { getFaqs } from "@/lib/contact/getFaqs"
 import { Container } from "@/components/layout/Container"
 import {
   Accordion,
@@ -12,8 +15,8 @@ import {
 //   locale: SiteLocale
 // }
 
-export function ContactFAQ({ locale }: { locale: SiteLocale }) {
-  const questions = contactFaq[locale]
+export async function ContactFAQ({ locale }: { locale: SiteLocale }) {
+  const questions = await getFaqs(locale)
   const midpoint = Math.ceil(questions.length / 2)
 
   const columns = [questions.slice(0, midpoint), questions.slice(midpoint)]
@@ -48,7 +51,7 @@ export function ContactFAQ({ locale }: { locale: SiteLocale }) {
                   {column.map((item) => (
                     <AccordionItem
                       key={item.id}
-                      value={item.id}
+                      value={item.key}
 
                       className="rounded-xl border border-border bg-background px-4 transition-colors duration-200 focus-within:border-primary/60 hover:border-primary/40 motion-reduce:transition-none"
                     >
