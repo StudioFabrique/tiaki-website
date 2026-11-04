@@ -34,7 +34,7 @@ export function ContactPage({ locale }: ContactPageProps) {
             {/* Colonne gauche : FAQ + formulaire */}
             <div className="min-w-0 rounded-2xl border border-border bg-background p-5 sm:p-8 lg:col-span-2">
               {/* Formulaire */}
-              <section aria-labelledby="contact-form-title" className="mt-10">
+              <section aria-labelledby="contact-form-title">
                 <ContactForm locale={locale} />
               </section>
             </div>
