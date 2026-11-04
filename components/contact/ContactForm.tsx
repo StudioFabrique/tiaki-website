@@ -409,7 +409,7 @@ export function ContactForm({ locale }: ContactFormProps) {
           {/* Politique de confidentialité */}
           <div className="space-y-2">
             <Link
-              href={isFrench ? "/fr/cgu" : "/es/condiciones-de-uso"}
+              href={isFrench ? "/fr/#" : "/es/#"}
               className="inline-flex items-center gap-2 rounded-sm text-sm font-medium text-foreground underline underline-offset-4 hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
             >
               <FileText aria-hidden="true" className="size-4 shrink-0" />
@@ -424,12 +424,12 @@ export function ContactForm({ locale }: ContactFormProps) {
           <div className="flex flex-col gap-3 sm:items-end">
             <Button
               type="submit"
-              // disabled
+              disabled
               className="min-h-11 w-full gap-2 px-6 sm:w-auto"
             >
-              {/* {isFrench ? "Envoyer le message" : "Enviar el mensaje"} */}
+              {isFrench ? "Envoyer le message" : "Enviar el mensaje"}
 
-              {isFrench ? "Vérifier le formulaire" : "Comprobar el formulario"}
+              {/* {isFrench ? "Vérifier le formulaire" : "Comprobar el formulario"} */}
 
               <Send aria-hidden="true" className="size-4 shrink-0" />
             </Button>
