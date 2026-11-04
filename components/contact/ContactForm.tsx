@@ -4,7 +4,11 @@ import Link from "next/link"
 import { useState } from "react"
 
 import type { SiteLocale } from "@/lib/i18n/config"
+
 import { contactSubjects, contactProfiles } from "@/lib/contact/contact"
+import { discoveryOptions } from "@/lib/contact/discovery"
+import type { ContactSubmissionPayload } from "@/lib/contact/submission"
+
 import { Button } from "@/components/ui/button"
 
 import { Send, FileText } from "lucide-react"
@@ -18,6 +22,7 @@ import {
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
   SelectTrigger,
   SelectValue,
@@ -30,24 +35,28 @@ type ContactFormProps = {
 export function ContactForm({ locale }: ContactFormProps) {
   const isFrench = locale === "fr"
 
-  const [values, setValues] = useState<ContactFormValues>({
+  const [values, setValues] = useState<ContactSubmissionPayload>({
     fullName: "",
     email: "",
     subject: "",
     message: "",
+    profile: null,
+    discoverySource: null,
   })
 
-  const [errors, setErrors] = useState<ContactFormErrors>({})
-
   const [validatedValues, setValidatedValues] =
-    useState<ContactFormValues | null>(null)
+    useState<ContactSubmissionPayload | null>(null)
+
+  const [errors, setErrors] = useState<ContactFormErrors>({})
 
   const isValidationSuccessful =
     validatedValues !== null &&
     values.fullName === validatedValues.fullName &&
     values.email === validatedValues.email &&
     values.subject === validatedValues.subject &&
-    values.message === validatedValues.message
+    values.message === validatedValues.message &&
+    values.profile === validatedValues.profile &&
+    values.discoverySource === validatedValues.discoverySource
 
   const [hasSubmitted, setHasSubmitted] = useState(false)
 
@@ -55,12 +64,12 @@ export function ContactForm({ locale }: ContactFormProps) {
 
   return (
     <>
-    <h2
-      id="contact-form-title"
-      className="mb-6 font-heading text-2xl font-bold text-foreground sm:text-3xl"
-    >
-      {isFrench ? "Envoyez-nous un message" : "Envíanos un mensaje"}
-    </h2>
+      <h2
+        id="contact-form-title"
+        className="mb-6 font-heading text-2xl font-bold text-foreground sm:text-3xl"
+      >
+        {isFrench ? "Envoyez-nous un message" : "Envíanos un mensaje"}
+      </h2>
       <form
         className="space-y-2"
         aria-labelledby="contact-form-title"
@@ -70,6 +79,7 @@ export function ContactForm({ locale }: ContactFormProps) {
           setHasSubmitted(true)
           const nextErrors = validateContactForm(values, locale)
           setErrors(nextErrors)
+
           setValidatedValues(
             Object.keys(nextErrors).length === 0 ? { ...values } : null
           )
@@ -234,7 +244,14 @@ export function ContactForm({ locale }: ContactFormProps) {
               </span>
             </label>
 
-            <Select name="profile" items={contactProfiles[locale]}>
+            <Select
+              name="profile"
+              items={contactProfiles[locale]}
+              value={values.profile}
+              onValueChange={(profile) => {
+                setValues((current) => ({ ...current, profile }))
+              }}
+            >
               <SelectTrigger id="contact-profile" className="min-h-11 w-full">
                 <SelectValue
                   placeholder={
@@ -396,6 +413,54 @@ export function ContactForm({ locale }: ContactFormProps) {
           </p>
         </div>
 
+        {/* TIAKI platform finding */}
+
+        <div className="mt-8 space-y-2">
+          <label
+            htmlFor="discovery-source"
+            className="block text-sm font-medium text-foreground"
+          >
+            {locale === "fr"
+              ? "Comment avez-vous découvert T-IA-KI ?"
+              : "¿Cómo conociste T-IA-KI?"}
+          </label>
+
+          <Select
+            name="discoverySource"
+            items={discoveryOptions[locale]}
+            value={values.discoverySource}
+            onValueChange={(discoverySource) => {
+              setValues((current) => ({ ...current, discoverySource }))
+            }}
+          >
+            <SelectTrigger id="discovery-source" className="w-full">
+              <SelectValue
+                placeholder={
+                  locale === "fr"
+                    ? "Sélectionnez une réponse"
+                    : "Selecciona una respuesta"
+                }
+              />
+            </SelectTrigger>
+
+            <SelectContent>
+              <SelectGroup>
+                {discoveryOptions[locale].map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+
+          <p className="text-xs leading-5 text-muted-foreground">
+            {locale === "fr"
+              ? "Facultatif - cette information nous aide à mieux connaître les canaux de découverte du projet."
+              : "Opcional - esta información nos ayuda a conocer mejor los canales por los que se descubre el proyecto."}
+          </p>
+        </div>
+
         {/* button  */}
 
         {isValidationSuccessful && (
@@ -405,7 +470,7 @@ export function ContactForm({ locale }: ContactFormProps) {
               : "Formulario válido. No se ha enviado ningún mensaje."}
           </p>
         )}
-        <div className="flex flex-col gap-6 pt-6 sm:flex-row sm:items-start sm:justify-between">
+        <div className="flex flex-col gap-6 pt-6 sm:flex-row sm:items-end sm:justify-between">
           {/* Politique de confidentialité */}
           <div className="space-y-2">
             <Link
