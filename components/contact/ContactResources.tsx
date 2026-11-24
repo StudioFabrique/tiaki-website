@@ -29,8 +29,6 @@ export function ContactResources({ locale }: ContactResourcesProps) {
         {isFrench
           ? "Vous souhaitez participer au projet, partager une idée ou découvrir T-IA-KI? "
           : "¿Quieres participar en el proyecto, compartir una idea o descubrir T-IA-KI?"}
-             {/* ? "Vous souhaitez participer au projet, partager une idée ou découvrir T-IA-KI ? Voici plusieurs possibilités d'échanger avec notre équipe."
-          : "¿Quieres participar en el proyecto, compartir una idea o descubrir T-IA-KI? Estas son algunas formas de intercambiar ideas con nuestro equipo."} */}
       </p>
 
       <div className="mt-6">
@@ -72,7 +70,7 @@ export function ContactResources({ locale }: ContactResourcesProps) {
 <div className="mt-auto flex justify-center pt-10">
   <Image
     src="/images/pictos/picto-9-orange.png"
-    alt=""
+    alt="pictogram de personnne travaillant sur ordinateur"
     aria-hidden="true"
     data-a11y-decorative-image
     width={679}

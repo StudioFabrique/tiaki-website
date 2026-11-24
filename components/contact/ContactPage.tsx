@@ -1,6 +1,7 @@
 import type { SiteLocale } from "@/lib/i18n/config"
 
-import { getContactUI } from "@/lib/contact/contact"
+// import { getContactUI } from "@/lib/contact/contact"
+import { getContactPage } from "@/lib/contact/getContactPage"
 
 import { Container } from "@/components/layout/Container"
 import { ContactHero } from "@/components/contact/ContactHero"
@@ -17,8 +18,8 @@ type ContactPageProps = {
   locale: SiteLocale
 }
 
-export function ContactPage({ locale }: ContactPageProps) {
-  const content = getContactUI(locale)
+export async function ContactPage({ locale }: ContactPageProps) {
+  const content = await getContactPage(locale)
 
   return (
     <>
