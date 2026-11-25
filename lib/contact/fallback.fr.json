@@ -1,0 +1,131 @@
+{
+  "id": 1,
+  "hero": {
+    "title": "Vous avez une question ? Parlons-en",
+    "description": "Si vous avez une question sur T-IA-KI, si vous souhaitez participer au projet ou proposer une collaboration, notre équipe est à votre écoute."
+  },
+  "faqSection": {
+    "title": "Questions fréquentes",
+    "description": "Retrouvez les réponses aux questions les plus fréquentes concernant le projet T-IA-KI, ses objectifs et les possibilités de participation."
+  },
+  "contactForm": {
+    "title": "Envoyez-nous un message",
+    "labels": {
+      "fullName": "Nom et prénom",
+      "email": "Adresse e-mail",
+      "profile": "Votre profil",
+      "subject": " Objet de la demande",
+      "message": "Votre message",
+      "discoverySource": "Comment avez-vous découvert T-IA-KI ?",
+      "required": "Obligatoire",
+      "optional": "Facultative"
+    },
+    "placeholders": {
+      "profile": "Sélectionnez votre profil",
+      "subject": "Sélectionnez un objet",
+      "message": "Décrivez votre demande",
+      "discoverySource": "Sélectionnez une réponse"
+    },
+    "subjects": {
+      "general": "Question générale sur T-IA-KI",
+      "platform": "Informations sur la plateforme",
+      "resources": "Ressources et accompagnement",
+      "content": "Proposer une ressource ou un contenu",
+      "participation": "Participer aux ateliers ou aux tests",
+      "demo": "Demander une démonstration",
+      "partnership": "Partenariat et collaboration",
+      "technical": "Signaler un problème technique",
+      "other": "Autre demande"
+    },
+    "profiles": {
+      "caregiver": "Aidant(e)",
+      "professional": "Professionnel de santé ou médico-social",
+      "association": "Association",
+      "institution": "Institution ou Collectivité",
+      "other": "Autre"
+    },
+    "discoveryOptions": {
+      "google": "Google",
+      "searchEngine": "Autre moteur de recherche",
+      "linkedin": "LinkedIn",
+      "socialMedia": "Autres réseaux sociaux",
+      "advertisement": "Publicité ou annonce",
+      "wordOfMouth": "Bouche-à-oreille",
+      "event": "Événement ou rencontre",
+      "organization": "Association ou organisation partenaire",
+      "other": "Autre"
+    },
+    "hints": {
+      "message": "Merci de ne pas inclure de données médicales ou de santé personnelles dans votre message.",
+      "discoverySource": "Facultatif - cette information nous aide à mieux connaître les canaux de découverte du projet."
+    },
+    "messages": {
+      "validationSuccess": "Formulaire valide. Aucun message n'a été envoyé.",
+      "submissionUnavailable": "L'envoi des messages sera disponible prochainement."
+    },
+    "privacyLabel": "Politique de confidentialité",
+    "submitLabel": "Envoyer le message"
+  },
+  "resources": {
+    "title": "Comment pouvons-nous vous aider ?",
+    "description": "Vous souhaitez participer au projet, partager une idée ou découvrir T-IA-KI?",
+    "topics": {
+      "participation": {
+        "title": "Participer au projet",
+        "description": "Vous êtes aidant(e) ou professionnel(le) ? Manifestez votre intérêt pour les ateliers de co-conception et les tests utilisateurs."
+      },
+      "suggestion": {
+        "title": "Proposer une idée ou une ressource",
+        "description": "Partagez un outil, un guide, une initiative ou une suggestion susceptible d'être utile aux aidant(e)s."
+      },
+      "demo": {
+        "title": "Demander une démonstration",
+        "description": "Vous représentez une association ou une structure d'accompagnement ? Faites-nous part de votre intérêt pour une présentation du projet."
+      }
+    }
+  },
+  "participation": {
+    "title": "Construisons T-IA-KI ensemble",
+    "description": "Votre expérience, vos idées et vos connaissances peuvent contribuer à construire une plateforme adaptée aux besoins des aidant(e)s.",
+    "audiencesAriaLabel": "Publics pouvant participer au projet",
+    "audiences": {
+      "caregivers": {
+        "title": "Vous êtes aidant(e) ?",
+        "compactTitle": "Aidant(e)s",
+        "description": "Partagez votre expérience du quotidien, les difficultés rencontrées et vos attentes pour contribuer à la conception d'une plateforme adaptée à vos besoins."
+      },
+      "professionals": {
+        "title": "Vous êtes professionnel(le) ?",
+        "compactTitle": "Professionnels",
+        "description": "Apportez votre expertise de terrain et vos connaissances des besoins des aidant(e)s pour enrichir les réflexions autour des services et fonctionnalités."
+      },
+      "organizations": {
+        "title": "Vous représentez une organisation ?",
+        "compactTitle": "Organisations",
+        "description": "Explorez les possibilités de collaboration autour du partage de ressources, des échanges d'expertise et de la participation au projet."
+      }
+    },
+    "activitiesTitle": "Comment contribuer au projet ?",
+    "activities": {
+      "experience": {
+        "title": "Partager son expérience",
+        "description": "Exprimer ses besoins, ses difficultés et ses attentes pour contribuer aux réflexions sur la plateforme."
+      },
+      "workshops": {
+        "title": "Participer aux ateliers",
+        "description": "Contribuer à la co-conception des services et des fonctionnalités de T-IA-KI."
+      },
+      "testing": {
+        "title": "Tester la plateforme",
+        "description": "Évaluer les prototypes et partager ses impressions sur les interfaces et les parcours utilisateurs."
+      },
+      "collaboration": {
+        "title": "Proposer une collaboration",
+        "description": "Partager des ressources, des connaissances ou des initiatives en lien avec l'accompagnement des aidant(e)s."
+      }
+    }
+  },
+  "updatedAt": "2026-11-24T13:52:22.923Z",
+  "createdAt": "2026-11-24T13:52:22.923Z",
+  "globalType": "contact-page"
+}

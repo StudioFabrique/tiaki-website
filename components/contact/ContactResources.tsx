@@ -1,15 +1,19 @@
 import Image from "next/image"
 
-import type { SiteLocale } from "@/lib/i18n/config"
+import type { ContactResourcesContent } from "@/lib/contact/types"
 import { Users, Lightbulb, Presentation } from "lucide-react"
-import { contactResourceTopics } from "@/lib/contact/resources"
 
 type ContactResourcesProps = {
-  locale: SiteLocale
+  content: ContactResourcesContent
 }
 
-export function ContactResources({ locale }: ContactResourcesProps) {
-  const isFrench = locale === "fr"
+export function ContactResources({ content }: ContactResourcesProps) {
+  const topics = (["participation", "suggestion", "demo"] as const).map(
+    (id) => ({
+      id,
+      ...content.topics[id],
+    })
+  )
 
   return (
     <aside
@@ -20,20 +24,16 @@ export function ContactResources({ locale }: ContactResourcesProps) {
         id="contact-resources-title"
         className="font-heading text-2xl leading-snug font-bold text-foreground"
       >
-        {isFrench
-          ? "Comment pouvons-nous vous aider ?"
-          : "¿Cómo podemos ayudarte?"}
+        {content.title}
       </h2>
 
       <p className="mt-3 text-sm leading-6 text-muted-foreground">
-        {isFrench
-          ? "Vous souhaitez participer au projet, partager une idée ou découvrir T-IA-KI? "
-          : "¿Quieres participar en el proyecto, compartir una idea o descubrir T-IA-KI?"}
+        {content.description}
       </p>
 
       <div className="mt-6">
         <ul className="space-y-3">
-          {contactResourceTopics[locale].map((item) => (
+          {topics.map((item) => (
             <li
               key={item.id}
               className="flex items-start gap-3 rounded-xl border border-border bg-background p-4"
@@ -67,17 +67,17 @@ export function ContactResources({ locale }: ContactResourcesProps) {
       </div>
 
       {/* Pictogramme décoratif T-IA-KI */}
-<div className="mt-auto flex justify-center pt-10">
-  <Image
-    src="/images/pictos/picto-9-orange.png"
-    alt="pictogram de personnne travaillant sur ordinateur"
-    aria-hidden="true"
-    data-a11y-decorative-image
-    width={679}
-    height={679}
-    className="h-auto w-36 object-contain sm:w-44 lg:w-30"
-  />
-</div>
+      <div className="mt-auto flex justify-center pt-10">
+        <Image
+          src="/images/pictos/picto-9-orange.png"
+          alt="pictogram de personnne travaillant sur ordinateur"
+          aria-hidden="true"
+          data-a11y-decorative-image
+          width={679}
+          height={679}
+          className="h-auto w-36 object-contain sm:w-44 lg:w-30"
+        />
+      </div>
     </aside>
   )
 }
