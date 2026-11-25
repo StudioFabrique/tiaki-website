@@ -1,0 +1,131 @@
+{
+  "id": 1,
+  "hero": {
+    "title": "Preguntas frecuentes",
+    "description": "¿Tienes preguntas sobre T-IA-KI? Encuentra aquí respuestas a las preguntas más frecuentes sobre el proyecto, la plataforma y las posibilidades de participación."
+  },
+  "faqSection": {
+    "title": "¿Tienes alguna pregunta? Hablemos.",
+    "description": "Si tienes alguna pregunta sobre T-IA-KI o quieres participar en el proyecto o proponer una colaboración, Estamos aquí para escucharte"
+  },
+  "contactForm": {
+    "title": "Envíanos un mensaje",
+    "labels": {
+      "fullName": "Nombre y apellidos",
+      "email": "Correo electrónico ",
+      "profile": "Tu perfil (opcional)",
+      "subject": "Asunto de la consulta",
+      "message": "Tu mensaje",
+      "discoverySource": "¿Cómo conociste T-IA-KI?",
+      "required": "Obligatorio",
+      "optional": "Opcional"
+    },
+    "placeholders": {
+      "profile": "Selecciona tu perfil",
+      "subject": "Selecciona tu asunto",
+      "message": "Describe tu consulta",
+      "discoverySource": "Selecciona tu respuesta"
+    },
+    "subjects": {
+      "general": "Consulta general sobre T-IA-KI",
+      "platform": "Información sobre la plataforma",
+      "resources": "Recursos y acompañamiento",
+      "content": "Proponer un recurso o contenido",
+      "participation": "Participar en talleres o pruebas",
+      "demo": "Solicitar una demostración",
+      "partnership": "Colaboración y alianzas",
+      "technical": "Comunicar un problema técnico",
+      "other": "Otra consulta"
+    },
+    "profiles": {
+      "caregiver": "Persona cuidadora",
+      "professional": "Profesional sanitario o sociosanitario",
+      "association": "Asociación",
+      "institution": "Institución o administración pública",
+      "other": "Otro"
+    },
+    "discoveryOptions": {
+      "google": "Google",
+      "searchEngine": "Otro motor de búsqueda",
+      "linkedin": "LinkedIn",
+      "socialMedia": "Otras redes sociales",
+      "advertisement": "Publicidad o anuncio",
+      "wordOfMouth": "Recomendación de otra persona",
+      "event": "Evento o encuentro",
+      "organization": "Asociación u organización colaboradora",
+      "other": "Otro"
+    },
+    "hints": {
+      "message": "Por favor, no incluyas datos médicos ni información personal de salud en tu mensaje.",
+      "discoverySource": "Opcional - esta información nos ayuda a conocer mejor los canales por los que se descubre el proyecto."
+    },
+    "messages": {
+      "validationSuccess": "Formulario válido. No se ha enviado ningún mensaje.",
+      "submissionUnavailable": "El envío de mensajes estará disponible próximamente."
+    },
+    "privacyLabel": "Política de privacidad",
+    "submitLabel": "Enviar el mensaje"
+  },
+  "resources": {
+    "title": "¿Cómo podemos ayudarte?",
+    "description": "¿Quieres participar en el proyecto, compartir una idea o descubrir T-IA-KI?",
+    "topics": {
+      "participation": {
+        "title": "Participar en el proyecto",
+        "description": "¿Eres una persona cuidadora o profesional? Expresa tu interés en los talleres de codiseño y las pruebas con usuarios."
+      },
+      "suggestion": {
+        "title": "Proponer una idea o un recurso",
+        "description": "Comparte una herramienta, una guía, una iniciativa o una sugerencia que pueda ser útil para las personas cuidadoras."
+      },
+      "demo": {
+        "title": "Solicitar una demostración",
+        "description": "¿Representas a una asociación o entidad de apoyo? Comunícanos tu interés en una presentación del proyecto."
+      }
+    }
+  },
+  "participation": {
+    "title": "Construyamos T-IA-KI juntos",
+    "description": "Tu experiencia, tus ideas y tus conocimientos pueden contribuir al desarrollo de una plataforma adaptada a las necesidades de las personas cuidadoras.",
+    "audiencesAriaLabel": "Públicos que pueden participar en el proyecto",
+    "audiences": {
+      "caregivers": {
+        "title": "¿Eres una persona cuidadora?",
+        "compactTitle": "Personas cuidadoras",
+        "description": "Comparte tu experiencia cotidiana, las dificultades que encuentras y tus expectativas para contribuir al diseño de una plataforma adaptada a tus necesidades."
+      },
+      "professionals": {
+        "title": "¿Eres profesional?",
+        "compactTitle": "Profesionales",
+        "description": "\nAporta tu experiencia práctica y tus conocimientos sobre las necesidades de las personas cuidadoras para enriquecer el desarrollo de los servicios y funcionalidades."
+      },
+      "organizations": {
+        "title": "¿Representas a una organización?",
+        "compactTitle": "Organizaciones",
+        "description": "Explora las posibilidades de colaboración mediante el intercambio de recursos, conocimientos y la participación en el proyecto."
+      }
+    },
+    "activitiesTitle": "¿Cómo contribuir al proyecto?",
+    "activities": {
+      "experience": {
+        "title": "Compartir su experiencia",
+        "description": "Expresar necesidades, dificultades y expectativas para contribuir al desarrollo de la plataforma."
+      },
+      "workshops": {
+        "title": "Participar en talleres",
+        "description": "Contribuir al codiseño de los servicios y funcionalidades de T-IA-KI."
+      },
+      "testing": {
+        "title": "Probar la plataforma",
+        "description": "Evaluar prototipos y compartir impresiones sobre las interfaces y los recorridos de usuario."
+      },
+      "collaboration": {
+        "title": "Proponer una colaboración",
+        "description": "Compartir recursos, conocimientos o iniciativas relacionadas con el apoyo a las personas cuidadoras."
+      }
+    }
+  },
+  "updatedAt": "2026-11-24T13:52:22.923Z",
+  "createdAt": "2026-11-24T13:52:22.923Z",
+  "globalType": "contact-page"
+}

@@ -4,21 +4,16 @@ import Link from "next/link"
 import { useState } from "react"
 
 import type { SiteLocale } from "@/lib/i18n/config"
-
-import { contactSubjects, contactProfiles } from "@/lib/contact/contact"
-import { discoveryOptions } from "@/lib/contact/discovery"
 import type { ContactSubmissionPayload } from "@/lib/contact/submission"
-
-import { Button } from "@/components/ui/button"
-
-import { Send, FileText } from "lucide-react"
-
+import type { ContactFormContent } from "@/lib/contact/types"
 import {
   validateContactForm,
   type ContactFormValues,
   type ContactFormErrors,
 } from "@/lib/contact/validation"
 
+import { Send, FileText } from "lucide-react"
+import { Button } from "@/components/ui/button"
 import {
   Select,
   SelectContent,
@@ -30,11 +25,59 @@ import {
 
 type ContactFormProps = {
   locale: SiteLocale
+  content: ContactFormContent
 }
 
-export function ContactForm({ locale }: ContactFormProps) {
+export function ContactForm({ locale, content }: ContactFormProps) {
   const isFrench = locale === "fr"
 
+  // Options dynamiques provenant de Payload CMS
+  const profileOptions = (
+    [
+      "caregiver",
+      "professional",
+      "association",
+      "institution",
+      "other",
+    ] as const
+  ).map((value) => ({
+    value,
+    label: content.profiles[value],
+  }))
+
+  const subjectOptions = (
+    [
+      "general",
+      "platform",
+      "resources",
+      "content",
+      "participation",
+      "demo",
+      "partnership",
+      "technical",
+      "other",
+    ] as const
+  ).map((value) => ({
+    value,
+    label: content.subjects[value],
+  }))
+
+  const discoverySourceOptions = Object.entries({
+    google: "google",
+    "search-engine": "searchEngine",
+    linkedin: "linkedin",
+    "social-media": "socialMedia",
+    advertisement: "advertisement",
+    "word-of-mouth": "wordOfMouth",
+    event: "event",
+    organization: "organization",
+    other: "other",
+  } as const).map(([value, key]) => ({
+    value,
+    label: content.discoveryOptions[key],
+  }))
+
+    // États du formulaire
   const [values, setValues] = useState<ContactSubmissionPayload>({
     fullName: "",
     email: "",
@@ -68,7 +111,7 @@ export function ContactForm({ locale }: ContactFormProps) {
         id="contact-form-title"
         className="mb-6 font-heading text-2xl font-bold text-foreground sm:text-3xl"
       >
-        {isFrench ? "Envoyez-nous un message" : "Envíanos un mensaje"}
+        {content.title}
       </h2>
       <form
         className="space-y-2"
@@ -128,10 +171,10 @@ export function ContactForm({ locale }: ContactFormProps) {
               htmlFor="contact-full-name"
               className="block text-sm font-medium text-foreground"
             >
-              {isFrench ? "Nom et prénom" : "Nombre y apellidos"}
+              {content.labels.fullName}
               <span aria-hidden="true"> *</span>
-              <span className="sr-only">
-                {isFrench ? " (obligatoire)" : " (obligatorio)"}
+              <span className="sr-only">{" "}
+                {content.labels.required}
               </span>
             </label>
 
@@ -182,10 +225,10 @@ export function ContactForm({ locale }: ContactFormProps) {
               htmlFor="contact-email"
               className="block text-sm font-medium text-foreground"
             >
-              {isFrench ? "Adresse e-mail" : "Correo electrónico"}
+              {content.labels.email}
               <span aria-hidden="true"> *</span>
-              <span className="sr-only">
-                {isFrench ? " (obligatoire)" : " (obligatorio)"}
+              <span className="sr-only">{" "}
+                {content.labels.required}
               </span>
             </label>
 
@@ -238,32 +281,26 @@ export function ContactForm({ locale }: ContactFormProps) {
               htmlFor="contact-profile"
               className="block text-sm font-medium text-foreground"
             >
-              {isFrench ? "Votre profil" : "Tu perfil"}
+              {content.labels.profile}
               <span className="ml-2 font-normal text-muted-foreground">
-                {isFrench ? "(facultatif)" : "(opcional)"}
+                {content.labels.optional}
               </span>
             </label>
 
             <Select
               name="profile"
-              items={contactProfiles[locale]}
+              items={profileOptions}
               value={values.profile}
               onValueChange={(profile) => {
                 setValues((current) => ({ ...current, profile }))
               }}
             >
               <SelectTrigger id="contact-profile" className="min-h-11 w-full">
-                <SelectValue
-                  placeholder={
-                    isFrench
-                      ? "Sélectionnez votre profil"
-                      : "Selecciona tu perfil"
-                  }
-                />
+                <SelectValue placeholder={content.placeholders.profile} />
               </SelectTrigger>
 
               <SelectContent>
-                {contactProfiles[locale].map((profile) => (
+                {profileOptions.map((profile) => (
                   <SelectItem key={profile.value} value={profile.value}>
                     {profile.label}
                   </SelectItem>
@@ -278,17 +315,17 @@ export function ContactForm({ locale }: ContactFormProps) {
               htmlFor="contact-subject"
               className="block text-sm font-medium text-foreground"
             >
-              {isFrench ? "Objet de la demande" : "Asunto de la consulta"}
+              {content.labels.subject}
               <span aria-hidden="true"> *</span>
-              <span className="sr-only">
-                {isFrench ? " (obligatoire)" : " (obligatorio)"}
+              <span className="sr-only">{" "}
+                {content.labels.required}
               </span>
             </label>
 
             <Select
               name="subject"
               required
-              items={contactSubjects[locale]}
+              items={subjectOptions}
               value={values.subject || null}
 
               onValueChange={(subject) => {
@@ -317,15 +354,11 @@ export function ContactForm({ locale }: ContactFormProps) {
                   errors.subject ? "contact-subject-error" : undefined
                 }
               >
-                <SelectValue
-                  placeholder={
-                    isFrench ? "Sélectionnez un objet" : "Selecciona un asunto"
-                  }
-                />
+                <SelectValue placeholder={content.placeholders.subject} />
               </SelectTrigger>
 
               <SelectContent>
-                {contactSubjects[locale].map((subject) => (
+                {subjectOptions.map((subject) => (
                   <SelectItem key={subject.value} value={subject.value}>
                     {subject.label}
                   </SelectItem>
@@ -350,10 +383,10 @@ export function ContactForm({ locale }: ContactFormProps) {
             htmlFor="contact-message"
             className="block text-sm font-medium text-foreground"
           >
-            {isFrench ? "Votre message" : "Tu mensaje"}
+            {content.labels.message}
             <span aria-hidden="true"> *</span>
-            <span className="sr-only">
-              {isFrench ? " (obligatoire)" : " (obligatorio)"}
+            <span className="sr-only">{" "}
+             {content.labels.required}
             </span>
           </label>
 
@@ -388,9 +421,7 @@ export function ContactForm({ locale }: ContactFormProps) {
               }
             }}
 
-            placeholder={
-              isFrench ? "Décrivez votre demande..." : "Describe tu consulta..."
-            }
+            placeholder={content.placeholders.message}
           />
 
           {errors.message && (
@@ -407,9 +438,7 @@ export function ContactForm({ locale }: ContactFormProps) {
             id="contact-message-hint"
             className="text-sm leading-6 text-muted-foreground"
           >
-            {isFrench
-              ? "Merci de ne pas inclure de données médicales ou de santé personnelles dans votre message."
-              : "Por favor, no incluyas datos médicos ni información personal de salud en tu mensaje."}
+            {content.hints.message}
           </p>
         </div>
 
@@ -420,32 +449,24 @@ export function ContactForm({ locale }: ContactFormProps) {
             htmlFor="discovery-source"
             className="block text-sm font-medium text-foreground"
           >
-            {locale === "fr"
-              ? "Comment avez-vous découvert T-IA-KI ?"
-              : "¿Cómo conociste T-IA-KI?"}
+            {content.labels.discoverySource}
           </label>
 
           <Select
             name="discoverySource"
-            items={discoveryOptions[locale]}
+            items={discoverySourceOptions}
             value={values.discoverySource}
             onValueChange={(discoverySource) => {
               setValues((current) => ({ ...current, discoverySource }))
             }}
           >
             <SelectTrigger id="discovery-source" className="w-full">
-              <SelectValue
-                placeholder={
-                  locale === "fr"
-                    ? "Sélectionnez une réponse"
-                    : "Selecciona una respuesta"
-                }
-              />
+              <SelectValue placeholder={content.placeholders.discoverySource} />
             </SelectTrigger>
 
             <SelectContent>
               <SelectGroup>
-                {discoveryOptions[locale].map((option) => (
+                {discoverySourceOptions.map((option) => (
                   <SelectItem key={option.value} value={option.value}>
                     {option.label}
                   </SelectItem>
@@ -455,9 +476,7 @@ export function ContactForm({ locale }: ContactFormProps) {
           </Select>
 
           <p className="text-xs leading-5 text-muted-foreground">
-            {locale === "fr"
-              ? "Facultatif - cette information nous aide à mieux connaître les canaux de découverte du projet."
-              : "Opcional - esta información nos ayuda a conocer mejor los canales por los que se descubre el proyecto."}
+            {content.hints.discoverySource}
           </p>
         </div>
 
@@ -465,9 +484,7 @@ export function ContactForm({ locale }: ContactFormProps) {
 
         {isValidationSuccessful && (
           <p role="status" className="text-sm font-medium text-foreground">
-            {isFrench
-              ? "Formulaire valide. Aucun message n'a été envoyé."
-              : "Formulario válido. No se ha enviado ningún mensaje."}
+            {content.messages.validationSuccess}
           </p>
         )}
         <div className="flex flex-col gap-6 pt-6 sm:flex-row sm:items-end sm:justify-between">
@@ -478,9 +495,7 @@ export function ContactForm({ locale }: ContactFormProps) {
               className="inline-flex items-center gap-2 rounded-sm text-sm font-medium text-foreground underline underline-offset-4 hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
             >
               <FileText aria-hidden="true" className="size-4 shrink-0" />
-              {isFrench
-                ? "Politique de confidentialité"
-                : "Política de privacidad"}
+              {content.privacyLabel}
             </Link>
           </div>
 
@@ -492,7 +507,7 @@ export function ContactForm({ locale }: ContactFormProps) {
               disabled
               className="min-h-11 w-full gap-2 px-6 sm:w-auto"
             >
-              {isFrench ? "Envoyer le message" : "Enviar el mensaje"}
+              {content.submitLabel}
 
               {/* {isFrench ? "Vérifier le formulaire" : "Comprobar el formulario"} */}
 
@@ -500,9 +515,7 @@ export function ContactForm({ locale }: ContactFormProps) {
             </Button>
 
             <p className="text-sm text-muted-foreground sm:text-right">
-              {isFrench
-                ? "L'envoi des messages sera disponible prochainement."
-                : "El envío de mensajes estará disponible próximamente."}
+              {content.messages.submissionUnavailable}
             </p>
           </div>
         </div>

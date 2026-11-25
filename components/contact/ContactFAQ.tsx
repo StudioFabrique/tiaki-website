@@ -1,8 +1,7 @@
-import type { SiteLocale } from "@/lib/i18n/config"
-// import { contactFaq } from "@/lib/contact/faq"
+import type { ContactFAQContent } from "@/lib/contact/types"
 
 // import FAQ from the backoffice
-import { getFaqs } from "@/lib/contact/getFaqs"
+import type { FAQ } from "@/lib/contact/faqSchema"
 import { Container } from "@/components/layout/Container"
 import {
   Accordion,
@@ -11,12 +10,12 @@ import {
   AccordionContent,
 } from "@/components/ui/accordion"
 
-// type ContactFAQProps = {
-//   locale: SiteLocale
-// }
+type ContactFAQProps = {
+  content: ContactFAQContent
+  questions: FAQ[]
+}
 
-export async function ContactFAQ({ locale }: { locale: SiteLocale }) {
-  const questions = await getFaqs(locale)
+export function ContactFAQ({ content, questions }: ContactFAQProps) {
   const midpoint = Math.ceil(questions.length / 2)
 
   const columns = [questions.slice(0, midpoint), questions.slice(midpoint)]
@@ -31,15 +30,11 @@ export async function ContactFAQ({ locale }: { locale: SiteLocale }) {
               id="contact-faq-title"
               className="font-heading text-2xl font-bold text-foreground sm:text-3xl"
             >
-              {locale === "fr"
-                ? "Questions fréquentes"
-                : "Preguntas frecuentes"}
+              {content.title}
             </h2>
 
             <p className="mt-4 text-base leading-7 text-muted-foreground">
-              {locale === "fr"
-                ? "Vous vous posez des questions sur T-IA-KI ? Retrouvez ici les réponses aux interrogations les plus fréquentes concernant le projet, la plateforme et les possibilités de participation."
-                : "¿Tienes preguntas sobre T-IA-KI? Encuentra aquí respuestas a las preguntas más frecuentes sobre el proyecto, la plataforma y las posibilidades de participación."}
+              {content.description}
             </p>
           </div>
 

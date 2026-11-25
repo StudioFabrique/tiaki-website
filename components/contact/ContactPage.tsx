@@ -1,6 +1,7 @@
 import type { SiteLocale } from "@/lib/i18n/config"
 
-import { getContactUI } from "@/lib/contact/contact"
+import { getContactPage } from "@/lib/contact/getContactPage"
+import { getFaqs } from "@/lib/contact/getFaqs"
 
 import { Container } from "@/components/layout/Container"
 import { ContactHero } from "@/components/contact/ContactHero"
@@ -8,17 +9,16 @@ import { ContactForm } from "@/components/contact/ContactForm"
 import { ContactFAQ } from "@/components/contact/ContactFAQ"
 import { ContactResources } from "@/components/contact/ContactResources"
 import { ContactParticipation } from "@/components/contact/ContactParticipation"
-import {
-  participationAudiences,
-  participationActivities,
-} from "@/lib/contact/participation"
 
 type ContactPageProps = {
   locale: SiteLocale
 }
 
-export function ContactPage({ locale }: ContactPageProps) {
-  const content = getContactUI(locale)
+export async function ContactPage({ locale }: ContactPageProps) {
+  const [content, questions] = await Promise.all([
+    getContactPage(locale),
+    getFaqs(locale),
+  ])
 
   return (
     <>
@@ -26,7 +26,11 @@ export function ContactPage({ locale }: ContactPageProps) {
         title={content.hero.title}
         description={content.hero.description}
       />
-      <ContactFAQ locale={locale} />
+      <ContactFAQ
+      
+        content={content.faqSection}
+        questions={questions}
+      />
 
       <section className="pb-16 sm:pb-24">
         <Container>
@@ -35,21 +39,17 @@ export function ContactPage({ locale }: ContactPageProps) {
             <div className="min-w-0 rounded-2xl border border-border bg-background p-5 sm:p-8 lg:col-span-2">
               {/* Formulaire */}
               <section aria-labelledby="contact-form-title">
-                <ContactForm locale={locale} />
+                <ContactForm locale={locale} content={content.contactForm} />
               </section>
             </div>
 
             {/* Colonne droite : informations utiles */}
-            <ContactResources locale={locale} />
+            <ContactResources content={content.resources} />
           </div>
         </Container>
       </section>
 
-      <ContactParticipation
-        locale={locale}
-        audiences={participationAudiences[locale]}
-        activities={participationActivities[locale]}
-      />
+      <ContactParticipation content={content.participation} />
     </>
   )
 }

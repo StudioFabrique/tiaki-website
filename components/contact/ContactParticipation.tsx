@@ -3,11 +3,7 @@
 
 import { useState } from "react"
 
-import type { SiteLocale } from "@/lib/i18n/config"
-import type {
-  ParticipationAudience,
-  ParticipationActivity,
-} from "@/lib/contact/participation"
+import type { ContactParticipationContent } from "@/lib/contact/types"
 
 import { Container } from "@/components/layout/Container"
 
@@ -21,20 +17,30 @@ import {
   Handshake,
 } from "lucide-react"
 
+
+
 type ContactParticipationProps = {
-  locale: SiteLocale
-  audiences: ParticipationAudience[]
-  activities: ParticipationActivity[]
+  content: ContactParticipationContent
 }
 
 export function ContactParticipation({
-  locale,
-  audiences,
-  activities,
+  content,
 }: ContactParticipationProps) {
-  const isFrench = locale === "fr"
-
   const [activeAudience, setActiveAudience] = useState("caregivers")
+
+  const audiences = (
+    ["caregivers", "professionals", "organizations"] as const
+  ).map((id) => ({
+    id,
+    ...content.audiences[id],
+  }))
+
+  const activities = (
+    ["experience", "workshops", "testing", "collaboration"] as const
+  ).map((id) => ({
+    id,
+    ...content.activities[id],
+  }))
 
   return (
     <section
@@ -51,26 +57,18 @@ export function ContactParticipation({
               id="contact-participation-title"
               className="font-heading text-2xl font-bold text-foreground sm:text-3xl"
             >
-              {isFrench
-                ? "Construisons T-IA-KI ensemble"
-                : "Construyamos T-IA-KI juntos"}
+              {content.title}
             </h2>
 
             <p className="mt-4 text-base leading-7 text-muted-foreground">
-              {isFrench
-                ? "Votre expérience, vos idées et vos connaissances peuvent contribuer à construire une plateforme adaptée aux besoins des aidant(e)s."
-                : "Tu experiencia, tus ideas y tus conocimientos pueden contribuir al desarrollo de una plataforma adaptada a las necesidades de las personas cuidadoras."}
+              {content.description}
             </p>
           </div>
 
           {/* Cartes extensibles */}
           <div
             role="group"
-            aria-label={
-              isFrench
-                ? "Publics pouvant participer au projet"
-                : "Públicos que pueden participar en el proyecto"
-            }
+            aria-label={content.audiencesAriaLabel}
             className="flex min-w-0 flex-col gap-3 lg:h-88 lg:flex-row"
           >
             {audiences.map((audience) => {
@@ -83,19 +81,7 @@ export function ContactParticipation({
                     ? UsersRound
                     : Building2
 
-              const compactTitle =
-                audience.id === "caregivers"
-                  ? isFrench
-                    ? "Aidant(e)s"
-                    : "Personas cuidadoras"
-                  : audience.id === "professionals"
-                    ? isFrench
-                      ? "Professionnels"
-                      : "Profesionales"
-                    : isFrench
-                      ? "Organisations"
-                      : "Organizaciones"
-
+             const compactTitle = audience.compactTitle
               const descriptionId =
                 `participation-${audience.id}-description`
 
@@ -202,9 +188,7 @@ export function ContactParticipation({
         {/* Formes de contribution */}
         <div className="mt-12">
           <h3 className="mb-6 font-heading text-xl font-bold text-foreground">
-            {isFrench
-              ? "Comment contribuer au projet ?"
-              : "¿Cómo contribuir al proyecto?"}
+            {content.activitiesTitle}
           </h3>
 
           <ul className="grid gap-4 sm:grid-cols-2">
