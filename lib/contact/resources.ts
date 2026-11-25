@@ -1,12 +1,5 @@
 
-import type { SiteLocale, RouteKey } from "@/lib/i18n/config"
-
-type ContactResourceLink = {
-  id: string
-  route: RouteKey
-  title: string
-  description: string
-}
+import type { SiteLocale } from "@/lib/i18n/config"
 
 
 export const contactResourceTopics = {
