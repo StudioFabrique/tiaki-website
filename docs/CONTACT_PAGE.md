@@ -3,8 +3,8 @@
 **Projet :** T-IA-KI  
 **Dépôt :** `tiaki-website`  
 **Emplacement :** `docs/CONTACT_PAGE.md`  
-**Dernière mise à jour :** 25 novembre 2026  
-**Statut :** déployé en production ; recette validée par l'équipe de développement.
+**Dernière mise à jour :** 26 novembre 2026  
+**Statut :** version initiale déployée et validée en production ; refactorisation CMS-01 validée localement sur `feature/cms-core`, en attente de livraison.
 
 ## 1. Objectif et périmètre
 
@@ -16,26 +16,32 @@ Cette page constitue la première implémentation complète d'un modèle d'inté
 
 ### 1.1. Périmètre fonctionnel
 
-| Section | Source éditoriale | Composant |
-| --- | --- | --- |
-| Hero | Global `contact-page`, groupe `hero` | `ContactHero` |
-| FAQ — titre et introduction | Global, groupe `faqSection` | `ContactFAQ` |
-| FAQ — questions et réponses | Collection `faqs` | `ContactFAQ` |
-| Formulaire | Global, groupe `contactForm` | `ContactForm` |
-| Ressources | Global, groupe `resources` | `ContactResources` |
-| Participation | Global, groupe `participation` | `ContactParticipation` |
+|Section|Source éditoriale|Composant|
+|---|---|---|
+|Hero|Global `contact-page`, groupe `hero`|`ContactHero`|
+|FAQ — titre et introduction|Global, groupe `faqSection`|`ContactFAQ`|
+|FAQ — questions et réponses|Collection `faqs`|`ContactFAQ`|
+|Formulaire|Global, groupe `contactForm`|`ContactForm`|
+|Ressources|Global, groupe `resources`|`ContactResources`|
+|Participation|Global, groupe `participation`|`ContactParticipation`|
 
 **Hors périmètre :** envoi effectif des messages du formulaire, stockage des demandes, notifications, pièces jointes, traitement des données personnelles des visiteurs. Le bouton d'envoi reste désactivé ; la validation locale ne constitue pas une soumission. Le lien vers la politique de confidentialité doit être finalisé dans le cadre de l'activation du formulaire.
 
 ## 2. Architecture
+
 
 ```mermaid
 flowchart TD
     U[Visiteur FR ou ES] --> P[ContactPage - Next.js Server Component]
     P --> G[getContactPage]
     P --> Q[getFaqs]
-    G -->|HTTPS REST| CG[Payload Global contact-page]
-    Q -->|HTTPS REST| CQ[Payload Collection faqs]
+    G --> REG[cmsRegistry]
+    Q --> REG
+    G --> HTTP[fetchCms]
+    Q --> HTTP
+    HTTP --> CFG[Configuration commune]
+    HTTP -->|HTTPS REST| CG[Payload Global contact-page]
+    HTTP -->|HTTPS REST| CQ[Payload Collection faqs]
     CG --> DB[(PostgreSQL 17)]
     CQ --> DB
     G --> V[Validation Zod Contact]
@@ -50,18 +56,20 @@ flowchart TD
     S --> C
 ```
 
+
 Le composant parent déclenche les deux chargements de données de façon concurrente avec `Promise.all()`. Chaque fonction de récupération gère ses erreurs indépendamment et retourne des données typées.
 
-| Couche | Technologie / responsabilité |
-| --- | --- |
-| Présentation | Next.js App Router, React, TypeScript ; composants et interactions existants |
-| Orchestration | `ContactPage.tsx`, Server Component asynchrone |
-| Accès aux données | Fonctions serveur `getContactPage()` et `getFaqs()` |
-| Contrat de données | Zod : validation à l'exécution et inférence des types |
-| Résilience | Snapshots JSON locaux par langue ; fusion granulaire du Global |
-| Administration | Payload CMS, hébergé sur OVH dans Docker |
-| Persistance | PostgreSQL 17 |
-| Hébergement du site | Vercel |
+|Couche|Technologie / responsabilité|
+|---|---|
+|Présentation|Next.js App Router, React, TypeScript ; composants et interactions existants|
+|Orchestration|`ContactPage.tsx`, Server Component asynchrone|
+|Accès aux données|Adaptateurs serveur `getContactPage()` et `getFaqs()` ; transport partagé `fetchCms()`|
+|Configuration et registre|`lib/cms/config.ts` et `registry.ts` : URL, timeout, endpoints, schémas, paramètres et snapshots|
+|Contrat de données|Zod : validation à l'exécution et inférence des types|
+|Résilience|Snapshots JSON locaux par langue ; fusion granulaire du Global|
+|Administration|Payload CMS, hébergé sur OVH dans Docker|
+|Persistance|PostgreSQL 17|
+|Hébergement du site|Vercel|
 
 Les requêtes CMS sont réalisées côté serveur Next.js, pas directement depuis le navigateur du visiteur. Les routes publiques du CMS exposent des données éditoriales publiques ; les écritures nécessitent une authentification.
 
@@ -69,7 +77,7 @@ Les requêtes CMS sont réalisées côté serveur Next.js, pas directement depui
 
 Principaux fichiers concernés (arborescence volontairement non exhaustive) :
 
-```text
+```
 tiaki-website/
 ├── components/contact/
 │   ├── ContactPage.tsx
@@ -78,13 +86,18 @@ tiaki-website/
 │   ├── ContactForm.tsx
 │   ├── ContactResources.tsx
 │   └── ContactParticipation.tsx
+├── lib/cms/
+│   ├── config.ts
+│   ├── client.ts
+│   ├── validation.ts
+│   ├── mergeWithFallback.ts
+│   └── registry.ts
 ├── lib/contact/
 │   ├── getContactPage.ts
 │   ├── getFaqs.ts
 │   ├── schema.ts
 │   ├── faqSchema.ts
 │   ├── types.ts
-│   ├── mergeWithFallback.ts
 │   ├── fallback.ts
 │   ├── fallback.fr.json
 │   ├── fallback.es.json
@@ -94,20 +107,21 @@ tiaki-website/
 │   ├── validation.ts
 │   └── submission.ts
 └── docs/
+    ├── CMS_INTEGRATION.md
     └── CONTACT_PAGE.md
 ```
 
-Les anciens modules de contenu statique peuvent encore contenir des constantes ou types métier. Ne pas les supprimer sans vérifier leurs usages. Les schémas Zod décrivent les réponses attendues ; la validation des saisies utilisateur relève de `validation.ts`, non du schéma éditorial.
+Les anciens modules de contenu statique peuvent encore contenir des constantes ou types métier. Ne pas les supprimer sans vérifier leurs usages. Les schémas Zod décrivent les réponses attendues ; la validation des saisies utilisateur relève de `lib/contact/validation.ts`, non du schéma éditorial ni de `lib/cms/validation.ts`.
 
 ## 4. Configuration et API
 
 ### 4.1. Variable d'environnement
 
-| Environnement | `TIAKI_BACKOFFICE_URL` |
-| --- | --- |
-| Local (`.env.local`) | `http://localhost:3009` |
-| Vercel Preview | `https://backoffice.tiaki.step.eco` |
-| Vercel Production | `https://backoffice.tiaki.step.eco` |
+|Environnement|`TIAKI_BACKOFFICE_URL`|
+|---|---|
+|Local (`.env.local`)|`http://localhost:3009`|
+|Vercel Preview|`https://backoffice.tiaki.step.eco`|
+|Vercel Production|`https://backoffice.tiaki.step.eco`|
 
 Ne pas utiliser le préfixe `NEXT_PUBLIC_` : cette variable sert aux fonctions serveur. Ne pas versionner les fichiers d'environnement locaux. Une modification des variables Vercel nécessite un nouveau déploiement pour être prise en compte par celui-ci.
 
@@ -115,17 +129,17 @@ Ne pas utiliser le préfixe `NEXT_PUBLIC_` : cette variable sert aux fonctions s
 
 Global Contact :
 
-```http
+```
 GET /api/globals/contact-page?locale=fr&fallback-locale=none
 ```
 
 Collection FAQ :
 
-```http
+```
 GET /api/faqs?locale=fr&fallback-locale=none&where[published][equals]=true&sort=displayOrder&limit=100
 ```
 
-Remplacer `fr` par `es` pour les contenus espagnols. Dans le code, les paramètres sont construits avec `URL` et `searchParams`.
+Remplacer `fr` par `es` pour les contenus espagnols. Dans le code, `cmsRegistry` fournit les endpoints et les paramètres FAQ ; `fetchCms()` construit les URL avec `URL` et `searchParams` et impose les paramètres linguistiques.
 
 Le paramètre `fallback-locale=none` désactive le fallback linguistique de Payload pour ces lectures. Il évite notamment qu'un champ manquant en espagnol soit silencieusement remplacé par sa valeur française avant la validation côté site.
 
@@ -135,14 +149,14 @@ La collection FAQ filtre les documents publiés et les trie selon `displayOrder`
 
 Le Global possède 75 champs textuels localisés, soit 150 valeurs attendues pour les deux langues.
 
-| Groupe | Nombre de champs | Description |
-| --- | ---: | --- |
-| `hero` | 2 | Titre, description |
-| `faqSection` | 2 | Titre, description de la section FAQ |
-| `contactForm` | 42 | Titre, labels, placeholders, sujets, profils, sources de découverte, aides, messages et boutons |
-| `resources` | 8 | Titre, description, trois cartes thématiques |
-| `participation` | 21 | Titre, description, label accessible, trois publics et quatre activités |
-| **Total** | **75** | Hors documents de la collection FAQ |
+|Groupe|Nombre de champs|Description|
+|---|--:|---|
+|`hero`|2|Titre, description|
+|`faqSection`|2|Titre, description de la section FAQ|
+|`contactForm`|42|Titre, labels, placeholders, sujets, profils, sources de découverte, aides, messages et boutons|
+|`resources`|8|Titre, description, trois cartes thématiques|
+|`participation`|21|Titre, description, label accessible, trois publics et quatre activités|
+|**Total**|**75**|Hors documents de la collection FAQ|
 
 Les groupes structurent la réponse API ; ils ne représentent pas cinq collections distinctes. Les quatre champs du Hero et de l'introduction FAQ sont obligatoires dans le modèle CMS et `NOT NULL` dans PostgreSQL. Les autres champs sont actuellement facultatifs dans le modèle CMS. Côté Next.js, tous les textes attendus sont néanmoins requis par le contrat Zod après application éventuelle du fallback.
 
@@ -156,7 +170,7 @@ Les structures exactes des groupes et les identifiants acceptés sont définis d
 
 Extrait de `ContactPage.tsx` :
 
-```tsx
+```
 const [content, questions] = await Promise.all([
   getContactPage(locale),
   getFaqs(locale),
@@ -167,7 +181,7 @@ Le parent transmet ensuite les groupes aux composants. `ContactFAQ` reçoit `con
 
 ### 5.2. Contrat Zod
 
-`schema.ts` contient les schémas des cinq groupes et `contactPageSchema`. Les textes sont validés comme des chaînes non vides après suppression des espaces périphériques (`z.string().trim().min(1)`). `types.ts` infère les types à partir des schémas (`z.infer`) pour éviter de maintenir deux contrats divergents.
+`schema.ts` contient les schémas des cinq groupes et `contactPageSchema`. Les textes sont validés avec la primitive commune `requiredText` de `lib/cms/validation.ts` (`z.string().trim().min(1)`), également utilisée par `faqSchema.ts`. `types.ts` infère les types à partir des schémas (`z.infer`) pour éviter de maintenir deux contrats divergents.
 
 `faqSchema.ts` valide les documents FAQ : `id` (entier ou chaîne non vide), `key`, `question`, `answer`, `displayOrder` (nombre positif ou nul) et `published` (valeur littérale `true`). `faqResponseSchema` valide l'enveloppe `docs`.
 
@@ -175,12 +189,12 @@ La validation TypeScript agit à la compilation ; Zod contrôle les données re�
 
 ### 5.3. Paramètres réseau
 
-Les deux fonctions utilisent :
+Les deux adaptateurs utilisent `fetchCms()` ; ce client applique la configuration de `lib/cms/config.ts` :
 
-```ts
+```
 {
   cache: 'no-store',
-  signal: AbortSignal.timeout(5000),
+  signal: AbortSignal.timeout(CMS_REQUEST_TIMEOUT_MS),
 }
 ```
 
@@ -190,21 +204,35 @@ Les deux fonctions utilisent :
 
 Aucun mécanisme de retry, cache persistant des dernières réponses valides ou circuit breaker n'est implémenté dans ce périmètre.
 
+### 5.4. Adaptateurs métier après CMS-01
+
+`getContactPage.ts` conserve ses imports `server-only`, `SiteLocale` depuis `@/lib/i18n/config` et `ContactPageContent` depuis `./types`. Il récupère `endpoint` et `schema` depuis `cmsRegistry.contact`, appelle `fetchCms(endpoint, { locale })`, puis utilise `schema.safeParse(data)`. En cas de réponse partiellement invalide, il journalise les chemins Zod, fusionne avec `mergeWithFallback(data, fallback)` et applique `schema.parse(merged)`. Le bloc `catch` retourne le fallback complet si la requête ou la validation finale échoue.
+
+`getFaqs.ts` conserve `server-only`, ses types et son fallback. Le bloc de récupération devient :
+
+```
+const { endpoint, schema, query } = cmsRegistry.faqs
+const data = await fetchCms(endpoint, { locale, query })
+return schema.parse(data).docs
+```
+
+Le `catch` conserve sa stratégie de fallback intégral. Les deux adaptateurs restent indépendants et parallélisés par le composant parent. Aucun changement des composants, du modèle Payload ou de PostgreSQL n'est nécessaire pour CMS-01. Voir `CMS_INTEGRATION.md` pour les responsabilités et limites de la couche commune.
+
 ## 6. Stratégie de résilience
 
 ### 6.1. Global Contact : fallback granulaire
 
 `getContactPage()` récupère le snapshot correspondant à la langue, interroge le CMS, puis valide la réponse avec `contactPageSchema.safeParse()`.
 
-| Situation | Comportement |
-| --- | --- |
-| Réponse entièrement valide | Utiliser les contenus CMS |
-| Réponse partiellement invalide | Conserver les textes CMS valides et remplacer uniquement les champs invalides ou absents |
-| Échec HTTP, réseau, timeout ou parsing JSON | Utiliser le snapshot complet de la langue |
-| Variable CMS absente | Utiliser le snapshot et journaliser l'erreur |
-| Fusion toujours invalide | Utiliser le snapshot complet |
+|Situation|Comportement|
+|---|---|
+|Réponse entièrement valide|Utiliser les contenus CMS|
+|Réponse partiellement invalide|Conserver les textes CMS valides et remplacer uniquement les champs invalides ou absents|
+|Échec HTTP, réseau, timeout ou parsing JSON|Utiliser le snapshot complet de la langue|
+|Variable CMS absente|Utiliser le snapshot et journaliser l'erreur|
+|Fusion toujours invalide|Utiliser le snapshot complet|
 
-`mergeWithFallback.ts` parcourt récursivement la structure du snapshot. Pour chaque feuille textuelle, il conserve la valeur distante si celle-ci est une chaîne non vide après `trim()`. Les autres valeurs sont remplacées par celles du snapshot. Les propriétés inconnues ne sont pas intégrées.
+`lib/cms/mergeWithFallback.ts` (déplacé depuis `lib/contact/` sans changement de logique) parcourt récursivement la structure du snapshot. Pour chaque feuille textuelle, il conserve la valeur distante si celle-ci est une chaîne non vide après `trim()`. Les autres valeurs sont remplacées par celles du snapshot. Les propriétés inconnues ne sont pas intégrées.
 
 Exemple : si `resources.title` est valide dans Payload mais `resources.description` est vide, le titre CMS est conservé et seule la description est restaurée depuis le snapshot de la même langue.
 
@@ -228,9 +256,9 @@ Une réponse valide avec `docs: []` est considérée comme une collection volont
 
 Actualiser les snapshots après des changements éditoriaux significatifs, une évolution du schéma ou une dépublication de FAQ qui ne doit pas réapparaître en mode dégradé. Prendre comme référence des contenus approuvés, jamais des textes temporaires de test. Ne stocker aucune donnée privée ni aucun identifiant d'accès dans ces fichiers.
 
-La procédure ci-dessous est une procédure de maintenance proposée, à exécuter depuis la racine de `tiaki-website` sur une branche dédiée, après vérification de l'environnement source. Elle prépare les quatre fichiers dans un répertoire temporaire, les valide avec les schémas de l'application, retire les métadonnées non nécessaires et ne remplace les snapshots qu'après validation de l'ensemble. Elle suppose une version de Node.js compatible avec l'import natif de ces fichiers TypeScript (Node.js 24 recommandé) et les dépendances du projet installées.
+La procédure ci-dessous est une procédure de maintenance proposée, à exécuter depuis la racine de `tiaki-website` sur une branche dédiée, après vérification de l'environnement source. Elle prépare les quatre fichiers dans un répertoire temporaire, les valide avec les schémas de l'application, retire les métadonnées non nécessaires et ne remplace les snapshots qu'après validation de l'ensemble. Elle nécessite les dépendances du projet et un exécuteur TypeScript capable de résoudre les imports relatifs sans extension, par exemple `tsx`. Depuis CMS-01, l'ancien exemple fondé uniquement sur `node --input-type=module` n'est plus fiable, car les schémas importent `../cms/validation`. L'exemple ci-dessous est une adaptation proposée, non exécutée contre le dépôt : vérifier la disponibilité de `tsx` (`pnpm exec tsx --version`) ; si absent, différer l'exécution jusqu'à la sélection du runner dans CMS-03. Aucun ajout de dépendance n'est supposé effectué.
 
-```bash
+```
 (
   set -eu
   export SNAPSHOT_DIR="$(mktemp -d)"
@@ -251,11 +279,12 @@ La procédure ci-dessous est une procédure de maintenance proposée, à exécut
       -o "$SNAPSHOT_DIR/faq-fallback.$locale.json"
   done
 
-  node --input-type=module <<'JS'
+  cat > "$SNAPSHOT_DIR/validate.mts" <<'JS'
 import { readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { contactPageSchema } from './lib/contact/schema.ts'
-import { faqResponseSchema } from './lib/contact/faqSchema.ts'
+import { pathToFileURL } from 'node:url'
+const { contactPageSchema } = await import(pathToFileURL(join(process.cwd(), 'lib/contact/schema.ts')).href)
+const { faqResponseSchema } = await import(pathToFileURL(join(process.cwd(), 'lib/contact/faqSchema.ts')).href)
 
 const dir = process.env.SNAPSHOT_DIR
 for (const locale of ['fr', 'es']) {
@@ -275,6 +304,7 @@ for (const locale of ['fr', 'es']) {
   console.log(`${locale}: Contact valide, ${faqs.docs.length} FAQ valides`)
 }
 JS
+  pnpm exec tsx "$SNAPSHOT_DIR/validate.mts"
 
   for locale in fr es; do
     cp "$SNAPSHOT_DIR/fallback.$locale.json" "lib/contact/fallback.$locale.json"
@@ -283,29 +313,31 @@ JS
 )
 ```
 
-Le garde-fou contre une collection FAQ vide est volontaire pour cette procédure de maintenance : si le retrait de toutes les FAQ est intentionnel, adapter ce contrôle après revue. Le site, lui, accepte une collection vide valide en fonctionnement nominal.
+Le garde-fou contre une collection FAQ vide est volontaire pour cette ancienne procédure manuelle : si le retrait de toutes les FAQ est intentionnel, adapter ce contrôle après revue. Le site accepte déjà une collection vide valide en fonctionnement nominal (test CMS-01). Le futur script générique devra accepter une collection vide complète et valide, sans la confondre avec une erreur ni ressusciter des contenus dépubliés.
 
-Relire les différences avec `git diff -- lib/contact/`, contrôler les traductions et les éventuelles suppressions, puis lancer `pnpm exec tsc --noEmit`, `pnpm run lint` et `pnpm run build`. Tester les deux langues et le mode dégradé avant le merge. Le script proposé n'est pas encore automatisé dans le pipeline CI.
+Relire les différences avec `git diff -- lib/contact/`, contrôler les traductions et les éventuelles suppressions, puis lancer `pnpm exec tsc --noEmit`, `pnpm run lint` et `pnpm run build`. Tester les deux langues et le mode dégradé avant le merge. Le script proposé n'est pas encore automatisé dans le pipeline CI. CMS-03 puis CMS-02/CMS-05 doivent remplacer cette procédure ponctuelle par un mécanisme générique fondé sur `cmsRegistry`, avec validation complète, contrôle de pagination, détection de changement et PR. Tant que la fusion et le déploiement n'ont pas eu lieu, les snapshots embarqués ne changent pas.
 
 ## 8. Tests et diagnostic
 
 ### 8.1. Matrice de recette
 
-| ID | Scénario | Résultat attendu | Statut au 25/11/2026 |
-| --- | --- | --- | --- |
-| T01 | Un champ CMS vide et un autre modifié | Fallback du seul champ invalide | Validé en local |
-| T02 | CMS arrêté | Page Contact et FAQ disponibles via les snapshots | Validé en local |
-| T03 | CMS rétabli | Retour aux contenus dynamiques sans redémarrage du site | Validé en local |
-| T04 | Contrôle des deux locales | Pas de fallback vers l'autre langue | Validé en local |
-| T05 | Serveur accessible ne répondant pas | Interruption des requêtes et activation des fallbacks | Validé en local |
-| T06 | Modification éditoriale sur CMS de production | Changement visible sur Vercel Preview | Validé sur `dev` |
-| T07 | Recette fonctionnelle en production | Affichage FR/ES, interactions, non-régression | Validé selon retour de recette |
+|ID|Scénario|Résultat attendu|Statut au 25/11/2026|
+|---|---|---|---|
+|T01|Un champ CMS vide et un autre modifié|Fallback du seul champ invalide|Validé en local|
+|T02|CMS arrêté|Page Contact et FAQ disponibles via les snapshots|Validé en local|
+|T03|CMS rétabli|Retour aux contenus dynamiques sans redémarrage du site|Validé en local|
+|T04|Contrôle des deux locales|Pas de fallback vers l'autre langue|Validé en local|
+|T05|Serveur accessible ne répondant pas|Interruption des requêtes et activation des fallbacks|Validé en local|
+|T06|Modification éditoriale sur CMS de production|Changement visible sur Vercel Preview|Validé sur `dev`|
+|T07|Recette fonctionnelle en production|Affichage FR/ES, interactions, non-régression|Validé selon retour de recette|
 
-Les validations ci-dessus sont issues des essais réalisés pendant le développement et la mise en production. Elles ne constituent pas une suite de tests automatisés. Aucun arrêt volontaire du CMS de production n'est requis pour la recette.
+Les validations ci-dessus sont issues des essais réalisés pendant le développement et la mise en production initiale.
+
+**Recette CMS-01 du 26/11/2026 :** validée en local selon les retours du développeur : affichage FR/ES, édition dynamique, tri et dépublication FAQ, fallback granulaire, panne locale et rétablissement, serveur simulé sans réponse (timeout nominal 5 s), collection FAQ vide et restauration des publications. TypeScript, lint et build confirmés. La durée exacte du rendu n’a pas été mesurée ici. La recette Vercel Preview/Production de la refactorisation est encore à réaliser. Elles ne constituent pas une suite de tests automatisés. Aucun arrêt volontaire du CMS de production n'est requis pour la recette.
 
 ### 8.2. Contrôles techniques
 
-```bash
+```
 pnpm exec tsc --noEmit
 pnpm run lint
 pnpm run build
@@ -315,13 +347,13 @@ Vérifier également les contenus dynamiques, les FAQ, les listes déroulantes, 
 
 ### 8.3. Diagnostic
 
-| Symptôme | Vérifications |
-| --- | --- |
-| Un seul texte ne change pas | Vérifier la valeur CMS dans la bonne locale, le schéma et les logs de fusion |
-| Aucun texte ne change | Vérifier `TIAKI_BACKOFFICE_URL`, l'accessibilité HTTPS et les logs de fallback |
-| FAQ absentes | Vérifier la publication, la locale, les données de la collection et les filtres |
-| Page lente | Examiner les timeouts, les logs serveur, la latence CMS et la parallélisation |
-| Erreur au démarrage ou au build | Vérifier les schémas et les quatre snapshots, notamment les valeurs `null` |
+|Symptôme|Vérifications|
+|---|---|
+|Un seul texte ne change pas|Vérifier la valeur CMS dans la bonne locale, le schéma et les logs de fusion|
+|Aucun texte ne change|Vérifier `TIAKI_BACKOFFICE_URL`, l'accessibilité HTTPS et les logs de fallback|
+|FAQ absentes|Vérifier la publication, la locale, les données de la collection et les filtres|
+|Page lente|Examiner les timeouts, les logs serveur, la latence CMS et la parallélisation|
+|Erreur au démarrage ou au build|Vérifier les schémas et les quatre snapshots, notamment les valeurs `null`|
 
 Préfixes de logs à rechercher côté serveur Next.js : `[ContactPage][fr]`, `[ContactPage][es]`, `[FAQs][fr]`, `[FAQs][es]`. Les messages `Invalid CMS content` indiquent des problèmes de contrat ; `Using local fallback` signale une erreur ayant déclenché un fallback complet. Ne jamais journaliser les tokens ou les données privées.
 
@@ -347,33 +379,33 @@ Privilégier la compatibilité ascendante du CMS pendant les déploiements du si
 
 ## 10. Conventions réutilisables pour les futures pages
 
-Cette section formalise une proposition de standard interne à partir de l'implémentation Contact. Elle sera à extraire dans un document transversal `docs/CMS_INTEGRATION.md` lorsque les prochaines pages seront intégrées. Ne pas dupliquer mécaniquement le modèle Contact.
+Cette section résume le standard transversal désormais documenté dans `docs/CMS_INTEGRATION.md`. Le socle CMS-01 est implémenté ; les nouveaux modèles et les politiques de fallback propres aux futurs contenus restent à définir. Ne pas dupliquer mécaniquement le modèle Contact.
 
 ### 10.1. Choisir le bon modèle CMS
 
-| Type de contenu | Modèle recommandé | Exemple |
-| --- | --- | --- |
-| Page éditoriale unique, sections fixes | Global | Accueil, À propos, Plateforme |
-| Liste d'éléments autonomes, CRUD et tri | Collection | FAQ, actualités, ressources |
-| Sections réordonnables ou répétables | Tableau ou blocs Payload, si nécessaire | Liste de partenaires, modules éditoriaux configurables |
-| Fichier ou illustration administrable | Relation vers une collection média | Illustration de Hero, logos |
-| Valeur métier, validation ou action technique | Code applicatif | Identifiants de sujets, routes, règles d'accès |
+|Type de contenu|Modèle recommandé|Exemple|
+|---|---|---|
+|Page éditoriale unique, sections fixes|Global|Accueil, À propos, Plateforme|
+|Liste d'éléments autonomes, CRUD et tri|Collection|FAQ, actualités, ressources|
+|Sections réordonnables ou répétables|Tableau ou blocs Payload, si nécessaire|Liste de partenaires, modules éditoriaux configurables|
+|Fichier ou illustration administrable|Relation vers une collection média|Illustration de Hero, logos|
+|Valeur métier, validation ou action technique|Code applicatif|Identifiants de sujets, routes, règles d'accès|
 
 Les choix des autres pages sont des recommandations à confirmer par leur inventaire de contenus. Il n'est pas nécessaire de créer une collection pour chaque section d'une page fixe, ni de rendre toute la mise en page éditable si le besoin est uniquement textuel.
 
 ### 10.2. Conventions de nommage
 
-| Élément | Convention proposée | Exemple Accueil |
-| --- | --- | --- |
-| Global Payload | `<page>-page` | `home-page` |
-| Configuration Payload | `src/globals/<Page>Page.ts` | `HomePage.ts` |
-| Module côté site | `lib/<page>/` | `lib/home/` |
-| Fonction de récupération | `get<Page>Page.ts` | `getHomePage.ts` |
-| Schéma Zod | `schema.ts` | `lib/home/schema.ts` |
-| Types inférés | `types.ts` | `lib/home/types.ts` |
-| Snapshots éditoriaux | `fallback.<locale>.json` | `fallback.fr.json`, `fallback.es.json` |
-| Orchestrateur | `components/<page>/<Page>Page.tsx` | `components/home/HomePage.tsx` |
-| Documentation | `docs/<PAGE>_PAGE.md` | `docs/HOME_PAGE.md` |
+|Élément|Convention proposée|Exemple Accueil|
+|---|---|---|
+|Global Payload|`<page>-page`|`home-page`|
+|Configuration Payload|`src/globals/<Page>Page.ts`|`HomePage.ts`|
+|Module côté site|`lib/<page>/`|`lib/home/`|
+|Fonction de récupération|`get<Page>Page.ts`|`getHomePage.ts`|
+|Schéma Zod|`schema.ts`|`lib/home/schema.ts`|
+|Types inférés|`types.ts`|`lib/home/types.ts`|
+|Snapshots éditoriaux|`fallback.<locale>.json`|`fallback.fr.json`, `fallback.es.json`|
+|Orchestrateur|`components/<page>/<Page>Page.tsx`|`components/home/HomePage.tsx`|
+|Documentation|`docs/<PAGE>_PAGE.md`|`docs/HOME_PAGE.md`|
 
 Adapter le nommage aux routes et à l'arborescence existantes : ne pas renommer les composants ou les URLs publiques uniquement pour suivre cette convention.
 
@@ -384,26 +416,25 @@ Adapter le nommage aux routes et à l'arborescence existantes : ne pas renommer 
 3. Choisir Global, collection ou combinaison ; définir le contrat de données et les contraintes de localisation.
 4. Créer le modèle Payload et renseigner les contenus des deux langues.
 5. Définir le schéma Zod et les types ; préparer les snapshots validés.
-6. Implémenter le chargement côté serveur, les timeouts, la journalisation et la stratégie de fallback adaptée.
+6. Déclarer le contenu dans `cmsRegistry`, réutiliser `fetchCms()` et définir la stratégie de fallback adaptée côté serveur.
 7. Transmettre les données aux composants sans modifier inutilement le design ni les interactions.
 8. Tester le mode nominal, les champs invalides, l'indisponibilité, le rétablissement et la cohérence FR/ES ; vérifier le build.
 9. Générer et auditer la migration, tester sur une base isolée et déployer le CMS avant le site.
 10. Importer et vérifier les contenus, valider `dev` sur Vercel Preview, puis promouvoir en production via `main` et documenter.
 
-### 10.4. Mutualisation progressive
+### 10.4. Mutualisation réalisée (CMS-01)
 
-| Élément | Situation actuelle | Évolution proposée |
-| --- | --- | --- |
-| Configuration URL CMS | Variable commune déjà utilisée | Conserver une configuration serveur unique |
-| Construction des requêtes REST | Fonctions Contact et FAQ | Extraire un client serveur commun lorsque la deuxième page confirme les besoins partagés |
-| Timeout et journalisation | Configurés dans les deux fonctions | Centraliser les paramètres par défaut, conserver le contexte page/locale |
-| Fusion granulaire textuelle | `lib/contact/mergeWithFallback.ts` | Mutualiser uniquement pour les schémas compatibles |
-| Contrats Zod | Spécifiques à Contact et FAQ | Garder les schémas métier par page ; extraire les primitives communes si utile |
-| Snapshots | Quatre fichiers Contact/FAQ | Garder un snapshot distinct par page, collection et langue |
-| Validation des snapshots | Contrôles manuels | Ajouter un script commun et un contrôle CI |
-| Tests de résilience | Recette manuelle validée | Automatiser des scénarios reproductibles avec un CMS simulé |
+|Élément|Situation après CMS-01|Suite|
+|---|---|---|
+|Configuration URL CMS et timeout|`lib/cms/config.ts`|Réutiliser|
+|Transport HTTP|`lib/cms/client.ts`|Réutiliser ; tester hors Next.js dans CMS-03|
+|Endpoints, schémas et chemins|`lib/cms/registry.ts`|Enrichir pour chaque nouveau modèle|
+|Fusion granulaire textuelle|`lib/cms/mergeWithFallback.ts`|Réutiliser uniquement pour les modèles compatibles|
+|Primitives Zod|`lib/cms/validation.ts`|Ajouter des primitives selon les besoins|
+|Snapshots|Quatre fichiers Contact/FAQ inchangés|Validation CI et synchronisation à développer|
+|Tests de résilience|Recette manuelle locale validée|Automatisation et recette Preview/Production à faire|
 
-Éviter de créer un framework générique prématurément. La seconde intégration (par exemple Accueil) permettra d'identifier les véritables invariants. Les politiques de cache et de fallback peuvent varier selon la criticité, le volume et la fréquence d'actualisation des contenus.
+La configuration, le transport et les primitives sont mutualisés ; les schémas et décisions métier restent propres à chaque contenu. Les stratégies de cache, de fallback et de pagination peuvent varier selon le modèle. La prochaine intégration réutilisera ce socle après la mise en place des contrôles et de la synchronisation des snapshots.
 
 ### 10.5. Critères de fin d'intégration d'une page
 
@@ -417,16 +448,17 @@ Adapter le nommage aux routes et à l'arborescence existantes : ne pas renommer 
 
 ## 11. Suivi technique
 
-| Sujet | Statut / action |
-| --- | --- |
-| Administration éditoriale Contact FR/ES | Déployée et validée |
-| Envoi du formulaire | Non implémenté ; évolution distincte nécessitant validation fonctionnelle, sécurité et protection des données |
-| Validation automatique des snapshots en CI | À mettre en place |
-| Mutualisation du client REST CMS | À étudier lors de la prochaine page |
-| Politique de rétention des contenus dépubliés dans les snapshots | À préciser |
-| Rotation PAT GHCR et vérification des diagnostics du script de déploiement | Maintenance du back-office à documenter |
-| Audit des dépendances | 2 vulnérabilités faibles et 5 modérées signalées lors du contrôle ; analyse détaillée à mener |
-| Dette ESLint back-office | 15 avertissements non bloquants constatés ; nettoyage hors périmètre de cette livraison |
+|Sujet|Statut / action|
+|---|---|
+|Administration éditoriale Contact FR/ES|Déployée et validée|
+|Envoi du formulaire|Non implémenté ; évolution distincte nécessitant validation fonctionnelle, sécurité et protection des données|
+|Validation automatique des snapshots en CI|À mettre en place|
+|Mutualisation du client REST CMS|Implémentée et validée localement (CMS-01) ; livraison à réaliser|
+|Synchronisation automatique des snapshots|À développer (CMS-02/CMS-05), après CMS-03|
+|Politique de rétention des contenus dépubliés dans les snapshots|À préciser|
+|Rotation PAT GHCR et vérification des diagnostics du script de déploiement|Maintenance du back-office à documenter|
+|Audit des dépendances|2 vulnérabilités faibles et 5 modérées signalées lors du contrôle ; analyse détaillée à mener|
+|Dette ESLint back-office|15 avertissements non bloquants constatés ; nettoyage hors périmètre de cette livraison|
 
 ## 12. Documentation de référence
 
@@ -440,4 +472,4 @@ Les références ci-dessous sont des points d'entrée vers les documentations of
 - [Zod — Documentation](https://zod.dev/)
 - [Vercel — Environment variables](https://vercel.com/docs/environment-variables)
 
-Cette documentation décrit les choix, extraits de code et résultats de validation établis durant l'intégration Contact. Elle n'est pas un audit indépendant du dépôt : les noms de fichiers et les extraits doivent être confrontés au code versionné lors des futures évolutions. Les procédures de maintenance proposées et la mutualisation transverse ne sont pas présentées comme déjà implémentées.
+Cette documentation décrit les choix, extraits de code et résultats de validation établis durant l'intégration Contact. Elle n'est pas un audit indépendant du dépôt : les noms de fichiers et les extraits doivent être confrontés au code versionné lors des futures évolutions. La mutualisation transverse est désormais implémentée et validée localement selon les retours de recette. Les procédures de synchronisation automatique, les nouveaux modèles et l’adaptation du script manuel hors Next.js restent à implémenter ou vérifier. Aucun accès direct au dépôt Git n’a été effectué pour cette révision.
