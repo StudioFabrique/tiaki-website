@@ -4,10 +4,9 @@
 **Révision :** 25 novembre 2026 · **Statut :** standard proposé pour les futures intégrations ; Contact est la référence déployée.
 
 ## 1. Objet et périmètre
-
 Ce document définit le contrat d'intégration des contenus publics de Payload CMS dans le site Next.js bilingue T-IA-KI. Il vise à éviter la duplication de la logique de récupération, de validation et de résilience lorsque les pages Accueil, À propos, Plateforme et d'autres pages seront progressivement administrables.
 
-Il complète `CONTACT_PAGE.md`, qui décrit l'implémentation réelle de la page Contact. Le document correspondant côté serveur est `tiaki-backoffice/docs/CMS_ARCHITECTURE.md`. Les conventions proposées ici ne sont pas encore des modules implémentés dans le dépôt.
+Il complète `CONTACT_PAGE.md`, qui décrit l'implémentation réelle de la page Contact. Le document correspondant côté serveur est `tiaki-backoffice/docs/CMS_ARCHITECTURE.md`. Les cinq modules communs sont désormais implémentés. Les conventions pour les prochaines pages et la synchronisation automatique restent des évolutions à réaliser.
 
 Principes :
 
@@ -20,24 +19,29 @@ Principes :
 
 ## 2. État actuel et cible
 
-| Capacité | État actuel | Cible |
+|Capacité|État actuel|Cible|
 |---|---|---|
-| Contact | Global `contact-page` + collection `faqs`, FR/ES, déployé | Conserver le comportement ; mutualisation progressive |
-| Accueil | Intégration complète à réaliser | Global `home-page` si structure fixe confirmée |
-| À propos | Intégration complète à réaliser | Global `about-page` si structure fixe confirmée |
-| Plateforme | Intégration complète à réaliser | Global `platform-page` pour la présentation publique |
-| Articles, ressources, médias | Collections existantes côté CMS ; intégration détaillée à inventorier | Consommateurs adaptés aux listes et relations |
-| Navigation, footer | À inventorier | Globals transversaux uniquement si besoin éditorial validé |
+|Contact|Global `contact-page` + collection `faqs`, FR/ES, version initiale déployée|Refactorisation CMS-01 validée localement ; livraison à réaliser|
+|Couche commune|`config.ts`, `client.ts`, `validation.ts`, `mergeWithFallback.ts`, `registry.ts`|Réutiliser pour les prochaines pages|
+|Synchronisation des snapshots|Manuelle|Validation automatique, synchronisation planifiée et manuelle (CMS-03, CMS-02, CMS-05)|
+|Accueil|Intégration complète à réaliser|Global `home-page` si structure fixe confirmée|
+|À propos|Intégration complète à réaliser|Global `about-page` si structure fixe confirmée|
+|Plateforme|Intégration complète à réaliser|Global `platform-page` pour la présentation publique|
+|Articles, ressources, médias|Collections existantes côté CMS ; intégration détaillée à inventorier|Consommateurs adaptés aux listes et relations|
+|Navigation, footer|À inventorier|Globals transversaux uniquement si besoin éditorial validé|
 
 Les noms des pages et slugs futurs sont des propositions. Ne pas supposer que leurs routes, composants, champs et permissions sont déjà définis.
+
 
 ```mermaid
 flowchart TD
     R[Route localisée FR ou ES] --> P[Server Component de page]
     P --> G[Adaptateur métier de page]
     P --> C[Adaptateurs de collections utiles]
-    G --> HTTP[Client CMS serveur commun proposé]
+    G --> HTTP[fetchCms - client HTTP commun]
     C --> HTTP
+    G --> REG[Registre des endpoints et schémas]
+    C --> REG
     HTTP -->|HTTPS REST| CMS[Payload sur OVH]
     CMS --> DB[(PostgreSQL)]
     G --> Z[Schéma Zod propre au modèle]
@@ -50,11 +54,18 @@ flowchart TD
     F2 --> UI
 ```
 
+
 ## 3. Organisation du code
 
 ### 3.1. Modules existants de référence
 
-```text
+```
+lib/cms/
+  config.ts
+  client.ts
+  validation.ts
+  mergeWithFallback.ts
+  registry.ts
 lib/contact/
   getContactPage.ts
   getFaqs.ts
@@ -67,7 +78,6 @@ lib/contact/
   faqFallback.ts
   faq-fallback.fr.json
   faq-fallback.es.json
-  mergeWithFallback.ts
   validation.ts
   submission.ts
 components/contact/
@@ -83,15 +93,16 @@ Arborescence partielle. Certains modules de constantes statiques peuvent subsist
 
 ### 3.2. Arborescence cible proposée
 
-```text
+```
 tiaki-website/
 ├── lib/
 │   ├── i18n/                        # configuration des langues existante
-│   ├── cms/                         # à créer progressivement
+│   ├── cms/                         # implémenté par CMS-01
 │   │   ├── config.ts                # origine et timeout
 │   │   ├── client.ts                # lecture HTTP serveur
 │   │   ├── validation.ts            # primitives Zod communes
-│   │   └── mergeWithFallback.ts     # fusion textuelle, si réutilisable
+│   │   ├── mergeWithFallback.ts     # fusion textuelle
+│   │   └── registry.ts              # endpoints, schémas, paramètres et chemins JSON
 │   ├── contact/                     # existant
 │   ├── home/                        # proposé
 │   │   ├── schema.ts
@@ -110,15 +121,15 @@ tiaki-website/
 
 Un fichier `types.ts` peut réexporter les types inférés, mais ne doit pas redéfinir à la main un contrat déjà décrit par Zod. Les schémas et snapshots restent propres à chaque modèle ; un adaptateur de collection peut devenir partagé lorsqu'il est réellement consommé par plusieurs pages.
 
-**Règle de mutualisation :** extraire une responsabilité seulement lorsqu'un deuxième cas concret confirme qu'elle est commune. Ne pas refactoriser Contact pour créer abstraitement une architecture universelle avant d'avoir étudié la page suivante.
+**Règle de mutualisation :** CMS-01 extrait les mécanismes déjà communs à Contact et FAQ, notamment pour préparer la synchronisation. Ne pas généraliser les modèles métier ou la fusion textuelle à des types de données non couverts ; enrichir le socle selon les besoins réels.
 
 ## 4. Configuration et accès au CMS
 
 ### 4.1. Environnements
 
-| Variable | Local | Preview et Production lors de Contact |
+|Variable|Local|Preview et Production lors de Contact|
 |---|---|---|
-| `TIAKI_BACKOFFICE_URL` | `http://localhost:3009` | `https://backoffice.tiaki.step.eco` |
+|`TIAKI_BACKOFFICE_URL`|`http://localhost:3009`|`https://backoffice.tiaki.step.eco`|
 
 Configuration dans `.env.local` en développement et Vercel Environment Variables pour les environnements concernés. Le domaine doit être une origine de confiance contrôlée par l'équipe. Ne jamais construire la destination réseau à partir d'une URL saisie par un visiteur. Ne pas utiliser de secret administrateur dans les requêtes de lecture publique ; ne pas exposer de jeton dans `NEXT_PUBLIC_*`.
 
@@ -126,11 +137,11 @@ Preview pointait vers le CMS de production lors des tests Contact. Cette configu
 
 ### 4.2. Endpoints et localisation
 
-| Modèle | Exemple de lecture |
+|Modèle|Exemple de lecture|
 |---|---|
-| Global existant | `/api/globals/contact-page?locale=fr&fallback-locale=none` |
-| Global futur | `/api/globals/home-page?locale=es&fallback-locale=none` |
-| Collection | `/api/faqs?locale=fr&fallback-locale=none&where[published][equals]=true&sort=displayOrder&limit=100` |
+|Global existant|`/api/globals/contact-page?locale=fr&fallback-locale=none`|
+|Global futur|`/api/globals/home-page?locale=es&fallback-locale=none`|
+|Collection|`/api/faqs?locale=fr&fallback-locale=none&where[published][equals]=true&sort=displayOrder&limit=100`|
 
 Le paramètre `fallback-locale=none` empêche Payload de compléter silencieusement une traduction manquante à partir d'une autre langue. Le site gère sa propre stratégie de fallback, limitée à la langue demandée.
 
@@ -138,49 +149,59 @@ Utiliser `SiteLocale` depuis `lib/i18n/config` et la validation de locale de la 
 
 Pour les collections, la politique de lecture publique doit être appliquée par le CMS ; les filtres côté site ne constituent pas un contrôle d'accès. Définir aussi le tri, la pagination, la profondeur des relations et les champs nécessaires. Le `limit=100` est le choix actuel des FAQ, pas une convention universelle.
 
-### 4.3. Client serveur commun : proposition à valider
+### 4.3. Configuration et client commun (CMS-01)
 
-Le client commun devrait seulement gérer le transport (URL, paramètres, politique de cache, timeout, erreurs HTTP/JSON). Il ne doit pas connaître les modèles de page ni décider du fallback métier. Chaque adaptateur conserve la validation et la décision de dégradation.
+`lib/cms/config.ts` centralise `CMS_REQUEST_TIMEOUT_MS = 5_000`, `CMS_FALLBACK_LOCALE = "none"` et `getCmsBaseUrl()`. Cette dernière lit et nettoie `TIAKI_BACKOFFICE_URL` à l'appel, construit une `URL`, exige HTTP ou HTTPS et lève une exception si la configuration est invalide. Les adaptateurs interceptent cette exception pour appliquer leur fallback.
 
-Exemple minimal de futur `lib/cms/client.ts` (non implémenté à ce jour) :
+Le client implémenté est le suivant (extrait de l'implémentation réalisée pendant CMS-01) :
 
-```ts
-import 'server-only'
-import type { SiteLocale } from '@/lib/i18n/config'
+```
+import {
+  CMS_REQUEST_TIMEOUT_MS,
+  CMS_FALLBACK_LOCALE,
+  getCmsBaseUrl,
+} from "./config"
 
-const CMS_TIMEOUT_MS = 5_000
+type CmsRequestOptions = {
+  locale: "fr" | "es"
+  query?: Record<string, string>
+}
 
-export async function readCmsJson(
-  path: `/api/${string}`,
-  locale: SiteLocale,
-  params: Record<string, string> = {},
+export async function fetchCms(
+  endpoint: `/api/${string}`,
+  { locale, query = {} }: CmsRequestOptions,
 ): Promise<unknown> {
-  const base = process.env.TIAKI_BACKOFFICE_URL
-  if (!base) throw new Error('CMS URL not configured')
-  const origin = new URL(base)
-  if (!['http:', 'https:'].includes(origin.protocol) || origin.username || origin.password) {
-    throw new Error('Invalid CMS origin')
-  }
-  const url = new URL(path, origin)
-  if (url.origin !== origin.origin || !url.pathname.startsWith('/api/')) {
-    throw new Error('Invalid CMS path')
-  }
-  for (const [key, value] of Object.entries(params)) {
+  const url = new URL(endpoint, getCmsBaseUrl())
+  for (const [key, value] of Object.entries(query)) {
     url.searchParams.set(key, value)
   }
-  url.searchParams.set('locale', locale)
-  url.searchParams.set('fallback-locale', 'none')
+  url.searchParams.set("locale", locale)
+  url.searchParams.set("fallback-locale", CMS_FALLBACK_LOCALE)
   const response = await fetch(url, {
-    cache: 'no-store',
-    signal: AbortSignal.timeout(CMS_TIMEOUT_MS),
-    redirect: 'error',
+    cache: "no-store",
+    signal: AbortSignal.timeout(CMS_REQUEST_TIMEOUT_MS),
   })
-  if (!response.ok) throw new Error(`CMS HTTP ${response.status}`)
+  if (!response.ok) {
+    throw new Error(`[CMS][${locale}] ${endpoint}: HTTP ${response.status}`)
+  }
   return response.json()
 }
 ```
 
-Les chemins et paramètres doivent provenir d'adaptateurs internes, jamais directement de l'utilisateur. `redirect: 'error'` est une proposition de durcissement à tester sur les endpoints réels ; ce n'est pas une propriété annoncée de l'implémentation Contact actuelle. Le client ci-dessus doit être compilé, testé et adapté au projet avant adoption. Une politique de cache différente devra être explicitement justifiée par modèle.
+Les paramètres linguistiques sont imposés après les paramètres spécifiques. Le retour `unknown` ne présume pas de la conformité du JSON : le schéma métier doit être appliqué avant le rendu. Le client propage les erreurs réseau, HTTP et JSON sans appliquer de fallback. Les adaptateurs `getContactPage.ts` et `getFaqs.ts` restent protégés par `import "server-only"` ; le client et les schémas partagés n'importent volontairement pas cette protection pour préparer leur utilisation hors Next.js. Ne jamais les importer dans un composant client pour réaliser une lecture CMS depuis le navigateur.
+
+La destination et les paramètres proviennent du code interne. La signature TypeScript n'est pas une validation de sécurité à l'exécution. La restriction explicite de l'origine, le refus des identifiants intégrés à l'URL et des redirections demeurent des pistes de durcissement, non implémentées ici. Une politique de cache différente doit être explicitement justifiée par modèle.
+
+### 4.3.1. Registre déclaratif
+
+`lib/cms/registry.ts` exporte `CmsContentDefinition`, `cmsRegistry` et `CmsContentKey` (`"contact" | "faqs"` à ce stade). Chaque entrée fournit `endpoint`, `schema`, `snapshotPaths` pour FR/ES et éventuellement `query`. Le registre est déclaré avec `satisfies Record<string, CmsContentDefinition>` pour préserver les types précis des schémas et des clés.
+
+|Clé|Endpoint|Schéma|Snapshots sous `lib/contact/`|
+|---|---|---|---|
+|`contact`|`/api/globals/contact-page`|`contactPageSchema`|`fallback.fr.json`, `fallback.es.json`|
+|`faqs`|`/api/faqs`|`faqResponseSchema`|`faq-fallback.fr.json`, `faq-fallback.es.json`|
+
+L'entrée `faqs` fixe `where[published][equals]=true`, `sort=displayOrder`, `limit=100`. Les chemins sont relatifs à la racine du dépôt. Le registre référence les schémas métier ; ceux-ci importent les primitives communes, jamais le registre (éviter les cycles). La lecture et l'écriture des fichiers relèveront des scripts, pas du registre. Les futurs modèles nécessitant une transformation de réponse ou une pagination complète devront déclarer une politique adaptée. Aucun script de synchronisation n'est implémenté à ce stade.
 
 ### 4.4. Journalisation et classification des erreurs
 
@@ -188,7 +209,7 @@ Distinguer la configuration manquante, la connexion refusée, le timeout, le HTT
 
 Convention proposée :
 
-```text
+```
 [HomePage][fr] CMS invalid content: hero.title
 [HomePage][es] Using local fallback: timeout
 [FAQs][fr] Using local fallback: HTTP 503
@@ -204,10 +225,11 @@ Les types TypeScript décrivent les valeurs attendues à la compilation. Les typ
 
 Exemple de structure textuelle hypothétique pour une page Accueil (l'inventaire réel reste à faire) :
 
-```ts
+```
 import { z } from 'zod'
 
-const requiredText = z.string().trim().min(1)
+import { requiredText } from '../cms/validation'
+
 export const homePageSchema = z.object({
   hero: z.object({ title: requiredText, description: requiredText }),
 })
@@ -216,18 +238,20 @@ export type HomePageContent = z.infer<typeof homePageSchema>
 
 Le schéma peut ignorer les métadonnées inconnues qui ne sont pas consommées. Il doit en revanche détecter tous les champs réellement nécessaires au rendu. Ne pas rendre toutes les propriétés optionnelles pour masquer des erreurs. Distinguer les champs facultatifs dans PostgreSQL des champs indispensables au site après fallback.
 
+`lib/cms/validation.ts` exporte actuellement une seule primitive : `requiredText = z.string().trim().min(1)`. Contact et FAQ l'utilisent ; les autres primitives seront ajoutées selon les besoins.
+
 ### 5.2. Types de valeurs et règles
 
-| Type de contenu | Validation à prévoir |
+|Type de contenu|Validation à prévoir|
 |---|---|
-| Texte requis | Chaîne non vide après trim |
-| Texte facultatif | Absence/null/vide selon sémantique documentée |
-| Identifiant métier | Valeurs énumérées ou identifiants stables, non traduits |
-| Lien | Protocoles, destinations et routes autorisés ; refuser les schémas dangereux |
-| Image / média | Forme de la relation, URL de confiance, texte alternatif, taille/type selon usage |
-| Nombre / booléen | Type strict, bornes et sémantique ; `0` et `false` peuvent être valides |
-| Tableau / blocs | Schéma de chaque élément, ordre et identité ; discriminer le type de bloc |
-| Texte riche | Format et rendu contrôlés ; ne pas injecter de HTML arbitraire non assaini |
+|Texte requis|Chaîne non vide après trim|
+|Texte facultatif|Absence/null/vide selon sémantique documentée|
+|Identifiant métier|Valeurs énumérées ou identifiants stables, non traduits|
+|Lien|Protocoles, destinations et routes autorisés ; refuser les schémas dangereux|
+|Image / média|Forme de la relation, URL de confiance, texte alternatif, taille/type selon usage|
+|Nombre / booléen|Type strict, bornes et sémantique ; `0` et `false` peuvent être valides|
+|Tableau / blocs|Schéma de chaque élément, ordre et identité ; discriminer le type de bloc|
+|Texte riche|Format et rendu contrôlés ; ne pas injecter de HTML arbitraire non assaini|
 
 Les champs de texte ne doivent pas être utilisés pour injecter des classes CSS, du JavaScript ou des règles de sécurité. En présence de contenus riches, utiliser un rendu adapté au modèle Payload et une liste de composants autorisés ; définir la politique de sanitisation.
 
@@ -235,18 +259,19 @@ Les champs de texte ne doivent pas être utilisés pour injecter des classes CSS
 
 ### 6.1. Choix par nature des données
 
-| Données | Stratégie |
+|Données|Stratégie|
 |---|---|
-| Global Contact : groupes textuels fixes | Fusion par feuille invalide, puis validation du résultat |
-| FAQ : collection publiée | Snapshot complet si API/schéma échoue ; liste valide vide respectée |
-| Tableau administrable et ordonné | Politique à définir : snapshot complet ou fusion par identifiant stable, jamais par index sans justification |
-| Médias/relations | Politique à définir : visuel local autorisé, omission ou autre état explicite ; vérifier disponibilité et droits |
-| Information urgente, rétractée, sensible | État dégradé sans ancienne donnée si nécessaire ; pas de snapshot public par défaut |
+|Global Contact : groupes textuels fixes|Fusion par feuille invalide, puis validation du résultat|
+|FAQ : collection publiée|Snapshot complet si API/schéma échoue ; liste valide vide respectée|
+|Tableau administrable et ordonné|Politique à définir : snapshot complet ou fusion par identifiant stable, jamais par index sans justification|
+|Médias/relations|Politique à définir : visuel local autorisé, omission ou autre état explicite ; vérifier disponibilité et droits|
+|Information urgente, rétractée, sensible|État dégradé sans ancienne donnée si nécessaire ; pas de snapshot public par défaut|
 
-L'algorithme `mergeWithFallback` de Contact suit la structure du snapshot et remplace uniquement les feuilles textuelles invalides. Il ne convient pas automatiquement aux objets contenant des tableaux, des booléens, des valeurs numériques ou des champs volontairement vides. Une valeur valide `false`, `0` ou `[]` n'est pas une erreur.
+L'algorithme `lib/cms/mergeWithFallback.ts`, transféré sans changement de logique depuis Contact, suit la structure du snapshot et remplace uniquement les feuilles textuelles invalides. Il ne convient pas automatiquement aux objets contenant des tableaux, des booléens, des valeurs numériques ou des champs volontairement vides. Une valeur valide `false`, `0` ou `[]` n'est pas une erreur.
 
 ### 6.2. Pipeline standard
 
+````
 ```mermaid
 flowchart TD
     A[Charger snapshot validé de la langue] --> B[Lire API]
@@ -260,6 +285,7 @@ flowchart TD
     G -->|Oui| H[Retour mixte]
     G -->|Non| F
 ```
+````
 
 Les schémas de secours doivent être validés avant commit et build. Contact valide les snapshots à l'import du module ; un snapshot invalide peut empêcher le rendu, y compris en mode normal. Ne pas avaler une erreur de snapshot et retourner des données non typées. Préférer des contrôles automatisés explicites en CI avant le déploiement.
 
@@ -275,13 +301,17 @@ Pour chaque page, stocker un snapshot FR et ES, exportés depuis un environnemen
 
 Les snapshots ne se mettent pas à jour automatiquement lorsque l'éditeur modifie Payload. Définir un responsable et des déclencheurs de mise à jour. Une FAQ dépubliée peut réapparaître pendant une indisponibilité si le snapshot n'a pas été actualisé. Pour une suppression impérative, appliquer rapidement une politique adaptée (mise à jour/redéploiement ou absence de fallback pour ce contenu). Ne pas promettre de disponibilité absolue.
 
+### 6.4. Feuille de route des snapshots
+
+CMS-03 : valider tous les snapshots du registre et intégrer ce contrôle à la CI. CMS-02 et CMS-05 : exporter depuis le CMS approuvé, valider toutes les réponses avant remplacement, normaliser les objets avec Zod, comparer sans métadonnées volatiles, vérifier la pagination et ouvrir une PR seulement en cas de changement ; déclenchement quotidien et manuel prévus. Une réponse FAQ vide et complète est valide, contrairement à une réponse incomplète ou invalide. Conserver les anciens fichiers en cas d'échec. Les fichiers embarqués ne changent en production qu'après fusion et déploiement Vercel. CMS-04 : supervision et notifications. CMS-06 : politique de retrait et de dépublication. CMS-07 : étude d'un stockage Last Known Good indépendant. Ces fonctionnalités ne sont pas encore implémentées.
+
 ## 7. Rendu et performance
 
 Un Server Component de page orchestre les adaptateurs et transmet des props validées aux composants. Garder les composants interactifs côté client seulement si nécessaire (`useState`, événements, etc.). Le navigateur ne doit pas recevoir de secret, config privée ou réponse API plus large que nécessaire.
 
 Contact est la référence :
 
-```tsx
+```
 const [content, questions] = await Promise.all([
   getContactPage(locale),
   getFaqs(locale),
@@ -296,24 +326,24 @@ Un futur cache devra définir sa durée, son invalidation, la séparation FR/ES 
 
 ## 8. Démarche d'intégration page par page
 
-| Étape | Travail et résultat attendu |
-|---:|---|
-| 1 | Inventorier composants, textes statiques FR/ES, assets, liens, listes, données partagées, contraintes d'accessibilité et logique métier. |
-| 2 | Arbitrer Global, collection ou relation avec l'équipe CMS et les éditeurs ; figer le contrat de champs et les règles de fallback. |
-| 3 | Implémenter le modèle Payload, localiser et exporter des contenus approuvés ; générer et tester la migration. |
-| 4 | Construire les schémas Zod, types et snapshots FR/ES ; les valider en local. |
-| 5 | Implémenter la récupération serveur et la stratégie de résilience ; extraire seulement les mécanismes partagés réellement nécessaires. |
-| 6 | Adapter les props des composants section par section sans changer leur rendu ou leurs interactions involontairement. |
-| 7 | Tester API, données, langues, fallback et non-régression ; compiler et contrôler le lint. |
-| 8 | Déployer le CMS et importer les contenus avant le site ; valider les réponses de production. |
-| 9 | PR vers `dev`, recette Vercel Preview, PR vers `main`, recette de production. |
-| 10 | Documenter le modèle et les fichiers de secours, les décisions de cache et les limites. |
+|Étape|Travail et résultat attendu|
+|--:|---|
+|1|Inventorier composants, textes statiques FR/ES, assets, liens, listes, données partagées, contraintes d'accessibilité et logique métier.|
+|2|Arbitrer Global, collection ou relation avec l'équipe CMS et les éditeurs ; figer le contrat de champs et les règles de fallback.|
+|3|Implémenter le modèle Payload, localiser et exporter des contenus approuvés ; générer et tester la migration.|
+|4|Construire les schémas Zod, types et snapshots FR/ES ; les valider en local.|
+|5|Déclarer le contenu dans `cmsRegistry`, réutiliser `fetchCms()` et les primitives communes ; définir la stratégie de résilience propre au modèle.|
+|6|Adapter les props des composants section par section sans changer leur rendu ou leurs interactions involontairement.|
+|7|Tester API, données, langues, fallback et non-régression ; compiler et contrôler le lint.|
+|8|Déployer le CMS et importer les contenus avant le site ; valider les réponses de production.|
+|9|PR vers `dev`, recette Vercel Preview, PR vers `main`, recette de production.|
+|10|Documenter le modèle et les fichiers de secours, les décisions de cache et les limites.|
 
-La prochaine intégration recommandée est Accueil, sous réserve de l'arbitrage du backlog. Commencer par l'inventaire, pas par la création automatique d'un Global ou d'un client générique.
+Après CMS-01, terminer la validation et la synchronisation des snapshots (CMS-03 puis CMS-02/CMS-05) avant la prochaine intégration éditoriale recommandée : Accueil. Commencer cette page par son inventaire, non par la création automatique d'un Global.
 
 ### Fiche de contrat à remplir avant chaque intégration
 
-```markdown
+```
 # Page : [nom]
 - Routes et locales :
 - Composants existants :
@@ -333,26 +363,26 @@ La prochaine intégration recommandée est Accueil, sous réserve de l'arbitrage
 
 ## 9. Tests et critères d'acceptation
 
-| ID | Scénario | Attendu |
+|ID|Scénario|Attendu|
 |---|---|---|
-| T01 | Champ requis absent/invalide | Fallback granulaire si autorisé, autres champs conservés |
-| T02 | CMS indisponible | Rendu dégradé conformément au contrat ; pas d'erreur non gérée |
-| T03 | CMS rétabli | Retour aux données CMS lors d'une nouvelle requête serveur |
-| T04 | Traduction manquante | Aucun mélange de langues ; traitement selon politique de locale |
-| T05 | CMS accepte la connexion mais ne répond pas | Requête interrompue ; rendu dégradé, temps mesuré hors compilation |
-| T06 | JSON invalide / HTTP 500 | Erreur classifiée, fallback ou état explicite |
-| T07 | Collection volontairement vide | Pas de réapparition d'éléments si la réponse vide est valide |
-| T08 | Snapshot non conforme | Contrôle local/CI échoue avant livraison |
-| T09 | Champs supplémentaires dans API | Pas de rupture pour les consommateurs compatibles |
-| T10 | Liens, médias, listes et responsive | Contrat spécifique respecté, accessibilité contrôlée |
-| T11 | Modifications CMS FR/ES | Nouvelles données visibles, contenus originaux restaurés après essai autorisé |
-| T12 | Autres pages et langues | Absence de régression dans le périmètre testé |
+|T01|Champ requis absent/invalide|Fallback granulaire si autorisé, autres champs conservés|
+|T02|CMS indisponible|Rendu dégradé conformément au contrat ; pas d'erreur non gérée|
+|T03|CMS rétabli|Retour aux données CMS lors d'une nouvelle requête serveur|
+|T04|Traduction manquante|Aucun mélange de langues ; traitement selon politique de locale|
+|T05|CMS accepte la connexion mais ne répond pas|Requête interrompue ; rendu dégradé, temps mesuré hors compilation|
+|T06|JSON invalide / HTTP 500|Erreur classifiée, fallback ou état explicite|
+|T07|Collection volontairement vide|Pas de réapparition d'éléments si la réponse vide est valide|
+|T08|Snapshot non conforme|Contrôle local/CI échoue avant livraison|
+|T09|Champs supplémentaires dans API|Pas de rupture pour les consommateurs compatibles|
+|T10|Liens, médias, listes et responsive|Contrat spécifique respecté, accessibilité contrôlée|
+|T11|Modifications CMS FR/ES|Nouvelles données visibles, contenus originaux restaurés après essai autorisé|
+|T12|Autres pages et langues|Absence de régression dans le périmètre testé|
 
-T01 à T05 ont été réalisés pour Contact selon la recette communiquée. Les tests supplémentaires sont proposés pour les futures intégrations ; leur automatisation n'est pas établie. Les scénarios destructifs et timeouts doivent être exécutés en local ou en environnement isolé, jamais en arrêtant la production.
+T01 à T05, T07 et les modifications éditoriales de T11 ont été validés localement pour Contact/FAQ après CMS-01, selon les retours de recette du développeur. TypeScript, lint et build ont également été confirmés. La dépublication de toutes les FAQ puis leur restauration ont été vérifiées. Aucun test automatisé ou résultat chiffré de latence n'est établi ici ; les autres scénarios constituent des critères à tester. Les scénarios destructifs et timeouts doivent être exécutés en local ou en environnement isolé, jamais en arrêtant la production.
 
 Contrôles techniques depuis le site :
 
-```bash
+```
 pnpm exec tsc --noEmit
 pnpm run lint
 pnpm run build
@@ -366,20 +396,20 @@ Le site suit `branche fonctionnelle → dev → main`. Le CMS suit sa CI, public
 
 Préférer les évolutions additives : ajouter une propriété compatible, remplir FR/ES, déployer le nouveau lecteur, puis retirer l'ancien champ dans une livraison ultérieure si plus aucun consommateur ne l'utilise. Un renommage ou changement de type peut casser les schémas et les snapshots. Un rollback du site ne nécessite pas nécessairement de revenir sur la DB ; vérifier la compatibilité avant toute action.
 
-| Symptôme | Première vérification |
+|Symptôme|Première vérification|
 |---|---|
-| Site OK mais contenu CMS invisible | `TIAKI_BACKOFFICE_URL`, logs fallback, réponse publique sans fallback linguistique |
-| Erreur uniquement ES | Traductions ES, schéma et snapshot ES |
-| Page lente | Temps API, concurrence, nombre de requêtes, timeout, compilation |
-| Champ vide | Distinguer valeur volontaire et erreur ; examiner contrat et édition |
-| Média absent | URL, droits, relation, configuration Next Image si utilisée |
-| FAQ dépubliée toujours visible | Source CMS, publication, cache éventuel et snapshot |
+|Site OK mais contenu CMS invisible|`TIAKI_BACKOFFICE_URL`, logs fallback, réponse publique sans fallback linguistique|
+|Erreur uniquement ES|Traductions ES, schéma et snapshot ES|
+|Page lente|Temps API, concurrence, nombre de requêtes, timeout, compilation|
+|Champ vide|Distinguer valeur volontaire et erreur ; examiner contrat et édition|
+|Média absent|URL, droits, relation, configuration Next Image si utilisée|
+|FAQ dépubliée toujours visible|Source CMS, publication, cache éventuel et snapshot|
 
 ## 11. Critères de fin et dette technique
 
 Une page est intégrée lorsque le modèle est déployé, les contenus FR/ES approuvés et validés, les composants et interactions testés, la politique de fallback documentée, le build et les contrôles réussis, la Preview et la production validées et les limites consignées. Un HTTP 200 ne suffit pas à démontrer le fonctionnement nominal du CMS.
 
-Travaux transversaux à prioriser : client commun à extraire au deuxième cas réel ; validation automatisée des snapshots ; gestion des médias et des listes ; métriques d'erreurs/fallback ; environnement de préproduction isolé ; règles de publication et retrait de contenu. Ne pas modifier l'intégration Contact déjà stable sans tests de non-régression.
+CMS-01 est implémenté et testé localement ; la revue, la fusion et la recette Preview/Production de cette refactorisation restent à réaliser. Travaux suivants : validation automatisée des snapshots (CMS-03), synchronisation planifiée/manuelle (CMS-02/CMS-05), supervision et gestion des retraits (CMS-04/CMS-06), puis nouvelles pages. Les médias, listes complexes, préproduction isolée et Last Known Good restent à traiter.
 
 ## 12. Références
 
@@ -393,4 +423,4 @@ Travaux transversaux à prioriser : client commun à extraire au deuxième cas r
 - [Payload — REST API](https://payloadcms.com/docs/rest-api/overview)
 - [Payload — Localization](https://payloadcms.com/docs/configuration/localization)
 
-Ce document est fondé sur la livraison Contact et les documents de référence disponibles. Les exemples d'Accueil et du client commun sont des propositions, non du code déjà livré ; ils n'ont pas été compilés contre le dépôt réel.
+Ce document s'appuie sur les documents précédents, les extraits de code et les validations communiquées par le développeur. Le dépôt Git n'a pas été inspecté directement lors de cette mise à jour. Les exemples Accueil et les évolutions de synchronisation restent des propositions. La résolution des imports hors Next.js sera vérifiée au moment de CMS-03.

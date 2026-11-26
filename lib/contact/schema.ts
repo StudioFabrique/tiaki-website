@@ -1,7 +1,7 @@
 
 import { z } from "zod"
+import { requiredText } from "../cms/validation"
 
-const requiredText = z.string().trim().min(1)
 
 export const contactHeroSchema = z.object({
   title: requiredText,
