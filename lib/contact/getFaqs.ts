@@ -5,7 +5,7 @@ import type { SiteLocale } from "@/lib/i18n/config"
 import { fetchCms } from "@/lib/cms/client"
 import { cmsRegistry } from "@/lib/cms/registry"
 
-import { faqResponseSchema, type FAQ } from "./faqSchema"
+import { type FAQ } from "./faqSchema"
 import { getFaqFallback } from "./faqFallback"
 
 export type { FAQ } from "./faqSchema"
