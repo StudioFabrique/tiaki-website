@@ -424,3 +424,108 @@ CMS-01 est implémenté et testé localement ; la revue, la fusion et la recette
 - [Payload — Localization](https://payloadcms.com/docs/configuration/localization)
 
 Ce document s'appuie sur les documents précédents, les extraits de code et les validations communiquées par le développeur. Le dépôt Git n'a pas été inspecté directement lors de cette mise à jour. Les exemples Accueil et les évolutions de synchronisation restent des propositions. La résolution des imports hors Next.js sera vérifiée au moment de CMS-03.
+
+
+
+---
+
+## Validation et intégrité des snapshots CMS
+
+### Objectif
+
+Garantir que les contenus de fallback embarqués dans le site respectent les contrats de données définis par les schémas Zod, indépendamment de la disponibilité du back-office Payload CMS.
+
+### Architecture
+
+Le mécanisme de validation repose sur les composants suivants :
+
+| Composant | Responsabilité |
+|---|---|
+| `lib/cms/registry.ts` | Registre centralisé des contenus CMS, des endpoints, des schémas et des chemins des snapshots. |
+| `lib/cms/validation.ts` | Règles de validation réutilisables. |
+| `scripts/validate-cms-fallbacks.ts` | Script générique de validation des snapshots. |
+| `package.json` | Commandes de validation et de construction du site. |
+| `.github/workflows/ci.yml` | Pipeline d'intégration continue. |
+
+### Fonctionnement du validateur
+
+Le script parcourt dynamiquement les contenus déclarés dans `cmsRegistry` pour chacune des langues supportées (`fr` et `es`).
+
+Pour chaque snapshot, il réalise les opérations suivantes :
+
+1. Résolution du chemin du fichier JSON.
+2. Lecture du fichier depuis le système de fichiers.
+3. Analyse syntaxique du contenu JSON.
+4. Validation structurelle avec le schéma Zod associé.
+5. Enregistrement du résultat de la validation.
+6. Passage au snapshot suivant, même en cas d'erreur.
+
+Un rapport consolidé présente le nombre total de snapshots contrôlés, le nombre de snapshots valides et invalides ainsi que la durée d'exécution.
+
+### Commandes disponibles
+
+- `pnpm cms:validate` : validation indépendante de tous les snapshots.
+- `pnpm build` : validation des snapshots suivie du build Next.js.
+
+Le script retourne un code de sortie `0` lorsque tous les snapshots sont valides et `1` lorsqu'au moins une erreur est détectée.
+
+### Gestion des erreurs
+
+| Type d'erreur | Comportement |
+|---|---|
+| Fichier absent | Identification du chemin et message `File not found`. |
+| Fichier inaccessible | Affichage de l'erreur de lecture. |
+| JSON malformé | Message `Malformed JSON`. |
+| Non-conformité au schéma Zod | Affichage du chemin des champs invalides et des erreurs associées. |
+| Erreurs multiples | Poursuite de la validation de tous les snapshots. |
+
+Une collection FAQ vide (`{"docs": []}`) est considérée comme valide. Elle peut correspondre à une absence volontaire de contenus publiés.
+
+### Intégration dans le processus de livraison
+
+La validation est intégrée directement à la commande de construction du site :
+
+`pnpm cms:validate && next build`
+
+En cas d'échec de la validation, la compilation Next.js n'est pas exécutée.
+
+Ce mécanisme s'applique aux builds locaux, au pipeline GitHub Actions et aux déploiements Vercel utilisant le script de build du projet.
+
+### Extensibilité
+
+Lors de l'intégration d'un nouveau contenu CMS, son endpoint, son schéma Zod et les chemins de ses snapshots doivent être déclarés dans `cmsRegistry`.
+
+Le script de validation prendra automatiquement en charge ce nouveau contenu sans modification de sa logique.
+
+### Tests fonctionnels
+
+| ID | Scénario | Résultat |
+|---|---|---|
+| T00 | Ensemble des snapshots valides | Réussi |
+| T01 | Champ obligatoire vide | Réussi |
+| T02 | JSON malformé | Réussi |
+| T03 | Snapshot absent | Réussi |
+| T04 | Erreurs multiples simultanées | Réussi |
+| T05 | Collection FAQ vide | Réussi |
+| T06 | Blocage du build en présence d'un snapshot invalide | Réussi |
+
+Les tests ont été réalisés manuellement en environnement local. L'intégration de la validation dans le build Vercel a également été vérifiée.
+
+### Limites actuelles
+
+- La validation garantit la conformité structurelle des snapshots, mais pas leur exactitude éditoriale.
+- Elle ne vérifie pas la fraîcheur des contenus par rapport au CMS.
+- Elle ne garantit pas que les textes correspondent effectivement à la langue du snapshot.
+- La synchronisation automatique des snapshots avec Payload CMS n'est pas encore implémentée.
+- La validation ne nécessite aucune connexion au back-office.
+- Les tests fonctionnels ne constituent pas encore une suite de tests automatisés.
+
+### Évolutions prévues
+
+- CMS-02 : synchronisation automatique des snapshots.
+- CMS-04 : supervision et journalisation des synchronisations.
+- CMS-05 : déclenchement manuel de la synchronisation.
+- CMS-06 : gestion des suppressions et dépublications.
+- CMS-07 : étude d'un mécanisme Last Known Good.
+
+**Référence : CMS-03 — Validation et intégrité des contenus de fallback.**
