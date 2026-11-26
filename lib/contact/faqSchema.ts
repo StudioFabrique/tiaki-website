@@ -1,7 +1,5 @@
-
 import { z } from "zod"
-
-const requiredText = z.string().trim().min(1)
+import { requiredText } from "../cms/validation"
 
 export const faqSchema = z.object({
   id: z.union([z.number().int(), requiredText]),
