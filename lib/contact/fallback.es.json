@@ -1,11 +1,11 @@
 {
   "hero": {
-    "title": "Preguntas frecuentes",
-    "description": "¿Tienes preguntas sobre T-IA-KI? Encuentra aquí respuestas a las preguntas más frecuentes sobre el proyecto, la plataforma y las posibilidades de participación."
-  },
-  "faqSection": {
     "title": "¿Tienes alguna pregunta? Hablemos.",
     "description": "Si tienes alguna pregunta sobre T-IA-KI o quieres participar en el proyecto o proponer una colaboración, Estamos aquí para escucharte"
+  },
+  "faqSection": {
+    "title": "Preguntas frecuentes",
+    "description": "¿Tienes preguntas sobre T-IA-KI? Encuentra aquí respuestas a las preguntas más frecuentes sobre el proyecto, la plataforma y las posibilidades de participación."
   },
   "contactForm": {
     "title": "Envíanos un mensaje",
