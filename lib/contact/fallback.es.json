@@ -1,5 +1,4 @@
 {
-  "id": 1,
   "hero": {
     "title": "Preguntas frecuentes",
     "description": "¿Tienes preguntas sobre T-IA-KI? Encuentra aquí respuestas a las preguntas más frecuentes sobre el proyecto, la plataforma y las posibilidades de participación."
@@ -12,7 +11,7 @@
     "title": "Envíanos un mensaje",
     "labels": {
       "fullName": "Nombre y apellidos",
-      "email": "Correo electrónico ",
+      "email": "Correo electrónico",
       "profile": "Tu perfil (opcional)",
       "subject": "Asunto de la consulta",
       "message": "Tu mensaje",
@@ -91,18 +90,18 @@
     "audiences": {
       "caregivers": {
         "title": "¿Eres una persona cuidadora?",
-        "compactTitle": "Personas cuidadoras",
-        "description": "Comparte tu experiencia cotidiana, las dificultades que encuentras y tus expectativas para contribuir al diseño de una plataforma adaptada a tus necesidades."
+        "description": "Comparte tu experiencia cotidiana, las dificultades que encuentras y tus expectativas para contribuir al diseño de una plataforma adaptada a tus necesidades.",
+        "compactTitle": "Personas cuidadoras"
       },
       "professionals": {
         "title": "¿Eres profesional?",
-        "compactTitle": "Profesionales",
-        "description": "\nAporta tu experiencia práctica y tus conocimientos sobre las necesidades de las personas cuidadoras para enriquecer el desarrollo de los servicios y funcionalidades."
+        "description": "Aporta tu experiencia práctica y tus conocimientos sobre las necesidades de las personas cuidadoras para enriquecer el desarrollo de los servicios y funcionalidades.",
+        "compactTitle": "Profesionales"
       },
       "organizations": {
         "title": "¿Representas a una organización?",
-        "compactTitle": "Organizaciones",
-        "description": "Explora las posibilidades de colaboración mediante el intercambio de recursos, conocimientos y la participación en el proyecto."
+        "description": "Explora las posibilidades de colaboración mediante el intercambio de recursos, conocimientos y la participación en el proyecto.",
+        "compactTitle": "Organizaciones"
       }
     },
     "activitiesTitle": "¿Cómo contribuir al proyecto?",
@@ -124,8 +123,5 @@
         "description": "Compartir recursos, conocimientos o iniciativas relacionadas con el apoyo a las personas cuidadoras."
       }
     }
-  },
-  "updatedAt": "2026-11-24T13:52:22.923Z",
-  "createdAt": "2026-11-24T13:52:22.923Z",
-  "globalType": "contact-page"
+  }
 }

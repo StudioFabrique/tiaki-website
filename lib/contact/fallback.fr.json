@@ -1,7 +1,6 @@
 {
-  "id": 1,
   "hero": {
-    "title": "Vous avez une question ? Parlons-en",
+    "title": "Vous avez une question ? Parlons-en.",
     "description": "Si vous avez une question sur T-IA-KI, si vous souhaitez participer au projet ou proposer une collaboration, notre équipe est à votre écoute."
   },
   "faqSection": {
@@ -14,7 +13,7 @@
       "fullName": "Nom et prénom",
       "email": "Adresse e-mail",
       "profile": "Votre profil",
-      "subject": " Objet de la demande",
+      "subject": "Objet de la demande",
       "message": "Votre message",
       "discoverySource": "Comment avez-vous découvert T-IA-KI ?",
       "required": "Obligatoire",
@@ -91,18 +90,18 @@
     "audiences": {
       "caregivers": {
         "title": "Vous êtes aidant(e) ?",
-        "compactTitle": "Aidant(e)s",
-        "description": "Partagez votre expérience du quotidien, les difficultés rencontrées et vos attentes pour contribuer à la conception d'une plateforme adaptée à vos besoins."
+        "description": "Partagez votre expérience du quotidien, les difficultés rencontrées et vos attentes pour contribuer à la conception d'une plateforme adaptée à vos besoins.",
+        "compactTitle": "Aidant(e)s"
       },
       "professionals": {
         "title": "Vous êtes professionnel(le) ?",
-        "compactTitle": "Professionnels",
-        "description": "Apportez votre expertise de terrain et vos connaissances des besoins des aidant(e)s pour enrichir les réflexions autour des services et fonctionnalités."
+        "description": "Apportez votre expertise de terrain et vos connaissances des besoins des aidant(e)s pour enrichir les réflexions autour des services et fonctionnalités.",
+        "compactTitle": "Professionnels"
       },
       "organizations": {
         "title": "Vous représentez une organisation ?",
-        "compactTitle": "Organisations",
-        "description": "Explorez les possibilités de collaboration autour du partage de ressources, des échanges d'expertise et de la participation au projet."
+        "description": "Explorez les possibilités de collaboration autour du partage de ressources, des échanges d'expertise et de la participation au projet.",
+        "compactTitle": "Organisations"
       }
     },
     "activitiesTitle": "Comment contribuer au projet ?",
@@ -124,8 +123,5 @@
         "description": "Partager des ressources, des connaissances ou des initiatives en lien avec l'accompagnement des aidant(e)s."
       }
     }
-  },
-  "updatedAt": "2026-11-24T13:52:22.923Z",
-  "createdAt": "2026-11-24T13:52:22.923Z",
-  "globalType": "contact-page"
+  }
 }
