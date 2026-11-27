@@ -1,12 +1,14 @@
 # T-IA-KI — Standard d'intégration CMS côté site web
 
-**Dépôt :** `tiaki-website` · **Emplacement :** `docs/CMS_INTEGRATION.md`  
-**Révision :** 25 novembre 2026 · **Statut :** standard proposé pour les futures intégrations ; Contact est la référence déployée.
+**Dépôt :** `tiaki-website` · **Emplacement :** `docs/CMS_INTEGRATION.md`
+
+**Révision :** 27 novembre 2026 · **Statut :** socle CMS opérationnel ; recette manuelle CMS-02 validée, déclenchement planifié et migration Client ID à confirmer.
 
 ## 1. Objet et périmètre
+
 Ce document définit le contrat d'intégration des contenus publics de Payload CMS dans le site Next.js bilingue T-IA-KI. Il vise à éviter la duplication de la logique de récupération, de validation et de résilience lorsque les pages Accueil, À propos, Plateforme et d'autres pages seront progressivement administrables.
 
-Il complète `CONTACT_PAGE.md`, qui décrit l'implémentation réelle de la page Contact. Le document correspondant côté serveur est `tiaki-backoffice/docs/CMS_ARCHITECTURE.md`. Les cinq modules communs sont désormais implémentés. Les conventions pour les prochaines pages et la synchronisation automatique restent des évolutions à réaliser.
+Il complète `CONTACT_PAGE.md`, qui décrit l'implémentation réelle de la page Contact. Le document correspondant côté serveur est `tiaki-backoffice/docs/CMS_ARCHITECTURE.md`. Le socle commun (CMS-01), la validation des snapshots (CMS-03) et leur synchronisation automatisée (CMS-02) sont implémentés. La page Contact constitue la référence déployée ; les conventions des prochaines pages restent à adapter à leurs besoins.
 
 Principes :
 
@@ -21,9 +23,11 @@ Principes :
 
 |Capacité|État actuel|Cible|
 |---|---|---|
-|Contact|Global `contact-page` + collection `faqs`, FR/ES, version initiale déployée|Refactorisation CMS-01 validée localement ; livraison à réaliser|
-|Couche commune|`config.ts`, `client.ts`, `validation.ts`, `mergeWithFallback.ts`, `registry.ts`|Réutiliser pour les prochaines pages|
-|Synchronisation des snapshots|Manuelle|Validation automatique, synchronisation planifiée et manuelle (CMS-03, CMS-02, CMS-05)|
+|Contact|Global `contact-page` + collection `faqs`, FR/ES ; CMS-01 déployé|Référence pour les futures pages|
+|Couche commune|Socle CMS-01 et modules de synchronisation CMS-02|Réutiliser pour les prochaines pages|
+|Validation des snapshots (CMS-03)|Implémentée et intégrée au build et à la CI|Maintenir la conformité pour chaque nouveau modèle|
+|Synchronisation des snapshots (CMS-02)|Workflow déployé sur `main` ; recette manuelle validée|Confirmer la première exécution planifiée et la migration vers `client-id`|
+|Déclenchement manuel (CMS-05)|`workflow_dispatch` opérationnel|Formaliser les éventuels besoins complémentaires|
 |Accueil|Intégration complète à réaliser|Global `home-page` si structure fixe confirmée|
 |À propos|Intégration complète à réaliser|Global `about-page` si structure fixe confirmée|
 |Plateforme|Intégration complète à réaliser|Global `platform-page` pour la présentation publique|
@@ -31,7 +35,6 @@ Principes :
 |Navigation, footer|À inventorier|Globals transversaux uniquement si besoin éditorial validé|
 
 Les noms des pages et slugs futurs sont des propositions. Ne pas supposer que leurs routes, composants, champs et permissions sont déjà définis.
-
 
 ```mermaid
 flowchart TD
@@ -54,7 +57,6 @@ flowchart TD
     F2 --> UI
 ```
 
-
 ## 3. Organisation du code
 
 ### 3.1. Modules existants de référence
@@ -66,6 +68,9 @@ lib/cms/
   validation.ts
   mergeWithFallback.ts
   registry.ts
+  pagination.ts
+  comparison.ts
+  persistence.ts
 lib/contact/
   getContactPage.ts
   getFaqs.ts
@@ -87,6 +92,16 @@ components/contact/
   ContactForm.tsx
   ContactResources.tsx
   ContactParticipation.tsx
+scripts/
+  validate-cms-fallbacks.ts
+  sync-cms-fallbacks.ts
+  check-cms-sync-changes.ts
+  tests/
+    persistence.test.ts
+    check-cms-sync-changes.test.ts
+.github/workflows/
+  ci.yml
+  sync-cms-fallbacks.yml
 ```
 
 Arborescence partielle. Certains modules de constantes statiques peuvent subsister lorsqu'ils servent aux règles métier. Ne supprimer aucun fichier sur la seule base de son nom ; vérifier les imports et usages, puis reconstruire.
@@ -97,12 +112,15 @@ Arborescence partielle. Certains modules de constantes statiques peuvent subsist
 tiaki-website/
 ├── lib/
 │   ├── i18n/                        # configuration des langues existante
-│   ├── cms/                         # implémenté par CMS-01
+│   ├── cms/                         # socle CMS-01 et CMS-02
 │   │   ├── config.ts                # origine et timeout
 │   │   ├── client.ts                # lecture HTTP serveur
 │   │   ├── validation.ts            # primitives Zod communes
 │   │   ├── mergeWithFallback.ts     # fusion textuelle
-│   │   └── registry.ts              # endpoints, schémas, paramètres et chemins JSON
+│   │   ├── registry.ts              # types, endpoints, schémas, paramètres, snapshots
+│   │   ├── pagination.ts            # pagination de synchronisation
+│   │   ├── comparison.ts            # comparaison et sérialisation
+│   │   └── persistence.ts           # préparation et remplacement
 │   ├── contact/                     # existant
 │   ├── home/                        # proposé
 │   │   ├── schema.ts
@@ -114,9 +132,12 @@ tiaki-website/
 │   ├── about/                       # proposé, même convention
 │   └── platform/                    # proposé, même convention
 ├── components/                      # composants propres à chaque page
+├── scripts/                         # validation, synchronisation et tests
+├── .github/workflows/               # CI et automatisation
 └── docs/
     ├── CMS_INTEGRATION.md
-    └── CONTACT_PAGE.md
+    ├── CONTACT_PAGE.md
+    └── CI_CD.md
 ```
 
 Un fichier `types.ts` peut réexporter les types inférés, mais ne doit pas redéfinir à la main un contrat déjà décrit par Zod. Les schémas et snapshots restent propres à chaque modèle ; un adaptateur de collection peut devenir partagé lorsqu'il est réellement consommé par plusieurs pages.
@@ -141,7 +162,7 @@ Preview pointait vers le CMS de production lors des tests Contact. Cette configu
 |---|---|
 |Global existant|`/api/globals/contact-page?locale=fr&fallback-locale=none`|
 |Global futur|`/api/globals/home-page?locale=es&fallback-locale=none`|
-|Collection|`/api/faqs?locale=fr&fallback-locale=none&where[published][equals]=true&sort=displayOrder&limit=100`|
+|Collection|`/api/faqs?locale=fr&fallback-locale=none&where[published][equals]=true&sort=displayOrder,id&limit=100`|
 
 Le paramètre `fallback-locale=none` empêche Payload de compléter silencieusement une traduction manquante à partir d'une autre langue. Le site gère sa propre stratégie de fallback, limitée à la langue demandée.
 
@@ -151,7 +172,7 @@ Pour les collections, la politique de lecture publique doit être appliquée par
 
 ### 4.3. Configuration et client commun (CMS-01)
 
-`lib/cms/config.ts` centralise `CMS_REQUEST_TIMEOUT_MS = 5_000`, `CMS_FALLBACK_LOCALE = "none"` et `getCmsBaseUrl()`. Cette dernière lit et nettoie `TIAKI_BACKOFFICE_URL` à l'appel, construit une `URL`, exige HTTP ou HTTPS et lève une exception si la configuration est invalide. Les adaptateurs interceptent cette exception pour appliquer leur fallback.
+`lib/cms/config.ts` centralise `CMS_REQUEST_TIMEOUT_MS = 5_000`, `CMS_FALLBACK_LOCALE = "none"`, `CMS_MAX_PAGINATION_PAGES = 100` et `getCmsBaseUrl()`. Cette dernière lit et nettoie `TIAKI_BACKOFFICE_URL` à l'appel, construit une `URL`, exige HTTP ou HTTPS et lève une exception si la configuration est invalide. Les adaptateurs interceptent cette exception pour appliquer leur fallback.
 
 Le client implémenté est le suivant (extrait de l'implémentation réalisée pendant CMS-01) :
 
@@ -161,12 +182,10 @@ import {
   CMS_FALLBACK_LOCALE,
   getCmsBaseUrl,
 } from "./config"
-
 type CmsRequestOptions = {
   locale: "fr" | "es"
   query?: Record<string, string>
 }
-
 export async function fetchCms(
   endpoint: `/api/${string}`,
   { locale, query = {} }: CmsRequestOptions,
@@ -192,16 +211,16 @@ Les paramètres linguistiques sont imposés après les paramètres spécifiques.
 
 La destination et les paramètres proviennent du code interne. La signature TypeScript n'est pas une validation de sécurité à l'exécution. La restriction explicite de l'origine, le refus des identifiants intégrés à l'URL et des redirections demeurent des pistes de durcissement, non implémentées ici. Une politique de cache différente doit être explicitement justifiée par modèle.
 
-### 4.3.1. Registre déclaratif
+#### 4.3.1. Registre déclaratif
 
-`lib/cms/registry.ts` exporte `CmsContentDefinition`, `cmsRegistry` et `CmsContentKey` (`"contact" | "faqs"` à ce stade). Chaque entrée fournit `endpoint`, `schema`, `snapshotPaths` pour FR/ES et éventuellement `query`. Le registre est déclaré avec `satisfies Record<string, CmsContentDefinition>` pour préserver les types précis des schémas et des clés.
+`lib/cms/registry.ts` exporte `CmsContentDefinition`, `cmsRegistry` et `CmsContentKey` (`"contact" | "faqs"` à ce stade). Chaque entrée fournit `kind` (`global` ou `collection`), `endpoint`, `schema`, `snapshotPaths` pour FR/ES et éventuellement `query`. Le registre est déclaré avec `satisfies Record<string, CmsContentDefinition>` pour préserver les types précis des schémas et des clés.
 
-|Clé|Endpoint|Schéma|Snapshots sous `lib/contact/`|
-|---|---|---|---|
-|`contact`|`/api/globals/contact-page`|`contactPageSchema`|`fallback.fr.json`, `fallback.es.json`|
-|`faqs`|`/api/faqs`|`faqResponseSchema`|`faq-fallback.fr.json`, `faq-fallback.es.json`|
+|Clé|Type|Endpoint|Schéma|Snapshots sous `lib/contact/`|
+|---|---|---|---|---|
+|`contact`|`global`|`/api/globals/contact-page`|`contactPageSchema`|`fallback.fr.json`, `fallback.es.json`|
+|`faqs`|`collection`|`/api/faqs`|`faqResponseSchema`|`faq-fallback.fr.json`, `faq-fallback.es.json`|
 
-L'entrée `faqs` fixe `where[published][equals]=true`, `sort=displayOrder`, `limit=100`. Les chemins sont relatifs à la racine du dépôt. Le registre référence les schémas métier ; ceux-ci importent les primitives communes, jamais le registre (éviter les cycles). La lecture et l'écriture des fichiers relèveront des scripts, pas du registre. Les futurs modèles nécessitant une transformation de réponse ou une pagination complète devront déclarer une politique adaptée. Aucun script de synchronisation n'est implémenté à ce stade.
+L'entrée `faqs` fixe `where[published][equals]=true`, `sort=displayOrder,id`, `limit=100`. Les chemins sont relatifs à la racine du dépôt. Le registre référence les schémas métier ; ceux-ci importent les primitives communes, jamais le registre (éviter les cycles). La lecture et l’écriture des fichiers relèvent des scripts, pas du registre. CMS-02 récupère toutes les pages des collections pour les snapshots ; la lecture des FAQ au rendu reste limitée à une requête de 100 documents. Les futurs modèles nécessitant d’autres transformations doivent définir une politique adaptée.
 
 ### 4.4. Journalisation et classification des erreurs
 
@@ -227,9 +246,7 @@ Exemple de structure textuelle hypothétique pour une page Accueil (l'inventaire
 
 ```
 import { z } from 'zod'
-
 import { requiredText } from '../cms/validation'
-
 export const homePageSchema = z.object({
   hero: z.object({ title: requiredText, description: requiredText }),
 })
@@ -271,7 +288,6 @@ L'algorithme `lib/cms/mergeWithFallback.ts`, transféré sans changement de logi
 
 ### 6.2. Pipeline standard
 
-````
 ```mermaid
 flowchart TD
     A[Charger snapshot validé de la langue] --> B[Lire API]
@@ -285,25 +301,28 @@ flowchart TD
     G -->|Oui| H[Retour mixte]
     G -->|Non| F
 ```
-````
 
-Les schémas de secours doivent être validés avant commit et build. Contact valide les snapshots à l'import du module ; un snapshot invalide peut empêcher le rendu, y compris en mode normal. Ne pas avaler une erreur de snapshot et retourner des données non typées. Préférer des contrôles automatisés explicites en CI avant le déploiement.
+Les snapshots de secours doivent être validés avant commit et build. `pnpm cms:validate` est intégré au build depuis CMS-03. Contact valide les snapshots à l'import du module ; un snapshot invalide peut empêcher le rendu, y compris en mode normal. Ne pas avaler une erreur de snapshot et retourner des données non typées. Préférer des contrôles automatisés explicites en CI avant le déploiement.
 
 ### 6.3. Maintenance des snapshots
 
-Pour chaque page, stocker un snapshot FR et ES, exportés depuis un environnement approuvé, avec métadonnées techniques inutiles retirées et validés avec le schéma réel. La procédure détaillée Contact est dans `CONTACT_PAGE.md` § 7.
+Pour chaque modèle, conserver un snapshot FR et ES, issu de contenus publics approuvés et conforme au schéma réel. La maintenance courante est assurée par `pnpm cms:sync` ou le workflow GitHub Actions (voir § 13). La procédure d’export manuel historique de Contact reste documentée dans `CONTACT_PAGE.md` § 7 ; elle est réservée à l’initialisation ou au diagnostic.
 
-1. Télécharger dans un dossier temporaire, avec `curl -fsS` et timeout.
-2. Vérifier la langue, le statut de publication, la pagination et les valeurs attendues.
-3. Parser les deux réponses avec Zod et produire les objets validés.
-4. Comparer les changements, vérifier l'absence de contenu de test ou de données privées.
-5. Remplacer les fichiers après validation de l'ensemble, tester, commiter et redéployer.
+La synchronisation est distincte du rendu dynamique : une édition dans Payload ne modifie pas immédiatement les snapshots embarqués. La version de secours en production ne change qu’après fusion vers `dev`, livraison vers `main` et déploiement Vercel.
 
-Les snapshots ne se mettent pas à jour automatiquement lorsque l'éditeur modifie Payload. Définir un responsable et des déclencheurs de mise à jour. Une FAQ dépubliée peut réapparaître pendant une indisponibilité si le snapshot n'a pas été actualisé. Pour une suppression impérative, appliquer rapidement une politique adaptée (mise à jour/redéploiement ou absence de fallback pour ce contenu). Ne pas promettre de disponibilité absolue.
+Une FAQ dépubliée peut réapparaître pendant une indisponibilité si le snapshot déployé est ancien. Pour un retrait impératif, appliquer rapidement une politique adaptée (mise à jour/redéploiement ou désactivation du fallback concerné). Ne pas promettre de disponibilité absolue.
 
 ### 6.4. Feuille de route des snapshots
 
-CMS-03 : valider tous les snapshots du registre et intégrer ce contrôle à la CI. CMS-02 et CMS-05 : exporter depuis le CMS approuvé, valider toutes les réponses avant remplacement, normaliser les objets avec Zod, comparer sans métadonnées volatiles, vérifier la pagination et ouvrir une PR seulement en cas de changement ; déclenchement quotidien et manuel prévus. Une réponse FAQ vide et complète est valide, contrairement à une réponse incomplète ou invalide. Conserver les anciens fichiers en cas d'échec. Les fichiers embarqués ne changent en production qu'après fusion et déploiement Vercel. CMS-04 : supervision et notifications. CMS-06 : politique de retrait et de dépublication. CMS-07 : étude d'un stockage Last Known Good indépendant. Ces fonctionnalités ne sont pas encore implémentées.
+| User Story | État au 27 novembre 2026 |
+|---|---|
+| CMS-01 — Socle commun | Déployé |
+| CMS-03 — Validation et intégrité | Déployée, intégrée au build et à la CI (voir § 12) |
+| CMS-02 — Synchronisation automatique | Déployée ; recette manuelle validée, recette finale à clôturer (voir § 13) |
+| CMS-05 — Déclenchement manuel | Déclenchement opérationnel dans CMS-02 ; éventuels compléments à arbitrer |
+| CMS-04 — Supervision | À réaliser |
+| CMS-06 — Retrait et dépublication | À réaliser |
+| CMS-07 — Stockage Last Known Good | À étudier |
 
 ## 7. Rendu et performance
 
@@ -339,9 +358,9 @@ Un futur cache devra définir sa durée, son invalidation, la séparation FR/ES 
 |9|PR vers `dev`, recette Vercel Preview, PR vers `main`, recette de production.|
 |10|Documenter le modèle et les fichiers de secours, les décisions de cache et les limites.|
 
-Après CMS-01, terminer la validation et la synchronisation des snapshots (CMS-03 puis CMS-02/CMS-05) avant la prochaine intégration éditoriale recommandée : Accueil. Commencer cette page par son inventaire, non par la création automatique d'un Global.
+Le socle CMS-01 et la validation CMS-03 sont déployés ; CMS-02 est opérationnel en déclenchement manuel et sa recette finale reste à clôturer. La prochaine intégration éditoriale recommandée est Accueil. Commencer cette page par son inventaire, non par la création automatique d'un Global.
 
-### Fiche de contrat à remplir avant chaque intégration
+### 8.1. Fiche de contrat à remplir avant chaque intégration
 
 ```
 # Page : [nom]
@@ -378,17 +397,20 @@ Après CMS-01, terminer la validation et la synchronisation des snapshots (CMS-0
 |T11|Modifications CMS FR/ES|Nouvelles données visibles, contenus originaux restaurés après essai autorisé|
 |T12|Autres pages et langues|Absence de régression dans le périmètre testé|
 
-T01 à T05, T07 et les modifications éditoriales de T11 ont été validés localement pour Contact/FAQ après CMS-01, selon les retours de recette du développeur. TypeScript, lint et build ont également été confirmés. La dépublication de toutes les FAQ puis leur restauration ont été vérifiées. Aucun test automatisé ou résultat chiffré de latence n'est établi ici ; les autres scénarios constituent des critères à tester. Les scénarios destructifs et timeouts doivent être exécutés en local ou en environnement isolé, jamais en arrêtant la production.
+T01 à T05, T07 et les modifications éditoriales de T11 ont été validés localement pour Contact/FAQ après CMS-01, selon les retours de recette du développeur. TypeScript, lint et build ont également été confirmés. La dépublication de toutes les FAQ puis leur restauration ont été vérifiées. Ces tests de rendu ne constituent pas une suite automatisée et aucun résultat chiffré de latence n’est établi ici. Les tests automatisés CMS-02 couvrent séparément la persistance et la liste blanche Git (voir § 13). Les autres scénarios de rendu constituent des critères à tester. Les scénarios destructifs et timeouts doivent être exécutés en local ou en environnement isolé, jamais en arrêtant la production.
 
 Contrôles techniques depuis le site :
 
 ```
+pnpm cms:test
+pnpm cms:validate
+pnpm exec next typegen
 pnpm exec tsc --noEmit
-pnpm run lint
-pnpm run build
+pnpm lint
+pnpm build
 ```
 
-Recommandation CI : tests unitaires des schémas, de la fusion et de la récupération (transport simulé), validation des snapshots dans les deux langues, tests d'intégration contre CMS isolé, tests E2E sur Preview. Ne pas remplacer ces contrôles par la seule compilation.
+La CI inclut la validation des snapshots et les tests automatisés CMS-02. Pour étendre la couverture, prévoir des tests unitaires des schémas, de la fusion et de la récupération (transport simulé), des tests d’intégration contre un CMS isolé et des tests E2E sur Preview. Ne pas remplacer ces contrôles par la seule compilation.
 
 ## 10. Livraison, exploitation et compatibilité
 
@@ -409,33 +431,15 @@ Préférer les évolutions additives : ajouter une propriété compatible, rempl
 
 Une page est intégrée lorsque le modèle est déployé, les contenus FR/ES approuvés et validés, les composants et interactions testés, la politique de fallback documentée, le build et les contrôles réussis, la Preview et la production validées et les limites consignées. Un HTTP 200 ne suffit pas à démontrer le fonctionnement nominal du CMS.
 
-CMS-01 est implémenté et testé localement ; la revue, la fusion et la recette Preview/Production de cette refactorisation restent à réaliser. Travaux suivants : validation automatisée des snapshots (CMS-03), synchronisation planifiée/manuelle (CMS-02/CMS-05), supervision et gestion des retraits (CMS-04/CMS-06), puis nouvelles pages. Les médias, listes complexes, préproduction isolée et Last Known Good restent à traiter.
+CMS-01 et CMS-03 sont livrés en production. CMS-02 est déployé et sa recette manuelle est validée ; restent à confirmer l’authentification avec le Client ID et le déclenchement planifié. Les travaux suivants sont la supervision (CMS-04), la gestion des retraits (CMS-06), les éventuels compléments du déclenchement manuel (CMS-05), puis les nouvelles pages. Les médias, listes complexes, préproduction isolée et Last Known Good (CMS-07) restent à traiter.
 
-## 12. Références
+## 12. Validation et intégrité des snapshots CMS (CMS-03)
 
-- `CONTACT_PAGE.md` : implémentation réelle de référence et maintenance des snapshots.
-- `tiaki-backoffice/docs/CONTACT_GLOBAL.md` : modèle de données Contact, droits, API et import.
-- `tiaki-backoffice/docs/CMS_ARCHITECTURE.md` : standard de modélisation proposé.
-- `tiaki-backoffice/docs/DEPLOYMENT.md` : runbook de livraison.
-- [Next.js — Fetch API](https://nextjs.org/docs/app/api-reference/functions/fetch)
-- [Next.js — Server and Client Components](https://nextjs.org/docs/app/getting-started/server-and-client-components)
-- [Zod — Documentation](https://zod.dev/)
-- [Payload — REST API](https://payloadcms.com/docs/rest-api/overview)
-- [Payload — Localization](https://payloadcms.com/docs/configuration/localization)
-
-Ce document s'appuie sur les documents précédents, les extraits de code et les validations communiquées par le développeur. Le dépôt Git n'a pas été inspecté directement lors de cette mise à jour. Les exemples Accueil et les évolutions de synchronisation restent des propositions. La résolution des imports hors Next.js sera vérifiée au moment de CMS-03.
-
-
-
----
-
-## Validation et intégrité des snapshots CMS
-
-### Objectif
+### 12.1. Objectif
 
 Garantir que les contenus de fallback embarqués dans le site respectent les contrats de données définis par les schémas Zod, indépendamment de la disponibilité du back-office Payload CMS.
 
-### Architecture
+### 12.2. Architecture
 
 Le mécanisme de validation repose sur les composants suivants :
 
@@ -447,7 +451,7 @@ Le mécanisme de validation repose sur les composants suivants :
 | `package.json` | Commandes de validation et de construction du site. |
 | `.github/workflows/ci.yml` | Pipeline d'intégration continue. |
 
-### Fonctionnement du validateur
+### 12.3. Fonctionnement du validateur
 
 Le script parcourt dynamiquement les contenus déclarés dans `cmsRegistry` pour chacune des langues supportées (`fr` et `es`).
 
@@ -462,14 +466,14 @@ Pour chaque snapshot, il réalise les opérations suivantes :
 
 Un rapport consolidé présente le nombre total de snapshots contrôlés, le nombre de snapshots valides et invalides ainsi que la durée d'exécution.
 
-### Commandes disponibles
+### 12.4. Commandes disponibles
 
 - `pnpm cms:validate` : validation indépendante de tous les snapshots.
 - `pnpm build` : validation des snapshots suivie du build Next.js.
 
 Le script retourne un code de sortie `0` lorsque tous les snapshots sont valides et `1` lorsqu'au moins une erreur est détectée.
 
-### Gestion des erreurs
+### 12.5. Gestion des erreurs
 
 | Type d'erreur | Comportement |
 |---|---|
@@ -481,7 +485,7 @@ Le script retourne un code de sortie `0` lorsque tous les snapshots sont valides
 
 Une collection FAQ vide (`{"docs": []}`) est considérée comme valide. Elle peut correspondre à une absence volontaire de contenus publiés.
 
-### Intégration dans le processus de livraison
+### 12.6. Intégration dans le processus de livraison
 
 La validation est intégrée directement à la commande de construction du site :
 
@@ -491,13 +495,13 @@ En cas d'échec de la validation, la compilation Next.js n'est pas exécutée.
 
 Ce mécanisme s'applique aux builds locaux, au pipeline GitHub Actions et aux déploiements Vercel utilisant le script de build du projet.
 
-### Extensibilité
+### 12.7. Extensibilité
 
 Lors de l'intégration d'un nouveau contenu CMS, son endpoint, son schéma Zod et les chemins de ses snapshots doivent être déclarés dans `cmsRegistry`.
 
 Le script de validation prendra automatiquement en charge ce nouveau contenu sans modification de sa logique.
 
-### Tests fonctionnels
+### 12.8. Tests fonctionnels
 
 | ID | Scénario | Résultat |
 |---|---|---|
@@ -511,33 +515,32 @@ Le script de validation prendra automatiquement en charge ce nouveau contenu san
 
 Les tests ont été réalisés manuellement en environnement local. L'intégration de la validation dans le build Vercel a également été vérifiée.
 
-### Limites actuelles
+### 12.9. Limites actuelles
 
 - La validation garantit la conformité structurelle des snapshots, mais pas leur exactitude éditoriale.
 - Elle ne vérifie pas la fraîcheur des contenus par rapport au CMS.
 - Elle ne garantit pas que les textes correspondent effectivement à la langue du snapshot.
-- La synchronisation automatique des snapshots avec Payload CMS n'est pas encore implémentée.
+- La validation locale ne déclenche pas la synchronisation avec Payload CMS ; celle-ci est assurée séparément par CMS-02 (voir § 13).
 - La validation ne nécessite aucune connexion au back-office.
-- Les tests fonctionnels ne constituent pas encore une suite de tests automatisés.
+- Les tests fonctionnels du validateur CMS-03 ont été réalisés manuellement ; les tests automatisés CMS-02 couvrent un périmètre distinct.
 
-### Évolutions prévues
+### 12.10. Articulation avec les autres User Stories
 
-- CMS-02 : synchronisation automatique des snapshots.
+- CMS-02 : synchronisation automatique implémentée (voir § 13).
 - CMS-04 : supervision et journalisation des synchronisations.
-- CMS-05 : déclenchement manuel de la synchronisation.
+- CMS-05 : déclenchement manuel opérationnel ; éventuels compléments à définir.
 - CMS-06 : gestion des suppressions et dépublications.
 - CMS-07 : étude d'un mécanisme Last Known Good.
 
 **Référence : CMS-03 — Validation et intégrité des contenus de fallback.**
 
----
-## Synchronisation automatique des snapshots de secours
+## 13. Synchronisation automatique des snapshots de secours (CMS-02)
 
-### 1. Objectif
+### 13.1. Objectif
 
 Le mécanisme de synchronisation automatique des snapshots permet de maintenir les fichiers JSON locaux en cohérence avec les contenus éditoriaux publiés dans Payload CMS.
 
-Payload CMS constitue la source de vérité des contenus éditoriaux du site web T-IA-KI. Les snapshots locaux constituent un mécanisme de secours (*fallback*) permettant de garantir la disponibilité des contenus lorsque le CMS est indisponible ou retourne des données non conformes.
+Payload CMS constitue la source de vérité des contenus éditoriaux du site web T-IA-KI. Les snapshots locaux constituent un mécanisme de secours (*fallback*) permettant de maintenir un rendu dégradé à partir de snapshots valides lorsque le CMS est indisponible ou retourne des données non conformes.
 
 Cette synchronisation vise notamment à :
 
@@ -548,7 +551,7 @@ Cette synchronisation vise notamment à :
 - Assurer la traçabilité des évolutions éditoriales à travers Git.
 - Respecter les processus de validation et de mise en production existants.
 
-### 2. Architecture technique
+### 13.2. Architecture technique
 
 Le mécanisme de synchronisation repose sur une architecture modulaire permettant de séparer les responsabilités et de faciliter l'intégration de nouveaux contenus.
 
@@ -568,7 +571,7 @@ Le mécanisme de synchronisation repose sur une architecture modulaire permettan
 
 Le registre CMS constitue le point central de configuration du mécanisme. Il permet d'ajouter de nouveaux contenus sans modifier la logique principale de synchronisation.
 
-### 3. Cycle de synchronisation
+### 13.3. Cycle de synchronisation
 
 Le processus de synchronisation se déroule selon les étapes suivantes :
 
@@ -587,7 +590,7 @@ Aucun snapshot local n'est remplacé tant que l'ensemble des contenus distants n
 
 Cette approche permet notamment d'éviter qu'une erreur de récupération ou de validation sur un contenu entraîne une synchronisation partielle des autres contenus.
 
-### 4. Contenus actuellement pris en charge
+### 13.4. Contenus actuellement pris en charge
 
 | Contenu | Type Payload | Langues | Endpoint |
 |---|---|---|---|
@@ -609,7 +612,7 @@ L'intégration de nouveaux contenus nécessite de définir dans `cmsRegistry` :
 - Les éventuels paramètres de requête.
 - Les chemins des snapshots pour chaque langue.
 
-### 5. Commandes disponibles
+### 13.5. Commandes disponibles
 
 #### Validation des snapshots locaux
 
@@ -645,7 +648,7 @@ Cette commande exécute les tests automatisés présents dans le répertoire `sc
 
 Ces tests sont indépendants de la disponibilité de Payload CMS.
 
-### 6. Normalisation et comparaison des données
+### 13.6. Normalisation et comparaison des données
 
 Les données récupérées depuis Payload sont traitées par les schémas Zod avant d'être comparées avec les snapshots locaux.
 
@@ -662,7 +665,7 @@ Ainsi, une différence d'indentation ou d'ordre des propriétés d'un objet JSON
 
 Le mécanisme de synchronisation est idempotent : plusieurs exécutions successives sur des contenus distants inchangés ne produisent aucune modification supplémentaire des snapshots.
 
-### 7. Sécurisation de la pagination
+### 13.7. Sécurisation de la pagination
 
 La récupération des collections paginées intègre plusieurs mécanismes de contrôle :
 
@@ -679,7 +682,7 @@ Une collection vide est considérée comme valide lorsque le schéma métier cor
 
 Dans le cas des FAQ, cela permet notamment de synchroniser correctement une collection dont tous les documents ont été dépubliés.
 
-### 8. Gestion des erreurs et résilience
+### 13.8. Gestion des erreurs et résilience
 
 Le processus de synchronisation retourne un code de sortie non nul lorsqu'une erreur empêche son exécution complète.
 
@@ -702,9 +705,9 @@ Les scénarios suivants ont été testés et validés :
 | T09 | Exécution en mode dry-run | Aucune modification des fichiers locaux. |
 | T10 | Contenus distants inchangés | Aucune réécriture des snapshots. |
 
-En cas d'erreur, les étapes suivantes du workflow de synchronisation ne doivent pas être exécutées.
+En cas d’erreur bloquante, les étapes normales de publication ne sont pas exécutées ; les opérations de nettoyage peuvent néanmoins avoir lieu.
 
-### 9. Persistance des snapshots
+### 13.9. Persistance des snapshots
 
 Le mécanisme de persistance repose sur deux phases distinctes.
 
@@ -718,7 +721,7 @@ Cette phase doit réussir intégralement avant le remplacement des fichiers orig
 
 Une fois tous les fichiers temporaires préparés, les snapshots originaux sont remplacés à l'aide de l'opération `rename()` du système de fichiers.
 
-Les répertoires temporaires sont ensuite supprimés dans un bloc `finally`.
+La suppression des répertoires temporaires est tentée dans un bloc `finally`. Les échecs de nettoyage sont journalisés ; une interruption brutale peut laisser des fichiers résiduels.
 
 Cette approche limite les risques de corruption des fichiers lors de leur écriture.
 
@@ -732,13 +735,13 @@ Une erreur survenant pendant la phase de remplacement peut donc entraîner une m
 
 Par conséquent, le processus de synchronisation automatisé doit réussir intégralement avant toute publication des modifications dans le dépôt Git.
 
-### 10. Contrôle du périmètre des modifications Git
+### 13.10. Contrôle du périmètre des modifications Git
 
 Avant la création d'une Pull Request automatique, le workflow vérifie l'ensemble des modifications présentes dans le dépôt Git.
 
 Cette vérification repose sur une liste blanche dynamique générée à partir des chemins de snapshots déclarés dans `cmsRegistry`.
 
-Seules les modifications non indexées de fichiers de snapshots existants et déclarés dans le registre sont autorisées.
+Seules les modifications non indexées de fichiers de snapshots existants et déclarés dans le registre (statut Git ` M`) sont autorisées. Le contrôle porte sur les entrées retournées par `git status` ; les fichiers ignorés par Git ne sont pas recensés.
 
 | Type de modification | Autorisation |
 |---|---|
@@ -752,4 +755,111 @@ Seules les modifications non indexées de fichiers de snapshots existants et dé
 | Renommage d'un fichier | Refusé |
 | Modification déjà indexée dans Git | Refusée |
 
-Toute modification inattendue provoque l'échec du
+Toute modification inattendue détectée provoque l’échec du workflow. Ce contrôle applicatif ne réduit pas les permissions d’écriture de la GitHub App au niveau du dépôt et ne remplace pas le Ruleset.
+
+### 13.11. Synchronisation automatisée avec GitHub Actions
+
+Le workflow `.github/workflows/sync-cms-fallbacks.yml`, présent sur `main`, récupère explicitement `dev`. Il est configuré pour une exécution quotidienne à 05 h 17 UTC et un déclenchement manuel (`workflow_dispatch`). La première exécution planifiée reste à confirmer ; le déclenchement manuel est validé.
+
+Après synchronisation et validation locale, le workflow contrôle les modifications Git et recherche une PR ouverte depuis `automation/cms-fallback-sync` vers `dev`. Il génère un token d’installation de la GitHub App privée `TIAKI CMS Sync` uniquement si des changements sont détectés ou si une PR existante doit être réconciliée.
+
+| Changements par rapport à `dev` | PR ouverte | Comportement |
+|---|---|---|
+| Non | Non | Fin sans token d’écriture ni nouvelle PR |
+| Oui | Non | Création d’une PR |
+| Oui | Oui | Actualisation de la PR existante |
+| Non | Oui | Réconciliation et fermeture de la PR obsolète |
+
+Aucun push direct vers `dev` ou `main` ni fusion automatique n’est prévu. Les PR sont soumises au job obligatoire `Quality Checks` et au processus de fusion humaine. La disponibilité d’une PR ne garantit pas sa fraîcheur entre deux synchronisations ; vérifier son contenu avant fusion.
+
+```mermaid
+flowchart TD
+    A[Checkout dev] --> B[Synchronisation Payload]
+    B --> C[Validation locale et liste blanche Git]
+    C --> D{Changement ou PR ouverte ?}
+    D -->|Non| E[Fin sans écriture distante]
+    D -->|Oui| F[Token GitHub App temporaire]
+    F --> G[Création ou réconciliation de la PR]
+    G -->|PR à intégrer| H[Quality Checks et fusion humaine vers dev]
+    H --> I[PR vers main et livraison Vercel]
+    B -. erreur .-> J[Arrêt sans nouvelle publication]
+    C -. erreur .-> J
+```
+
+L’authentification initiale avec `app-id` a été validée. La branche de maintenance `fix/cms-sync-client-id` remplace ce paramètre par `client-id` associé à `CMS_SYNC_CLIENT_ID`, sans modifier `CMS_SYNC_PRIVATE_KEY`. Cette migration reste à tester sur GitHub Actions. Conserver `CMS_SYNC_APP_ID` tant que le workflow déployé en a besoin, puis supprimer cette ancienne variable après validation.
+
+Les détails d’authentification, de permissions, de rotation des clés et de diagnostic figurent dans `docs/CI_CD.md`.
+
+### 13.12. Tests automatisés de non-régression
+
+Les tests utilisent `node:test` et `tsx`, sans dépendre de Payload Production.
+
+| Fichier | Périmètre |
+|---|---|
+| `scripts/tests/persistence.test.ts` | Préservation du snapshot original et nettoyage après échec de préparation du deuxième fichier |
+| `scripts/tests/check-cms-sync-changes.test.ts` | Six scénarios de contrôle Git dans un dépôt temporaire, avec vérification de `GITHUB_OUTPUT` |
+
+| ID | Scénario de liste blanche | Résultat |
+|---|---|---|
+| WL01 | Dépôt propre | Accepté |
+| WL02 | Snapshot déclaré modifié | Accepté |
+| WL03 | Fichier non autorisé modifié | Refusé |
+| WL04 | Fichier non suivi | Refusé |
+| WL05 | Snapshot supprimé | Refusé |
+| WL06 | Snapshot indexé | Refusé |
+
+La commande `pnpm cms:test` exécute les deux tests automatisés et est intégrée à `Quality Checks`. Les tests HTTP et de pagination ont été exécutés manuellement avec des serveurs simulés. Les suites de tests de rendu (§ 9), du validateur CMS-03 (§ 12) et de synchronisation (§ 13.8) utilisent chacune leur propre numérotation Txx.
+
+### 13.13. Limites et perspectives
+
+- **Fraîcheur :** les snapshots embarqués ne sont actualisés qu’après fusion et déploiement. L’exécution quotidienne ne garantit pas une actualisation quotidienne en production.
+- **Retrait :** un contenu dépublié peut encore apparaître depuis un ancien snapshot si le CMS est indisponible. CMS-06 doit définir une politique de retrait adaptée.
+- **Cohérence :** les contrôles de pagination ne garantissent pas une lecture transactionnelle à un instant donné en cas de modifications concurrentes.
+- **Pagination au rendu :** la récupération exhaustive est implémentée dans le script de synchronisation, pas dans l’adaptateur runtime des FAQ (limite actuelle : 100 documents).
+- **Validation :** les schémas vérifient les types et contraintes déclarés, pas la pertinence éditoriale ni la langue réelle des textes. Les deux locales sont demandées explicitement.
+- **Persistance :** pas de transaction atomique globale ni de rollback automatique des fichiers en cas d’échec pendant les renommages.
+- **Supervision :** pas de système externe d’alerte sur les échecs ou la fraîcheur des snapshots (CMS-04).
+- **Last Known Good :** pas de stockage indépendant des snapshots versionnés (CMS-07).
+- **Couverture :** Contact et FAQ uniquement ; les médias, relations et structures complexes nécessitent des contrats propres. Les tests automatisés ne couvrent pas encore tous les scénarios manuels.
+
+### 13.14. État de validation et bilan de recette
+
+**Date de la recette initiale : 27 novembre 2026.** Les tests locaux, la CI, la fusion dans `dev` puis dans `main` et les exécutions manuelles du workflow ont été confirmés par le développeur.
+
+| ID | Scénario d’intégration | Statut |
+|---|---|---|
+| INT01 | Exécution du workflow sur GitHub Actions | Validé |
+| INT02 | Synchronisation sans modification | Validé |
+| INT03 | Authentification GitHub App avec App ID | Validé |
+| INT04 | Création automatique d’une PR | Validé |
+| INT05 | Déclenchement automatique de la CI | Validé |
+| INT06 | Actualisation d’une PR existante | Validé |
+| INT07 | Fermeture automatique d’une PR obsolète | Validé après retest |
+| INT08 | Échec de synchronisation sans publication | Validé selon le retour de recette ; erreur ECONNREFUSED observée |
+| INT09 | Déclenchement quotidien planifié | À valider |
+| INT10 | Fusion effective d’une PR automatique | Validé — PR #56 |
+| INT11 | Authentification GitHub App avec Client ID | À valider |
+
+La recette a identifié une inversion des contenus des sections `hero` et `faqSection` dans le snapshot espagnol de Contact par rapport à la version correcte dans Payload. Les deux titres et les deux descriptions ont été corrigés via la PR automatique #56, fusionnée dans `dev`. Un nouveau dry-run a confirmé quatre snapshots inchangés. Cette correction illustre la distinction entre conformité structurelle et exactitude éditoriale. Sa livraison vers `main` reste à réaliser.
+
+Le retest INT07, effectué après réalignement des snapshots, a confirmé la fermeture automatique de la PR. Le test INT08 a simulé une connexion refusée sur un runner GitHub, sans arrêter Payload Production ; la branche temporaire a été nettoyée.
+
+La clôture de CMS-02 reste conditionnée à la livraison corrective (snapshot ES, migration d’authentification et documentation), à la réussite d’INT11 avec génération effective d’un token, au retrait de la variable obsolète et à la confirmation d’INT09. Une exécution sans modification ne suffit pas à valider INT11, puisque la génération du token est alors ignorée en l’absence de PR ouverte.
+
+## 14. Références
+
+- `CONTACT_PAGE.md` : implémentation réelle de référence et maintenance des snapshots.
+- `tiaki-backoffice/docs/CONTACT_GLOBAL.md` : modèle de données Contact, droits, API et import.
+- `tiaki-backoffice/docs/CMS_ARCHITECTURE.md` : standard de modélisation proposé.
+- `tiaki-backoffice/docs/DEPLOYMENT.md` : runbook de livraison.
+- [Next.js — Fetch API](https://nextjs.org/docs/app/api-reference/functions/fetch)
+- [Next.js — Server and Client Components](https://nextjs.org/docs/app/getting-started/server-and-client-components)
+- [Zod — Documentation](https://zod.dev/)
+- [Payload — REST API](https://payloadcms.com/docs/rest-api/overview)
+- [Payload — Localization](https://payloadcms.com/docs/configuration/localization)
+- `CI_CD.md` : automatisation, authentification, permissions et recette des workflows.
+- [GitHub — Create GitHub App Token](https://github.com/actions/create-github-app-token)
+- [Create Pull Request Action](https://github.com/peter-evans/create-pull-request)
+- [Node.js — Test runner](https://nodejs.org/api/test.html)
+
+Ce document consolide le standard initial et les retours de développement et de recette communiqués au 27 novembre 2026. Le dépôt Git et les workflows n’ont pas été inspectés directement lors de cette révision. Les exemples relatifs aux futures pages restent des propositions.
