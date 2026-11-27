@@ -1,113 +1,84 @@
 {
   "docs": [
     {
-      "id": 2,
+      "id": 1,
       "key": "about",
       "question": "¿Qué es T-IA-KI?",
       "answer": "T-IA-KI es un proyecto de plataforma digital diseñado para apoyar a las personas cuidadoras, facilitándoles el acceso a información, recursos y herramientas útiles para el día a día.",
       "displayOrder": 1,
-      "published": true,
-      "updatedAt": "2026-11-03T15:24:50.958Z",
-      "createdAt": "2026-11-03T11:02:18.811Z"
+      "published": true
     },
     {
-      "id": 3,
+      "id": 2,
       "key": "audience",
       "question": "¿A quién se dirige T-IA-KI?",
       "answer": "T-IA-KI se dirige principalmente a las personas que cuidan de un familiar o ser querido que necesita ayuda, así como a los agentes implicados en su acompañamiento.",
       "displayOrder": 2,
-      "published": true,
-      "updatedAt": "2026-11-03T14:59:39.769Z",
-      "createdAt": "2026-11-03T14:53:23.271Z"
+      "published": true
     },
     {
-      "id": 4,
+      "id": 3,
       "key": "services",
       "question": "¿Qué servicios ofrece T-IA-KI?",
       "answer": "El proyecto contempla recursos informativos, herramientas para organizar la vida cotidiana y servicios de apoyo. La plataforma se encuentra actualmente en desarrollo",
       "displayOrder": 3,
-      "published": true,
-      "updatedAt": "2026-11-03T14:59:53.902Z",
-      "createdAt": "2026-11-03T14:53:51.039Z"
+      "published": true
     },
     {
-      "id": 5,
+      "id": 4,
       "key": "participation",
       "question": "¿Cómo puedo participar en el proyecto T-IA-KI?",
       "answer": "El proyecto cuenta con la participación de personas cuidadoras y profesionales en talleres y pruebas con usuarios. Las modalidades de participación se comunicarán a medida que avance el proyecto",
       "displayOrder": 4,
-      "published": true,
-      "updatedAt": "2026-11-03T15:00:07.367Z",
-      "createdAt": "2026-11-03T14:55:03.103Z"
+      "published": true
     },
     {
-      "id": 6,
+      "id": 5,
       "key": "caregiver-participation",
       "question": "¿Cómo pueden contribuir las personas cuidadoras al proyecto?",
       "answer": "Las personas cuidadoras pueden contribuir al desarrollo de la plataforma compartiendo sus experiencias, necesidades y expectativas. Estas aportaciones permiten comprender mejor su realidad cotidiana y orientar el diseño de los servicios",
       "displayOrder": 5,
-      "published": true,
-      "updatedAt": "2026-11-03T15:00:24.648Z",
-      "createdAt": "2026-11-03T14:55:26.137Z"
+      "published": true
     },
     {
-      "id": 7,
+      "id": 6,
       "key": "professional-participation",
       "question": "¿Pueden participar profesionales y organizaciones?",
       "answer": "Sí, sus conocimientos y su experiencia práctica pueden enriquecer el proyecto. Pueden contribuir al intercambio de ideas sobre las necesidades de las personas cuidadoras, los recursos útiles y las posibilidades de colaboración",
       "displayOrder": 6,
-      "published": true,
-      "updatedAt": "2026-11-03T15:00:42.295Z",
-      "createdAt": "2026-11-03T14:55:54.715Z"
+      "published": true
     },
     {
-      "id": 8,
+      "id": 7,
       "key": "platform-testing",
       "question": "¿Es posible participar en las pruebas de la plataforma?",
       "answer": "La evaluación de prototipos y recorridos de usuario forma parte de las modalidades de participación previstas. Las condiciones de participación y el calendario de las pruebas aún están por definir según el avance del proyecto",
       "displayOrder": 7,
-      "published": true,
-      "updatedAt": "2026-11-03T15:01:01.108Z",
-      "createdAt": "2026-11-03T14:56:21.381Z"
+      "published": true
     },
     {
-      "id": 9,
+      "id": 8,
       "key": "languages",
       "question": "¿En qué idiomas está disponible el sitio web de T·IA·KI?",
       "answer": "El sitio web de T·IA·KI está disponible en francés y español. Puedes cambiar de idioma mediante el selector situado en la navegación",
       "displayOrder": 8,
-      "published": true,
-      "updatedAt": "2026-11-03T15:01:19.063Z",
-      "createdAt": "2026-11-03T14:56:52.395Z"
+      "published": true
     },
     {
-      "id": 10,
+      "id": 9,
       "key": "website-platform",
       "question": "¿Cuál es la diferencia entre el sitio web y la plataforma T·IA·KI?",
       "answer": "El sitio web presenta el proyecto T·IA·KI, sus objetivos y sus recursos públicos. La plataforma tiene como objetivo ofrecer servicios digitales para acompañar a las personas cuidadoras en su vida cotidiana. Sus funcionalidades evolucionarán a medida que avance el proyecto",
       "displayOrder": 9,
-      "published": true,
-      "updatedAt": "2026-11-03T15:01:36.775Z",
-      "createdAt": "2026-11-03T14:57:15.633Z"
+      "published": true
     },
     {
-      "id": 11,
+      "id": 10,
       "key": "account-required",
       "question": "¿Es necesario crear una cuenta para consultar la información del sitio web?",
       "answer": "No. Las páginas públicas del sitio web son accesibles sin registrarse. Algunos servicios de la futura plataforma podrán requerir el acceso mediante una cuenta personal",
       "displayOrder": 10,
-      "published": true,
-      "updatedAt": "2026-11-03T15:01:56.927Z",
-      "createdAt": "2026-11-03T14:57:45.160Z"
+      "published": true
     }
-  ],
-  "hasNextPage": false,
-  "hasPrevPage": false,
-  "limit": 100,
-  "nextPage": null,
-  "page": 1,
-  "pagingCounter": 1,
-  "prevPage": null,
-  "totalDocs": 10,
-  "totalPages": 1
+  ]
 }

@@ -9,6 +9,7 @@ export type CmsContentDefinition = {
   schema: ZodType
   query?: Record<string, string>
   snapshotPaths: Record<"fr" | "es", string>
+  kind: "global" | "collection"
 }
 
 export const cmsRegistry = {
@@ -19,6 +20,7 @@ export const cmsRegistry = {
       fr: "lib/contact/fallback.fr.json",
       es: "lib/contact/fallback.es.json",
     },
+    kind: "global",
   },
 
   faqs: {
@@ -26,13 +28,14 @@ export const cmsRegistry = {
     schema: faqResponseSchema,
     query: {
       "where[published][equals]": "true",
-      sort: "displayOrder",
+      sort: "displayOrder,id",
       limit: "100",
     },
     snapshotPaths: {
       fr: "lib/contact/faq-fallback.fr.json",
       es: "lib/contact/faq-fallback.es.json",
     },
+    kind: "collection",
   },
 } satisfies Record<string, CmsContentDefinition>
 

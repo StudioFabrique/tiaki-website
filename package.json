@@ -10,7 +10,9 @@
     "lint": "eslint",
     "format": "prettier --write \"**/*.{ts,tsx}\"",
     "typecheck": "tsc --noEmit",
-    "cms:validate": "tsx scripts/validate-cms-fallbacks.ts"
+    "cms:validate": "tsx scripts/validate-cms-fallbacks.ts",
+    "cms:sync": "tsx scripts/sync-cms-fallbacks.ts",
+    "cms:test": "tsx --test scripts/tests/*.test.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.8.0",
