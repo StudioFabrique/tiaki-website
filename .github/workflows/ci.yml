@@ -50,5 +50,8 @@ jobs:
       - name: ESLint validation
         run: pnpm lint
 
+      - name: CMS regression tests
+        run: pnpm cms:test
+
       - name: Build and CMS fallback validation
         run: pnpm build

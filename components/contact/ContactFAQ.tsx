@@ -45,7 +45,7 @@ export function ContactFAQ({ content, questions }: ContactFAQProps) {
                 <Accordion key={index} className="flex min-w-0 flex-col gap-3">
                   {column.map((item) => (
                     <AccordionItem
-                      key={item.id}
+                      key={item.key}
                       value={item.key}
 
                       className="rounded-xl border border-border bg-background px-4 transition-colors duration-200 focus-within:border-primary/60 hover:border-primary/40 motion-reduce:transition-none"

@@ -1,0 +1,112 @@
+
+name: CMS - Fallback Synchronization
+
+on:
+  schedule:
+    - cron: "17 5 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: cms-fallback-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    name: Synchronize CMS Fallbacks
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    env:
+      TIAKI_BACKOFFICE_URL: https://backoffice.tiaki.step.eco
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          ref: dev
+          persist-credentials: false
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          version: "12.11.2"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24.22.1"
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Synchronize CMS fallbacks
+        run: pnpm cms:sync
+
+      - name: Validate CMS fallbacks
+        run: pnpm cms:validate
+
+      - name: Detect and validate snapshot changes
+        id: changes
+        run: pnpm exec tsx scripts/check-cms-sync-changes.ts
+
+      # détection des Pull Requests existantes
+      - name: Check existing CMS pull request
+        id: existing-pr
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          exists=$(gh api --method GET \
+            "repos/${GITHUB_REPOSITORY}/pulls" \
+            -f state=open \
+            -f base=dev \
+            -f head="${GITHUB_REPOSITORY_OWNER}:automation/cms-fallback-sync" \
+            --jq 'length > 0')
+
+          echo "Existing CMS pull request: $exists"
+          echo "exists=$exists" >> "$GITHUB_OUTPUT"
+
+
+      - name: Generate GitHub App token
+        if: steps.changes.outputs.changed == 'true' || steps.existing-pr.outputs.exists == 'true'
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ vars.CMS_SYNC_APP_ID }}
+          private-key: ${{ secrets.CMS_SYNC_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+
+      - name: Create or update CMS synchronization pull request
+        if: steps.changes.outputs.changed == 'true' || steps.existing-pr.outputs.exists == 'true'
+        id: cms-pr
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          branch: automation/cms-fallback-sync
+          base: dev
+          delete-branch: true
+          sign-commits: true
+          commit-message: "chore(cms): synchronize fallback snapshots"
+          title: "chore(cms): synchronize fallback snapshots"
+          body: |
+            ## CMS Fallback Synchronization
+
+            Automated synchronization of TIAKI website fallback snapshots
+            from Payload CMS Production.
+
+            ### Automated checks
+            - Remote content validation
+            - Pagination integrity
+            - Local snapshot validation
+            - Authorized file changes
+
+            This pull request requires review before merging.
+
+
+     

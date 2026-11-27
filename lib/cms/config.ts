@@ -1,6 +1,6 @@
 
 export const CMS_REQUEST_TIMEOUT_MS = 5_000
-
+export const CMS_MAX_PAGINATION_PAGES = 100
 export const CMS_FALLBACK_LOCALE = "none"
 
 export function getCmsBaseUrl(): URL {
