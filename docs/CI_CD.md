@@ -1,714 +1,472 @@
-# CI/CD — T-IA-KI Website
+# CI/CD - T-IA-KI Website
 
-## 1. Objectifs
+**Dépôt :** `StudioFabrique/tiaki-website`  
+**Emplacement :** `docs/CI_CD.md`  
+**Version :** 1.1 — 27 novembre 2026  
+**Statut :** CI et synchronisation CMS opérationnelles ; recette du déclenchement planifié et de la migration vers `client-id` à finaliser.
 
-La stratégie CI/CD du site T-IA-KI vise à garantir :
+## 1. Objectifs et périmètre
 
-- La qualité et la stabilité du code source.
-- La reproductibilité des builds.
-- L'intégrité des contenus de fallback.
-- La détection des anomalies avant leur intégration.
-- La sécurisation des branches d'intégration et de production.
-- La séparation des environnements de développement, de recette et de production.
-- La traçabilité des modifications et des déploiements.
+La stratégie CI/CD du site T-IA-KI vise à garantir la qualité du code, la reproductibilité des builds, l'intégrité des snapshots de secours, la détection des régressions avant livraison et la traçabilité des modifications. Elle sépare les environnements de développement, de recette et de production et protège les branches d'intégration et de production.
+
+L'automatisation CMS complète cette stratégie : elle maintient les contenus de secours en cohérence avec Payload CMS, sans contourner les contrôles qualité ni le processus de validation humaine. Elle évite les publications inutiles lorsque les contenus n'ont pas changé.
+
+Ce document couvre le site web public. Le back-office Payload possède son propre processus de CI/CD, de publication Docker et de déploiement OVH, décrit dans `tiaki-backoffice/docs/DEPLOYMENT.md`.
 
 ## 2. Architecture générale
 
-Le processus CI/CD repose sur deux services complémentaires :
-
 | Service | Responsabilité |
 |---|---|
-| GitHub Actions | Intégration continue et contrôles de qualité. |
-| Vercel | Construction, livraison continue et hébergement du site. |
+| GitHub Actions | Intégration continue, tests et synchronisation CMS. |
 | GitHub Rulesets | Protection des branches et application des règles de fusion. |
+| GitHub App TIAKI CMS Sync | Identité dédiée aux opérations Git d'écriture de la synchronisation. |
+| Vercel | Construction, livraison continue et hébergement du site. |
+| Payload CMS | Source éditoriale de référence des contenus publics. |
 
-GitHub Actions et Vercel disposent de leurs propres environnements d'exécution. Aucun déploiement n'est directement effectué depuis GitHub Actions.
+GitHub Actions et Vercel disposent d'environnements d'exécution distincts. Les workflows actuels ne déploient pas directement le site sur Vercel : le déploiement est piloté par l'intégration Git de Vercel.
+
+```mermaid
+flowchart TD
+    CMS[Payload CMS Production] --> SYNC[GitHub Actions - Synchronisation CMS]
+    DEV[Branche dev] --> SYNC
+    SYNC --> CHECK{Validation et contrôle Git réussis ?}
+    CHECK -->|Non| FAIL[Échec sans publication issue de cette étape]
+    CHECK -->|Oui| DEC{Changement ou PR existante ?}
+    DEC -->|Non| END[Fin sans écriture]
+    DEC -->|Oui| APP[Token temporaire GitHub App]
+    APP --> PR[Création, actualisation ou fermeture de la PR CMS]
+    PR -->|PR à intégrer| CI[Quality Checks et recette Preview]
+    CI -->|Contrôles réussis et fusion humaine| DEV
+    DEV --> RELEASE[PR de livraison vers main]
+    RELEASE -->|Contrôles réussis et fusion humaine| MAIN[Branche main]
+    MAIN --> VERCEL[Vercel Production]
+```
+
+Une synchronisation réussie ne signifie pas que les snapshots ont déjà été déployés en production. La fusion dans `dev`, la livraison dans `main` et le succès du déploiement restent nécessaires.
 
 ## 3. Environnement technique
 
-| Composant | Technologie |
+| Composant | Technologie ou configuration |
 |---|---|
 | Framework | Next.js |
 | Langage | TypeScript |
-| Runtime | Node.js |
-| Gestionnaire de dépendances | pnpm |
+| Runtime CI | Node.js 24.22.1 |
+| Gestionnaire de dépendances | pnpm 12.11.2 |
 | Analyse statique | ESLint |
-| Validation des données | Zod |
+| Validation de données | Zod |
 | Exécution des scripts TypeScript | tsx |
+| Tests CMS | `node:test` |
 | Gestion du code source | GitHub |
-| Intégration continue | GitHub Actions |
+| Runner de synchronisation | `ubuntu-latest` |
 | Livraison continue | Vercel |
 
-Les versions des outils utilisées par la CI sont déclarées dans le workflow et les fichiers de configuration du projet.
+Les versions indiquées correspondent à la configuration de référence de la recette du 27 novembre 2026. Les workflows et le champ `packageManager` de `package.json`, lorsqu'il existe, font foi. Les versions utilisées par les workflows CI et CMS doivent rester cohérentes. L'installation utilise `pnpm install --frozen-lockfile` et les autorisations explicites de scripts de compilation définies dans le projet.
 
 ## 4. Stratégie de branches
 
-### Branche `main`
+| Branche | Responsabilité |
+|---|---|
+| `main` | Branche par défaut et référence des déploiements de production. |
+| `dev` | Branche d'intégration, base de synchronisation des snapshots. |
+| `feature/*` | Développement de fonctionnalités. |
+| `fix/*` | Correction d'anomalies. |
+| `hotfix/*` | Correction urgente ; réintégrer dans `dev` toute correction livrée directement en production. |
+| `docs/*` | Mise à jour documentaire. |
+| `automation/cms-fallback-sync` | Branche exclusivement réservée aux PR automatiques de synchronisation. |
+| `test/*` | Branches temporaires de recette isolée, à nettoyer après validation. |
 
-Branche de production contenant les versions stables et validées du site.
+Flux standard : `feature/*` → PR vers `dev` → recette → PR vers `main` → production.
 
-Toute intégration dans cette branche doit passer par une Pull Request et satisfaire les contrôles de qualité obligatoires.
+Flux CMS : Payload → synchronisation sur un checkout de `dev` → branche d'automatisation → PR vers `dev` → contrôles et fusion humaine → PR vers `main` → Vercel Production.
 
-### Branche `dev`
-
-Branche d'intégration permettant de regrouper les développements, de réaliser les tests fonctionnels et de préparer les prochaines versions.
-
-### Branches `feature/*`
-
-Branches temporaires dédiées au développement de nouvelles fonctionnalités.
-
-### Branches `fix/*`
-
-Branches temporaires dédiées à la correction d'anomalies.
-
-### Branches `hotfix/*`
-
-Branches destinées aux corrections urgentes. Toute correction intégrée directement en production doit également être réintégrée dans `dev`.
-
-### Flux standard de livraison
-
-`feature/* → Pull Request → dev → Recette → Pull Request → main → Production`
+Le workflow de synchronisation planifié est défini sur `main` mais récupère explicitement `dev`. Aucun push direct vers `dev` ou `main` ni aucune fusion automatique ne sont configurés dans ce workflow. Ne pas utiliser la branche d'automatisation pour des développements manuels : l'action de gestion des PR peut réécrire son historique ou la supprimer.
 
 ## 5. Intégration continue — GitHub Actions
 
-### 5.1. Configuration
+### 5.1. Organisation et déclenchement
 
-Le workflow est défini dans :
-
-`.github/workflows/ci.yml`
-
-Nom du workflow : `CI - TIAKI Website`
-
-Nom du job : `Quality Checks`
-
-### 5.2. Déclenchement
-
-Le pipeline est exécuté automatiquement lors des événements suivants :
-
-- Création ou mise à jour d'une Pull Request ciblant `dev` ou `main`.
-- Push sur les branches `dev` et `main`.
-- Déclenchement manuel depuis GitHub Actions, lorsque le workflow est disponible sur la branche par défaut.
-
-### 5.3. Étapes du pipeline
-
-| Ordre | Étape | Responsabilité |
+| Workflow | Fichier | Responsabilité |
 |---|---|---|
-| 1 | Checkout repository | Récupération du code source. |
+| CI - TIAKI Website | `.github/workflows/ci.yml` | Contrôles qualité et build. |
+| CMS - Fallback Synchronization | `.github/workflows/sync-cms-fallbacks.yml` | Synchronisation et gestion des PR CMS. |
+
+Le workflow CI comporte le job obligatoire `Quality Checks`. Il est déclenché par les Pull Requests ciblant `dev` ou `main`, les push sur ces deux branches et les demandes manuelles (`workflow_dispatch`). Les PR automatiques de la GitHub App sont soumises aux mêmes contrôles que les PR humaines.
+
+### 5.2. Étapes du pipeline Quality Checks
+
+| Ordre | Étape | Commande ou responsabilité |
+|---|---|---|
+| 1 | Checkout repository | Récupération du code ; `persist-credentials: false`. |
 | 2 | Setup pnpm | Configuration du gestionnaire de dépendances. |
-| 3 | Setup Node.js | Configuration du runtime Node.js et du cache pnpm. |
-| 4 | Install dependencies | Installation reproductible des dépendances. |
-| 5 | Generate Next.js types | Génération des types spécifiques à Next.js. |
-| 6 | TypeScript validation | Vérification de la conformité des types. |
-| 7 | ESLint validation | Analyse statique du code source. |
-| 8 | Build and CMS fallback validation | Validation des snapshots CMS et compilation de production. |
+| 3 | Setup Node.js | Configuration du runtime et du cache pnpm. |
+| 4 | Install dependencies | `pnpm install --frozen-lockfile` |
+| 5 | Generate Next.js types | `pnpm exec next typegen` |
+| 6 | TypeScript validation | `pnpm exec tsc --noEmit` |
+| 7 | ESLint validation | `pnpm lint` |
+| 8 | CMS regression tests | `pnpm cms:test` |
+| 9 | Build and CMS fallback validation | `pnpm build` |
 
-### 5.4. Commandes exécutées
+L'échec d'une étape obligatoire entraîne l'échec du job. Les tests CMS automatisés ne nécessitent aucune connexion à Payload. Le workflow CI utilise un `GITHUB_TOKEN` limité à `contents: read`.
 
-| Commande | Responsabilité |
-|---|---|
-| `pnpm install --frozen-lockfile` | Installation des dépendances sans modification du lockfile. |
-| `pnpm exec next typegen` | Génération des types Next.js. |
-| `pnpm exec tsc --noEmit` | Vérification TypeScript sans génération de fichiers JavaScript. |
-| `pnpm lint` | Analyse statique du code. |
-| `pnpm build` | Validation CMS et compilation du site. |
+### 5.3. Contrôles locaux avant une PR
 
-L'échec d'une étape obligatoire interrompt le pipeline et entraîne l'échec du job `Quality Checks`.
+```bash
+pnpm cms:test && \
+pnpm cms:validate && \
+pnpm exec next typegen && \
+pnpm exec tsc --noEmit && \
+pnpm lint && \
+pnpm build
+```
 
-## 6. Protection des branches
+Pour le détail des contrats de données et des tests CMS, consulter `docs/CMS_INTEGRATION.md`.
 
-Les branches `dev` et `main` sont soumises à une politique de protection GitHub Rulesets.
+## 6. Protection des branches et gouvernance
 
-Nom du Ruleset : `TIAKI Website - Quality Gate`
-
-### Règles de protection
+Le Ruleset `TIAKI Website - Quality Gate` protège `dev` et `main`.
 
 | Règle | Objectif |
 |---|---|
 | Restrict deletions | Empêcher la suppression des branches protégées. |
-| Block force pushes | Empêcher la réécriture forcée de l'historique Git. |
-| Require a pull request before merging | Imposer l'intégration via une Pull Request. |
-| Require status checks to pass | Imposer la réussite des contrôles CI. |
-| Require branches to be up to date before merging | Garantir la validation du code par rapport à la branche cible actualisée. |
+| Block force pushes | Empêcher la réécriture forcée de leur historique. |
+| Require a pull request before merging | Imposer l'intégration via une PR. |
+| Require status checks to pass | Imposer la réussite des contrôles obligatoires. |
+| Require branches to be up to date before merging | Valider le code par rapport à la branche cible actualisée. |
 
-Le contrôle obligatoire est le job `Quality Checks`.
+Le contrôle obligatoire est `Quality Checks`. Le nombre minimal d'approbations formelles est actuellement fixé à zéro, conformément à l'organisation initiale de l'équipe. La revue et la décision humaine de fusion constituent une règle de travail, et non une exigence technique d'approbation par une deuxième personne. La GitHub App ne bénéficie d'aucune autorisation de contournement du Ruleset.
 
-Le nombre minimal d'approbations humaines obligatoires est initialement fixé à zéro afin de permettre le fonctionnement avec une équipe de développement restreinte.
-
-Cette configuration pourra évoluer avec l'organisation de l'équipe.
+Vérifier le résultat du contrôle sur le dernier commit de la PR, ainsi que l'absence de conflit et le périmètre du diff, avant toute fusion. Le contrôle Vercel Preview est également vérifié dans le processus de recette ; il n'est pas établi ici qu'il soit configuré comme contrôle bloquant dans le Ruleset.
 
 ## 7. Livraison continue — Vercel
 
-Vercel assure la construction et le déploiement du site indépendamment du workflow GitHub Actions.
+### 7.1. Environnements
 
-### Environnement Preview
+- **Preview :** recette fonctionnelle, responsive design, validation des contenus FR/ES et des intégrations CMS, partage des versions intermédiaires avec les parties prenantes.
+- **Production :** déploiement depuis `main`, après fusion d'une PR de livraison.
 
-Les déploiements Preview permettent de :
+Le push d'une branche d'automatisation ou de test peut générer un déploiement Preview selon les paramètres Vercel. Il ne constitue pas un déploiement de production.
 
-- Vérifier les nouvelles fonctionnalités.
-- Réaliser les tests fonctionnels.
-- Contrôler les interfaces et le responsive design.
-- Vérifier les contenus français et espagnols.
-- Tester les intégrations avec le CMS.
-- Partager les versions intermédiaires avec les parties prenantes.
-
-### Environnement Production
-
-La branche `main` constitue la branche de référence pour les déploiements de production.
-
-La fusion d'une Pull Request vers `main` déclenche le processus de construction et de déploiement configuré dans Vercel.
-
-### Variables d'environnement
-
-Les variables d'environnement doivent être configurées selon l'environnement cible.
+### 7.2. Variables d'environnement
 
 | Variable | Responsabilité |
 |---|---|
-| `TIAKI_BACKOFFICE_URL` | Adresse du back-office Payload CMS utilisé par le site. |
+| `TIAKI_BACKOFFICE_URL` | Adresse du back-office Payload utilisé par le site. |
 
-Les secrets et les paramètres sensibles ne doivent jamais être versionnés dans le dépôt Git.
+Configurer les variables pour chaque environnement Vercel concerné. La Preview a utilisé le CMS de production lors de la recette Contact ; elle ne constitue donc pas une préproduction CMS indépendante. Les essais destructifs doivent utiliser un CMS local ou isolé.
 
-## 8. Validation des snapshots CMS
+Les secrets et les paramètres sensibles ne doivent jamais être versionnés. Les identifiants GitHub App sont destinés à GitHub Actions, pas à Vercel ni au navigateur.
 
-Le site embarque des snapshots JSON permettant d'assurer la continuité d'affichage des contenus éditoriaux lorsque le CMS est indisponible.
+## 8. Validation et intégrité des snapshots — CMS-03
 
-La commande suivante permet de vérifier leur intégrité :
+Le site embarque des snapshots JSON permettant un rendu de secours lorsque Payload est indisponible ou retourne des données non conformes, selon la politique du modèle de contenu.
 
-`pnpm cms:validate`
-
-Cette validation est intégrée directement à la commande de build :
-
-`pnpm cms:validate && next build`
-
-En cas d'erreur, la compilation Next.js n'est pas exécutée.
-
-Ce mécanisme constitue une barrière de protection commune aux trois environnements :
-
-| Environnement | Validation CMS |
+| Commande | Responsabilité |
 |---|---|
-| Développement local | Oui, lors de `pnpm build` ou sur demande. |
-| GitHub Actions | Oui, pendant le build CI. |
-| Vercel | Oui, pendant le build de déploiement. |
+| `pnpm cms:validate` | Validation de tous les snapshots déclarés dans `cmsRegistry`, sans accès réseau. |
+| `pnpm cms:test` | Tests automatisés de non-régression CMS. |
+| `pnpm build` | Validation des snapshots, puis compilation Next.js. |
 
-Pour davantage d'informations, consulter `docs/CMS_INTEGRATION.md`.
+La commande de build est `pnpm cms:validate && next build`. En cas de snapshot absent, illisible, malformé ou non conforme au schéma Zod, la compilation n'est pas exécutée. Le contrôle s'applique aux builds locaux, à GitHub Actions et à Vercel lorsque le script de build du projet est utilisé.
 
-## 9. Processus standard de développement
+La validation garantit la conformité au contrat de données, pas la fraîcheur, la justesse éditoriale ou la langue réelle des textes. Les deux tests automatisés actuels couvrent la persistance et la liste blanche Git ; ils ne constituent pas une suite exhaustive de tests de toutes les pages ou de tous les cas de résilience.
 
-1. Créer une branche de développement depuis `dev`.
-2. Développer et tester la fonctionnalité.
-3. Exécuter les contrôles locaux.
-4. Effectuer un commit documenté.
-5. Pousser la branche sur GitHub.
-6. Créer une Pull Request vers `dev`.
-7. Vérifier les résultats de GitHub Actions.
-8. Vérifier le déploiement Vercel Preview.
-9. Fusionner la Pull Request.
-10. Effectuer la recette fonctionnelle.
-11. Créer une Pull Request de `dev` vers `main`.
-12. Vérifier les contrôles de qualité.
-13. Fusionner et vérifier le déploiement de production.
+## 9. Automatisation de la synchronisation — CMS-02
 
-## 10. Gestion des incidents
-
-| Incident | Action recommandée |
-|---|---|
-| Échec de TypeScript | Identifier et corriger les erreurs de typage. |
-| Échec ESLint | Corriger les anomalies signalées. |
-| Échec de validation CMS | Identifier le snapshot et les champs invalides. |
-| Échec du build Next.js | Analyser les logs de compilation. |
-| Échec d'installation pnpm | Vérifier les dépendances, le lockfile et les autorisations des scripts de compilation. |
-| Échec du déploiement Vercel | Analyser les logs et vérifier la configuration de l'environnement. |
-| Régression en production | Identifier la dernière version stable et appliquer une correction ou procéder à un rollback selon la nature de l'incident. |
-
-## 11. Sécurité
-
-Les mesures suivantes sont intégrées au processus CI/CD :
-
-- Permissions GitHub Actions limitées à la lecture du dépôt pour le workflow CI.
-- Désactivation de la persistance des identifiants Git après le checkout.
-- Protection des branches sensibles.
-- Installation des dépendances à partir d'un lockfile figé.
-- Autorisation explicite des scripts de compilation des dépendances qui en nécessitent.
-- Validation des données CMS avant compilation.
-- Séparation des variables d'environnement.
-- Absence de secrets dans le code source.
-
-Ces mesures contribuent à la sécurisation du processus de livraison, sans constituer à elles seules une garantie de sécurité complète.
-
-## 12. Évolutions prévues
-
-| Évolution | Objectif |
-|---|---|
-| Synchronisation automatique des snapshots CMS | Maintenir les fallbacks à jour. |
-| Déclenchement manuel des synchronisations | Permettre une actualisation à la demande. |
-| Supervision des synchronisations | Détecter les erreurs et les contenus obsolètes. |
-| Audit automatisé des dépendances | Identifier les vulnérabilités connues. |
-| Tests unitaires | Vérifier automatiquement les composants et fonctions. |
-| Tests d'intégration | Vérifier les interactions entre les différents modules. |
-| Tests end-to-end | Vérifier automatiquement les parcours utilisateurs. |
-| Analyse de sécurité automatisée | Renforcer la sécurité de la chaîne de livraison. |
-
-## 13. Limites actuelles
-
-- Les tests fonctionnels CMS sont actuellement réalisés manuellement.
-- Aucun audit automatisé des dépendances n'est encore intégré au workflow CI.
-- Aucun test end-to-end automatisé n'est actuellement exécuté par ce workflow.
-- La fraîcheur des snapshots par rapport au CMS n'est pas encore contrôlée.
-- Les contrôles GitHub Actions ne vérifient pas la disponibilité fonctionnelle du back-office.
-- L'application effective des règles de protection doit être vérifiée lors des opérations de fusion.
-
-## 14. Documents associés
-
-- `docs/CMS_INTEGRATION.md` — Architecture et intégration du CMS.
-- `docs/CONTACT_PAGE.md` — Intégration des contenus de la page Contact.
-- `.github/workflows/ci.yml` — Configuration du pipeline CI.
-- `package.json` — Commandes de développement, de validation et de construction.
-
-**Projet : T-IA-KI**
-
-**Périmètre : tiaki-website**
-
-**Version : 1.0**
-
-**Date : 26 novembre 2026**
-
----
-
-## Automatisation de la synchronisation des snapshots CMS
-
-### 1. Objectif
-
-Le mécanisme d'automatisation de la synchronisation CMS permet de maintenir les snapshots JSON du site web T-IA-KI en cohérence avec les contenus éditoriaux publiés dans Payload CMS.
-
-Cette automatisation s'inscrit dans le processus CI/CD existant et respecte les règles de protection des branches, les contrôles qualité et la stratégie de mise en production du projet.
-
-Les principaux objectifs sont les suivants :
-
-- Automatiser la récupération et l'actualisation des contenus de secours.
-- Réduire les opérations manuelles de maintenance.
-- Garantir la conformité des contenus avant leur intégration.
-- Limiter les permissions accordées aux processus automatisés.
-- Assurer la traçabilité des modifications.
-- Maintenir une validation humaine avant la mise en production.
-- Éviter les Pull Requests et les déploiements inutiles.
-
-### 2. Organisation des workflows GitHub Actions
-
-| Workflow | Fichier | Responsabilité |
-|---|---|---|
-| CI - TIAKI Website | `.github/workflows/ci.yml` | Contrôles qualité, tests automatisés, validation des snapshots et compilation Next.js. |
-| CMS - Fallback Synchronization | `.github/workflows/sync-cms-fallbacks.yml` | Synchronisation des snapshots depuis Payload et gestion des Pull Requests automatiques. |
-
-Les deux workflows ont des responsabilités distinctes.
-
-Le workflow de synchronisation prépare et propose les modifications, tandis que le workflow CI vérifie leur conformité avant leur intégration dans les branches protégées.
-
-### 3. Déclenchement de la synchronisation
-
-Le workflow de synchronisation prend en charge deux modes de déclenchement.
-
-#### Exécution planifiée
-
-La synchronisation est configurée pour s'exécuter quotidiennement à 05 h 17 UTC.
+### 9.1. Déclenchements
 
 | Paramètre | Valeur |
 |---|---|
+| Événement planifié | `schedule` |
 | Expression CRON | `17 5 * * *` |
-| Fréquence | Quotidienne |
-| Fuseau horaire | UTC |
-| Heure en France et en Espagne continentale en hiver | 06 h 17 |
-| Heure en France et en Espagne continentale en été | 07 h 17 |
+| Fréquence | Quotidienne à 05 h 17 UTC |
+| Heure locale France / Espagne continentale | 06 h 17 en hiver, 07 h 17 en été |
+| Événement manuel | `workflow_dispatch` |
 
-L'heure planifiée correspond à l'heure théorique de déclenchement. GitHub Actions peut retarder l'exécution selon la disponibilité de son infrastructure.
+L'heure planifiée est indicative : l'exécution peut être retardée par GitHub Actions. Le workflow doit être présent sur la branche par défaut pour permettre les déclenchements planifiés et manuels. Les exécutions planifiées utilisent la définition du workflow de la branche par défaut.
 
-#### Exécution manuelle
+Pour une synchronisation à la demande : dépôt → Actions → **CMS - Fallback Synchronization** → **Run workflow** → sélectionner `main` → confirmer. Un lancement manuel depuis une branche temporaire est possible pour une recette contrôlée ; il utilise la définition de workflow de cette branche, mais le checkout interne demeure `dev` sauf modification explicite.
 
-Le déclenchement manuel est disponible grâce à l'événement `workflow_dispatch`.
+Le déclenchement manuel est opérationnel et a été testé. La première exécution réellement planifiée reste à observer (INT09). CMS-05 pourra couvrir les éventuelles évolutions du déclenchement manuel ; sa fonctionnalité de base existe déjà.
 
-Depuis le dépôt GitHub :
-
-1. Accéder à l'onglet Actions.
-2. Sélectionner le workflow CMS - Fallback Synchronization.
-3. Cliquer sur Run workflow.
-4. Sélectionner la branche de référence du workflow.
-5. Confirmer l'exécution.
-
-Ce mécanisme permet notamment de déclencher une synchronisation exceptionnelle sans attendre la prochaine exécution quotidienne.
-
-Le workflow doit être présent sur la branche par défaut du dépôt pour permettre son déclenchement planifié et manuel.
-
-### 4. Configuration de l'environnement d'exécution
+### 9.2. Configuration du job
 
 | Paramètre | Configuration |
 |---|---|
+| Job | `Synchronize CMS Fallbacks` |
 | Runner | `ubuntu-latest` |
-| Version Node.js | `24.22.1` |
-| Version pnpm | `12.11.2` |
-| Installation des dépendances | `pnpm install --frozen-lockfile` |
-| Durée maximale du job | 15 minutes |
-| Branche récupérée | `dev` |
+| Durée maximale | 15 minutes |
+| Checkout | `dev`, `persist-credentials: false` |
 | CMS distant | `https://backoffice.tiaki.step.eco` |
 | Groupe de concurrence | `cms-fallback-sync` |
-| Annulation de l'exécution en cours | Désactivée |
+| Annulation de l'exécution en cours | `cancel-in-progress: false` |
 
-Les versions de Node.js et pnpm doivent rester cohérentes avec celles utilisées par le workflow CI principal.
+Le groupe de concurrence empêche les exécutions simultanées du workflow au sein de ce groupe. Une exécution active n'est pas annulée au profit d'une nouvelle ; avec la configuration actuelle, toutes les demandes en attente ne sont pas nécessairement conservées dans une file FIFO. Cette protection ne verrouille ni les éditions dans Payload ni les fusions humaines dans GitHub.
 
-La gestion de la concurrence empêche plusieurs exécutions du workflow de synchronisation de fonctionner simultanément dans le même groupe.
+### 9.3. Cycle d'exécution
 
-Une exécution en cours n'est pas interrompue lorsqu'une nouvelle exécution est demandée. GitHub Actions ne garantit toutefois pas une file d'attente FIFO de toutes les demandes successives.
+| Ordre | Étape | Responsabilité |
+|---|---|---|
+| 1 | Checkout repository | Récupérer `dev`. |
+| 2 | Setup pnpm / Setup Node.js | Configurer les outils. |
+| 3 | Install dependencies | Installer avec le lockfile figé. |
+| 4 | Synchronize CMS fallbacks | Exécuter `pnpm cms:sync`. |
+| 5 | Validate CMS fallbacks | Exécuter `pnpm cms:validate`. |
+| 6 | Detect and validate snapshot changes | Contrôler les modifications Git ; produire `changed`. |
+| 7 | Check existing CMS pull request | Consulter les PR ouvertes ; produire `exists`. |
+| 8 | Generate GitHub App token | Générer conditionnellement le token d'écriture. |
+| 9 | Create or update CMS synchronization pull request | Réconcilier la branche et la PR CMS. |
+| 10 | Post-job cleanup | Révoquer le token généré. |
 
-### 5. Cycle d'exécution du workflow
+Une erreur lors de la récupération, de la validation ou du contrôle Git bloque les étapes de publication suivantes. Un échec pendant la publication elle-même peut cependant laisser un état distant partiellement modifié ; examiner la branche et la PR avant de relancer. Une PR ouverte par une exécution antérieure n'est pas automatiquement annulée par un échec réseau ultérieur.
 
-Le workflow réalise les opérations suivantes :
+La synchronisation et la validation complète des contenus sont détaillées dans `docs/CMS_INTEGRATION.md`.
 
-1. Récupération de la branche `dev`.
-2. Configuration de Node.js et pnpm.
-3. Installation des dépendances.
-4. Récupération et synchronisation des contenus depuis Payload.
-5. Validation des snapshots locaux.
-6. Contrôle du périmètre des modifications Git.
-7. Recherche d'une Pull Request de synchronisation déjà ouverte.
-8. Détermination de la nécessité d'une opération d'écriture sur GitHub.
-9. Génération conditionnelle d'un token d'installation GitHub App.
-10. Création, actualisation ou fermeture de la Pull Request de synchronisation.
-11. Révocation automatique du token d'installation à la fin du job.
+## 10. Authentification et permissions de la GitHub App
 
-En cas d'échec d'une étape de récupération, de validation ou de contrôle du périmètre, les étapes de publication des modifications ne sont pas exécutées.
-
-### 6. Stratégie de branches
-
-| Branche | Responsabilité |
-|---|---|
-| `main` | Branche de production et branche par défaut du dépôt. |
-| `dev` | Branche d'intégration et base de synchronisation des snapshots. |
-| `feature/*` | Branches de développement des fonctionnalités. |
-| `automation/cms-fallback-sync` | Branche réservée aux modifications automatiques des snapshots CMS. |
-
-Le workflow planifié est défini sur la branche par défaut `main`, mais récupère explicitement la branche `dev` pour effectuer la synchronisation.
-
-Les modifications générées sont proposées à travers une Pull Request depuis `automation/cms-fallback-sync` vers `dev`.
-
-Le processus de livraison suit le parcours suivant :
-
-Payload CMS → GitHub Actions → Branche d'automatisation → Pull Request vers `dev` → Contrôles qualité → Fusion humaine → Pull Request vers `main` → Déploiement Vercel.
-
-Aucun push direct vers `dev` ou `main` n'est effectué par le workflow de synchronisation.
-
-La fusion automatique des Pull Requests ne fait pas partie du mécanisme actuel.
-
-### 7. Authentification GitHub App
-
-#### 7.1. Présentation
-
-Une GitHub App dédiée a été créée afin de permettre au workflow d'effectuer les opérations nécessitant des permissions d'écriture sur le dépôt.
+### 10.1. Application dédiée
 
 | Paramètre | Valeur |
 |---|---|
 | Nom | TIAKI CMS Sync |
-| Identifiant applicatif | `tiaki-cms-sync` |
+| Slug | `tiaki-cms-sync` |
 | Organisation propriétaire | StudioFabrique |
-| Type | Application privée |
+| Type | GitHub App privée |
 | Dépôt autorisé | `StudioFabrique/tiaki-website` |
 | Webhook | Désactivé |
-| Authentification OAuth utilisateur | Non utilisée |
-| Autorisation de contournement du Ruleset | Aucune |
+| OAuth utilisateur | Non utilisé |
+| Contournement du Ruleset | Aucun |
 
-L'application est installée exclusivement sur le dépôt `tiaki-website`.
+L'utilisation d'une GitHub App sépare l'identité de l'automatisation des comptes utilisateurs. Elle permet de générer des tokens temporaires, de limiter les accès au dépôt concerné et de déclencher les workflows CI des PR créées par l'application. Contrairement à un PAT personnel, son identité n'est pas liée à un collaborateur particulier.
 
-#### 7.2. Justification du choix
+### 10.2. Permissions et séparation des identités
 
-L'utilisation d'une GitHub App permet de séparer l'identité de l'automatisation des comptes utilisateurs.
-
-Contrairement à un Personal Access Token associé à un utilisateur, la GitHub App possède sa propre identité et peut générer des tokens d'installation temporaires.
-
-Cette approche permet notamment :
-
-- D'appliquer le principe du moindre privilège.
-- De limiter le périmètre d'accès au dépôt concerné.
-- De réduire l'utilisation d'identifiants permanents.
-- D'assurer la traçabilité des opérations automatisées.
-- De déclencher les workflows CI associés aux Pull Requests créées par l'application.
-- De limiter la dépendance vis-à-vis des comptes personnels des collaborateurs.
-
-#### 7.3. Permissions de la GitHub App
-
-| Permission | Niveau | Justification |
-|---|---|---|
-| Contents | Read & Write | Création de branches, commits et push. |
-| Pull requests | Read & Write | Création, actualisation et fermeture des Pull Requests. |
-| Metadata | Read | Permission obligatoire de GitHub. |
-| Actions | No access | Aucune administration des workflows nécessaire. |
-| Administration | No access | Aucune modification de la configuration du dépôt. |
-| Checks | No access | Aucun besoin de modifier les contrôles qualité. |
-| Deployments | No access | Aucun déploiement direct. |
-| Secrets | No access | Aucun accès aux secrets par l'API GitHub. |
-| Workflows | No access | Aucune modification des fichiers de workflows. |
-| Autres permissions | No access | Respect du principe du moindre privilège. |
-
-L'application ne dispose d'aucune autorisation de contournement des règles de protection des branches.
-
-### 8. Gestion des secrets et variables
-
-Les paramètres d'authentification sont configurés au niveau du dépôt GitHub.
-
-| Nom | Type | Responsabilité |
-|---|---|---|
-| `CMS_SYNC_APP_ID` | Repository variable | Identifiant numérique de la GitHub App. |
-| `CMS_SYNC_PRIVATE_KEY` | Repository secret | Clé privée permettant l'authentification de l'application. |
-
-Les paramètres sont accessibles depuis :
-
-Settings → Secrets and variables → Actions.
-
-L'App ID n'est pas considéré comme une information confidentielle.
-
-La clé privée est une information hautement sensible. Elle ne doit jamais être :
-
-- Versionnée dans Git.
-- Stockée dans le code source.
-- Intégrée dans les logs.
-- Transmise par un canal non sécurisé.
-- Conservée sans protection sur un poste de travail.
-
-Les valeurs réelles des identifiants sensibles ne doivent pas apparaître dans la documentation technique du projet.
-
-### 9. Génération et cycle de vie du token d'installation
-
-Le workflow utilise l'action officielle `actions/create-github-app-token@v3`.
-
-Cette action permet de générer un token d'installation temporaire à partir de l'identifiant de la GitHub App et de sa clé privée.
-
-Le processus d'authentification repose sur les étapes suivantes :
-
-1. Récupération de l'App ID depuis les variables GitHub Actions.
-2. Récupération de la clé privée depuis les secrets GitHub Actions.
-3. Génération d'un JWT signé avec l'algorithme RS256.
-4. Authentification de la GitHub App auprès de l'API GitHub.
-5. Génération d'un token d'installation.
-6. Utilisation du token pour les opérations autorisées.
-7. Révocation automatique du token à la fin du job.
-
-Le token d'installation possède une durée de validité maximale d'une heure.
-
-Sa génération intervient uniquement lorsque :
-
-- Des modifications autorisées ont été détectées dans les snapshots.
-- Ou une Pull Request de synchronisation est déjà ouverte et nécessite une réconciliation avec l'état actuel du CMS.
-
-Dans les autres situations, aucune authentification avec des permissions d'écriture n'est nécessaire.
-
-### 10. Séparation des identités et permissions
-
-Le workflow utilise deux mécanismes d'authentification distincts.
+| Permission de l'App | Niveau |
+|---|---|
+| Contents | Read & Write |
+| Pull requests | Read & Write |
+| Metadata | Read (obligatoire) |
+| Actions, Administration, Checks, Deployments, Secrets, Workflows et autres | No access |
 
 | Identité | Permissions | Utilisation |
 |---|---|---|
-| `GITHUB_TOKEN` | Contents: Read, Pull requests: Read | Récupération du dépôt et consultation des Pull Requests. |
-| Token d'installation GitHub App | Contents: Write, Pull requests: Write | Publication des snapshots et gestion des Pull Requests automatiques. |
+| `GITHUB_TOKEN` du workflow CI | `contents: read` | Lecture du dépôt. |
+| `GITHUB_TOKEN` du workflow CMS | `contents: read`, `pull-requests: read` | Checkout et consultation des PR. |
+| Token d'installation GitHub App | Contents et Pull requests en écriture ; Metadata en lecture | Création et actualisation de la branche et des PR CMS. |
 
-Le `GITHUB_TOKEN` conserve des permissions strictement limitées à la lecture.
+Les permissions globales du workflow concernent son `GITHUB_TOKEN`, et non le token distinct de la GitHub App. La configuration `persist-credentials: false` évite la persistance des identifiants de checkout. Cette séparation ne constitue pas une isolation absolue entre les étapes exécutées dans le même runner.
 
-Le token d'installation de la GitHub App est généré uniquement après la réussite des contrôles de synchronisation et de validation.
+### 10.3. Secrets et variables
 
-La configuration `persist-credentials: false` de l'action de checkout évite la conservation des identifiants de checkout dans la configuration Git locale du runner.
+Configuration : dépôt GitHub → Settings → Secrets and variables → Actions.
 
-Cette séparation réduit le périmètre d'utilisation des permissions d'écriture.
+| Nom | Type | État au 27 novembre 2026 |
+|---|---|---|
+| `CMS_SYNC_CLIENT_ID` | Repository variable | Créée ; utilisée dans la correction du workflow en cours de livraison. |
+| `CMS_SYNC_PRIVATE_KEY` | Repository secret | Clé privée PEM de l'App ; inchangée. |
+| `CMS_SYNC_APP_ID` | Repository variable | Ancienne variable numérique conservée temporairement, encore nécessaire au workflow déployé avant la migration. |
 
-Elle ne constitue toutefois pas une isolation absolue : les étapes autorisées du workflow s'exécutent dans le même environnement de travail.
+Le Client ID et l'App ID sont des identifiants distincts et ne sont pas secrets. La clé privée est un identifiant sensible persistant : ne jamais la versionner, la journaliser, la placer dans le navigateur ou la transmettre par un canal non sécurisé. Limiter les copies locales et protéger leur stockage. La durée de vie courte des tokens ne rend pas la clé privée elle-même temporaire.
 
-### 11. Contrôle du périmètre des modifications
+### 10.4. Génération et cycle de vie du token
 
-Avant toute publication, le script suivant est exécuté :
+L'action `actions/create-github-app-token@v3` génère un JWT signé en RS256 à partir des identifiants de l'App, puis obtient auprès de GitHub un token d'installation. Le token est limité au dépôt courant dans la configuration retenue, avec les permissions d'écriture explicites nécessaires. Sa durée de validité maximale est d'une heure ; l'action tente de le révoquer lors du nettoyage de fin de job, comme observé pendant la recette.
 
-`pnpm exec tsx scripts/check-cms-sync-changes.ts`
+Le token n'est généré qu'après réussite des contrôles précédents, lorsque `changed` ou `exists` vaut `true`.
 
-Ce script compare les modifications présentes dans le dépôt Git avec une liste blanche dynamique générée depuis `lib/cms/registry.ts`.
+### 10.5. Migration de `app-id` vers `client-id`
 
-Seules les modifications non indexées de snapshots existants et déclarés dans le registre sont autorisées.
+La recette du 27 novembre 2026 a signalé la dépréciation de `app-id`. La branche `fix/cms-sync-client-id` contient la correction suivante, encore à intégrer et à valider sur GitHub Actions :
 
-Toute modification inattendue provoque l'échec du workflow.
+```yaml
+- name: Generate GitHub App token
+  if: steps.changes.outputs.changed == 'true' || steps.existing-pr.outputs.exists == 'true'
+  id: app-token
+  uses: actions/create-github-app-token@v3
+  with:
+    client-id: ${{ vars.CMS_SYNC_CLIENT_ID }}
+    private-key: ${{ secrets.CMS_SYNC_PRIVATE_KEY }}
+    permission-contents: write
+    permission-pull-requests: write
+```
 
-Cette mesure permet notamment d'empêcher l'intégration accidentelle :
+La clé privée, les permissions et l'installation ne changent pas. Conserver `CMS_SYNC_APP_ID` jusqu'à la livraison du workflow corrigé sur `main` et au succès d'une exécution qui génère effectivement un token avec le Client ID (INT11). Un run sans modification ni PR ouverte ignore cette étape et ne valide donc pas la migration. Vérifier également l'absence de l'avertissement de dépréciation avant de supprimer l'ancienne variable.
 
-- De modifications du code source.
-- De modifications des workflows GitHub Actions.
-- De fichiers de configuration inattendus.
-- De modifications des dépendances.
-- De fichiers temporaires non suivis.
-- De suppressions ou de renommages de snapshots.
+## 11. Contrôle du périmètre des modifications
 
-Le résultat du contrôle est transmis aux étapes suivantes à travers la variable de sortie `changed`.
+Le script `pnpm exec tsx scripts/check-cms-sync-changes.ts` établit une liste blanche à partir des chemins de snapshots déclarés dans `lib/cms/registry.ts`.
 
-Ce mécanisme constitue un contrôle applicatif. Il ne limite pas directement les permissions de la GitHub App au niveau des fichiers, puisque GitHub attribue les permissions Contents à l'échelle du dépôt.
+Il autorise uniquement les modifications non indexées (` M`) de fichiers suivis déclarés dans le registre. Il refuse les modifications du code ou des workflows, les ajouts non suivis, suppressions, renommages et changements indexés. Il transmet à GitHub Actions la sortie `steps.changes.outputs.changed`.
 
-### 12. Gestion automatique des Pull Requests
+Ce contrôle s'appuie sur le statut Git : il ne recense pas les fichiers ignorés et ne constitue pas une restriction des permissions GitHub à certains chemins. La permission Contents reste accordée à l'échelle du dépôt. Le contrôle doit être exécuté dans un checkout initialement propre et avant toute publication.
 
-Le workflow utilise l'action `peter-evans/create-pull-request`, référencée par un SHA de commit correspondant à la version 8.1.1.
+L'autre sortie, `steps.existing-pr.outputs.exists`, provient d'une requête GitHub CLI en lecture seule filtrant les PR ouvertes de `automation/cms-fallback-sync` vers `dev`, pour le propriétaire du dépôt.
 
-Cette action assure la gestion de la branche d'automatisation et des Pull Requests associées.
+## 12. Gestion automatique des Pull Requests
+
+### 12.1. Configuration
 
 | Paramètre | Valeur |
 |---|---|
+| Action | `peter-evans/create-pull-request` |
+| SHA utilisé lors de la recette | `5f6978faf089d4d20b00c7766989d076bb2fc7f1` (version indiquée : 8.1.1) |
 | Branche source | `automation/cms-fallback-sync` |
 | Branche cible | `dev` |
-| Titre | `chore(cms): synchronize fallback snapshots` |
-| Message de commit | `chore(cms): synchronize fallback snapshots` |
-| Signature des commits | Activée |
-| Nettoyage de la branche | Activé |
+| Titre et message de commit | `chore(cms): synchronize fallback snapshots` |
+| Signature des commits | `sign-commits: true` |
+| Nettoyage de branche | `delete-branch: true` |
 | Fusion automatique | Non configurée |
 
-L'utilisation d'une branche dédiée permet de maintenir une seule Pull Request de synchronisation pour les modifications éditoriales successives.
+Le workflow déclenche la génération du token et la gestion de la PR lorsque :
 
-#### 12.1. Cycle de vie
+```yaml
+if: steps.changes.outputs.changed == 'true' || steps.existing-pr.outputs.exists == 'true'
+```
 
-| Modifications locales | Pull Request ouverte | Comportement prévu |
+### 12.2. Cycle de vie
+
+| Snapshots différents de `dev` | PR ouverte | Comportement |
 |---|---|---|
 | Non | Non | Fin du workflow sans opération d'écriture. |
-| Oui | Non | Création d'une Pull Request vers `dev`. |
-| Oui | Oui | Actualisation de la Pull Request existante si nécessaire. |
-| Non | Oui | Réconciliation et fermeture de la Pull Request devenue obsolète. |
+| Oui | Non | Création d'une PR vers `dev`. |
+| Oui | Oui | Actualisation de la même PR si nécessaire. |
+| Non | Oui | Réconciliation et fermeture de la PR devenue obsolète. |
 
-#### 12.2. Gestion des Pull Requests obsolètes
+La fermeture automatique a été validée pendant INT07. Le nettoyage de la branche est configuré, mais sa suppression effective doit être vérifiée séparément si nécessaire. Une branche résiduelle sans PR ouverte n'entraîne pas à elle seule une opération de nettoyage avec la condition actuelle.
 
-Une Pull Request peut devenir obsolète lorsque les contenus publiés dans Payload reviennent à un état identique aux snapshots présents sur `dev`.
+L'état éditorial n'est réconcilié qu'au moment des synchronisations. Avant de fusionner une PR CMS, vérifier que les contenus proposés sont toujours souhaités et que les contrôles portent sur son dernier commit. En cas de doute, lancer une nouvelle synchronisation avant la fusion.
 
-Le workflow consulte donc les Pull Requests ouvertes, même lorsqu'aucune modification locale n'a été détectée.
+### 12.3. Cas réel — PR #56
 
-Cette vérification est réalisée avec GitHub CLI en utilisant le `GITHUB_TOKEN` en lecture seule.
+Lors de la recette, une différence espagnole subsistait après restauration des contenus de test. Le mode `--dry-run` a identifié une inversion des titres et descriptions entre `hero` et `faqSection` dans le snapshot espagnol de référence. Les contenus actuels de Payload ont été retenus comme référence éditoriale.
 
-Les variables de sortie suivantes déterminent la nécessité d'une opération d'écriture :
+La PR automatique #56 a été fusionnée vers `dev` pour intégrer cette correction. Une vérification ultérieure a confirmé quatre snapshots valides et inchangés. Le test de fermeture d'une PR obsolète a ensuite été rejoué avec une modification française isolée, et la fermeture a été confirmée.
 
-- `steps.changes.outputs.changed`
-- `steps.existing-pr.outputs.exists`
+La correction espagnole est intégrée à `dev` ; sa livraison vers `main` reste à réaliser à la date de cette révision. La conformité Zod seule ne permet pas de détecter une inversion sémantique entre deux champs textuels valides.
 
-La GitHub App et l'action de gestion des Pull Requests sont utilisées lorsque l'une de ces deux variables vaut `true`.
+## 13. Processus standard de développement et de livraison
 
-Ce mécanisme doit permettre d'éviter le maintien d'une Pull Request proposant des contenus qui ne correspondent plus à l'état actuel de Payload.
+1. Créer une branche fonctionnelle ou de maintenance depuis `dev` actualisée.
+2. Développer, documenter et exécuter les contrôles locaux (§ 5.3).
+3. Vérifier les fichiers modifiés et indexer explicitement le périmètre attendu.
+4. Effectuer un commit documenté puis pousser la branche.
+5. Créer une PR vers `dev`, vérifier `Quality Checks`, le diff et la Preview.
+6. Fusionner après validation et effectuer la recette fonctionnelle.
+7. Créer une PR de `dev` vers `main` et vérifier à nouveau les contrôles et le périmètre de livraison.
+8. Fusionner, vérifier le déploiement Vercel Production et réaliser la recette finale.
 
-### 13. Intégration dans le pipeline CI
+Pour une PR générée par la synchronisation, les étapes de préparation et de publication de la branche sont effectuées par le workflow ; les étapes de revue, de fusion et de livraison restent sous responsabilité humaine.
 
-Les tests automatisés de non-régression CMS ont été intégrés au workflow `ci.yml`.
+## 14. Gestion des incidents et diagnostic
 
-Le job obligatoire `Quality Checks` réalise les opérations suivantes :
-
-| Ordre | Contrôle | Commande |
-|---|---|---|
-| 1 | Installation des dépendances | `pnpm install --frozen-lockfile` |
-| 2 | Génération des types Next.js | `pnpm exec next typegen` |
-| 3 | Validation TypeScript | `pnpm exec tsc --noEmit` |
-| 4 | Validation ESLint | `pnpm lint` |
-| 5 | Tests de non-régression CMS | `pnpm cms:test` |
-| 6 | Validation des snapshots et build | `pnpm build` |
-
-La commande `pnpm build` exécute préalablement `pnpm cms:validate`.
-
-Les tests CMS sont indépendants de la disponibilité de Payload Production.
-
-Une erreur détectée par les tests ou par les schémas de validation entraîne l'échec du job `Quality Checks`.
-
-Les Pull Requests automatiques doivent être soumises aux mêmes contrôles que les Pull Requests de développement classiques.
-
-### 14. Protection des branches et gouvernance
-
-Le Ruleset `TIAKI Website - Quality Gate` protège les branches `dev` et `main`.
-
-Le mécanisme de synchronisation doit respecter les règles suivantes :
-
-- Interdiction des push directs non autorisés.
-- Intégration des modifications à travers des Pull Requests.
-- Réussite du contrôle obligatoire `Quality Checks`.
-- Mise à jour des branches avant fusion, conformément au Ruleset.
-- Interdiction des force push sur les branches protégées.
-- Absence d'autorisation de contournement pour la GitHub App.
-
-La validation humaine avant la fusion constitue une règle du processus de livraison.
-
-Le Ruleset actuel n'impose pas nécessairement une approbation formelle supplémentaire par un autre utilisateur. Une telle exigence doit faire l'objet d'une configuration spécifique si elle devient nécessaire.
-
-### 15. Déploiement sur Vercel
-
-Le workflow CMS ne déclenche pas directement de déploiement en production.
-
-Le processus de déploiement reste fondé sur l'intégration des modifications dans les branches Git :
-
-| Événement | Conséquence |
+| Incident | Diagnostic et action recommandée |
 |---|---|
-| Création d'une Pull Request automatique | Exécution des contrôles CI et éventuellement création d'un déploiement Preview. |
-| Fusion vers `dev` | Intégration des nouveaux snapshots dans la branche de développement. |
-| Fusion vers `main` | Déclenchement du processus de déploiement de production sur Vercel. |
-| Échec de synchronisation | Aucune publication issue de cette exécution. |
-| Absence de modification | Aucun nouveau commit de synchronisation. |
+| Échec TypeScript ou ESLint | Examiner les logs et corriger les erreurs avant fusion. |
+| Échec d'installation pnpm | Vérifier les versions, dépendances, lockfile et autorisations de scripts de compilation. |
+| Snapshot invalide | Identifier le fichier et les champs Zod signalés ; corriger le contenu ou le contrat selon la cause. |
+| Échec du build Next.js | Examiner les logs de validation et de compilation. |
+| CMS indisponible / `ECONNREFUSED` | Vérifier l'adresse et la disponibilité de Payload ; relancer après rétablissement. |
+| Timeout HTTP | Examiner la latence et la disponibilité ; le timeout est de 5 s par requête. |
+| Pagination incohérente ou doublon | Examiner les métadonnées et les éditions concurrentes ; relancer après stabilisation. |
+| Modification Git non autorisée | Identifier le chemin et la source du changement ; ne pas élargir la liste blanche sans justification. |
+| Échec de génération du token | Vérifier le Client ID (ou l'App ID pour l'ancien workflow), la clé privée, l'installation et les permissions de l'App. |
+| HTTP 403 | Vérifier les permissions de l'App et les restrictions du dépôt ; ne pas accorder de droits excessifs. |
+| Échec de création ou actualisation de PR | Examiner les logs, la branche d'automatisation et la PR existante avant de relancer. |
+| PR CMS toujours ouverte | Contrôler `changed`, `exists` et les différences réelles avec `pnpm cms:sync --dry-run` depuis `dev` actualisée et propre. |
+| Quality Checks en échec | Corriger la cause et attendre le résultat des contrôles sur le dernier commit. |
+| Échec du déploiement Vercel | Examiner les logs et les variables de l'environnement cible. |
+| Régression en production | Identifier la dernière version stable et appliquer un correctif ou un rollback compatible avec le CMS. |
 
-La disponibilité des snapshots actualisés en production dépend donc du processus de validation, de fusion et de déploiement.
+Diagnostic local sans modification des snapshots :
 
-### 16. Gestion des incidents et diagnostic
+```bash
+TIAKI_BACKOFFICE_URL=https://backoffice.tiaki.step.eco pnpm cms:sync --dry-run
+```
 
-| Incident | Diagnostic à effectuer | Action recommandée |
-|---|---|---|
-| CMS indisponible | Vérifier les logs HTTP et la disponibilité de Payload. | Rétablir le service puis relancer le workflow. |
-| Timeout HTTP | Vérifier les temps de réponse du CMS. | Identifier la cause de la latence. |
-| Contenu non conforme | Consulter les erreurs Zod et les chemins des propriétés concernées. | Corriger le contenu dans Payload. |
-| Pagination incohérente | Vérifier les métadonnées et les modifications concurrentes. | Relancer après stabilisation des contenus. |
-| Modification Git non autorisée | Consulter les chemins signalés par le script de contrôle. | Identifier et corriger la source de la modification. |
-| Échec de génération du token | Vérifier l'App ID, la clé privée et l'installation de la GitHub App. | Corriger la configuration d'authentification. |
-| Erreur HTTP 403 | Vérifier les permissions de l'application et les restrictions du dépôt. | Ajuster uniquement les permissions nécessaires. |
-| Échec de création de PR | Vérifier les logs de l'action et l'état de la branche d'automatisation. | Corriger l'anomalie puis relancer. |
-| Quality Checks en échec | Examiner les logs TypeScript, ESLint, tests et build. | Corriger la régression avant fusion. |
-| Échec du déploiement Vercel | Examiner les logs de compilation et de déploiement. | Corriger la cause et relancer le déploiement. |
+Consulter les logs des étapes de synchronisation, de validation, de contrôle Git et de gestion de la PR. Distinguer une synchronisation sans modification, un échec et une actualisation réussie. Ne pas contourner le Ruleset pour résoudre un incident. Si une ancienne PR reste ouverte après un échec, vérifier sa fraîcheur avant toute fusion.
 
-En cas d'échec, il ne faut pas contourner les règles de protection ni fusionner une Pull Request dont les contrôles obligatoires ont échoué.
+## 15. Sécurité et maintenance des identifiants
 
-### 17. Maintenance et rotation des identifiants
+Les mesures existantes comprennent la limitation des permissions, la désactivation de la persistance des identifiants de checkout, la protection des branches, l'installation figée des dépendances, l'autorisation explicite des scripts de compilation nécessaires, la validation des contenus avant build, la séparation des environnements et la gestion des secrets hors du code source.
 
-La clé privée de la GitHub App doit faire l'objet d'une gestion sécurisée et d'une rotation périodique conforme à la politique de sécurité du projet.
+### 15.1. Rotation de la clé privée
 
-La procédure de rotation est la suivante :
-
-1. Générer une nouvelle clé privée depuis les paramètres de la GitHub App.
-2. Remplacer la valeur du secret `CMS_SYNC_PRIVATE_KEY`.
-3. Tester la génération d'un token d'installation.
+1. Générer une nouvelle clé privée dans les paramètres de la GitHub App.
+2. Remplacer le secret `CMS_SYNC_PRIVATE_KEY` du dépôt.
+3. Déclencher une recette contrôlée qui exécute réellement la génération d'un token.
 4. Vérifier le fonctionnement du workflow avec la nouvelle clé.
-5. Révoquer l'ancienne clé privée depuis les paramètres de l'application.
+5. Révoquer l'ancienne clé dans les paramètres de l'App.
 6. Supprimer les anciennes copies locales non nécessaires.
 
-En cas de suspicion de compromission, révoquer rapidement la clé concernée et examiner les opérations réalisées avec l'identité de l'application.
+En cas de suspicion de compromission, révoquer rapidement la clé concernée, évaluer les tokens déjà émis et examiner les opérations réalisées avec l'identité de l'application.
 
-Les dépendances GitHub Actions doivent également faire l'objet d'une maintenance régulière.
+### 15.2. Maintenance de la chaîne de livraison
 
-L'utilisation de références immuables par SHA de commit doit être privilégiée pour les actions recevant des identifiants sensibles ou des permissions d'écriture.
+Maintenir les versions des outils et des actions GitHub, vérifier les mises à jour de sécurité et privilégier les références immuables par SHA de commit pour les actions recevant des secrets ou des permissions d'écriture. L'action de création de PR utilise déjà un SHA ; `actions/create-github-app-token@v3` reste référencée par un tag majeur. Son épinglage à un SHA vérifié constitue une amélioration à planifier, et non une mesure déjà appliquée.
 
-### 18. Supervision et limites actuelles
+Les collaborateurs autorisés à modifier les workflows ou le code exécuté par ces workflows disposent d'un périmètre de confiance important. La liste blanche des snapshots ne protège pas contre une modification malveillante de la logique qui l'applique. Toute évolution des workflows et des permissions doit être revue.
 
-Les résultats des exécutions du workflow sont consultables depuis l'onglet Actions du dépôt GitHub.
+## 16. Recette d'intégration et état de validation
 
-À ce stade, le mécanisme ne dispose pas encore :
-
-- D'un système externe de supervision de la synchronisation.
-- D'une alerte spécifique lorsque les snapshots deviennent trop anciens.
-- D'un indicateur centralisé de la dernière synchronisation réussie.
-- D'un mécanisme de notification personnalisé en cas d'échecs répétés.
-- D'une synchronisation événementielle déclenchée directement depuis Payload.
-
-Les besoins de supervision et d'alerte seront traités dans la User Story CMS-04.
-
-Le déclenchement manuel est déjà configuré dans le workflow. Sa validation opérationnelle et les éventuelles fonctionnalités complémentaires seront traitées dans le cadre de CMS-05.
-
-### 19. Recette d'intégration
-
-Les scénarios suivants doivent être validés avant la clôture de CMS-02 :
+Recette initiale : **27 novembre 2026**. Les statuts ci-dessous s'appuient sur les logs et confirmations communiqués pendant la recette.
 
 | ID | Scénario | Critère d'acceptation | Statut |
 |---|---|---|---|
-| INT01 | Exécution sur GitHub Actions | Le workflow s'exécute correctement. | À valider |
-| INT02 | Synchronisation sans modification | Aucune nouvelle Pull Request n'est créée. | À valider |
-| INT03 | Authentification GitHub App | Un token d'installation valide est généré. | À valider |
-| INT04 | Création automatique d'une PR | Une PR est créée vers `dev`. | À valider |
-| INT05 | Déclenchement automatique de la CI | Quality Checks s'exécute sur la PR automatique. | À valider |
-| INT06 | Actualisation d'une PR | La PR existante est actualisée sans duplication. | À valider |
-| INT07 | Gestion d'une PR obsolète | La PR devenue inutile est fermée. | À valider |
-| INT08 | Échec de synchronisation | Aucun nouveau commit ni aucune PR issue de l'exécution en échec. | À valider |
-| INT09 | Déclenchement quotidien | Le workflow planifié s'exécute automatiquement. | À valider |
+| INT01 | Exécution sur GitHub Actions | Workflow exécuté correctement. | Validé |
+| INT02 | Synchronisation sans modification | Aucun token d'écriture ni nouvelle PR. | Validé |
+| INT03 | Authentification GitHub App avec App ID | Token valide, utilisé puis révoqué. | Validé |
+| INT04 | Création automatique d'une PR | PR vers `dev`, fichiers attendus. | Validé |
+| INT05 | Déclenchement automatique de la CI | Quality Checks exécuté sur la PR automatique. | Validé |
+| INT06 | Actualisation d'une PR existante | Même PR actualisée sans doublon. | Validé |
+| INT07 | Fermeture automatique d'une PR obsolète | Fermeture sans fusion après restauration du contenu. | Validé |
+| INT08 | Échec de synchronisation sans publication | Échec réseau simulé et interruption avant publication. | Validé selon retour de recette |
+| INT09 | Déclenchement quotidien planifié | Exécution dont l'événement est `schedule`. | À valider |
+| INT10 | Fusion effective d'une PR automatique | Correction espagnole intégrée à `dev` ; dry-run sans différence. | Validé — PR #56 |
+| INT11 | Authentification GitHub App avec Client ID | Génération effective du token, sans avertissement `app-id`. | À valider |
 
-### 20. Références techniques
+Le test INT08 a utilisé une branche temporaire avec une adresse CMS locale inaccessible (`127.0.0.1:65534`). Le runner a retourné `ECONNREFUSED` et le code de sortie 1 ; le nettoyage de la branche de test a été confirmé. Ce scénario ne constitue pas un test de panne réelle du CMS de production. Les logs détaillés des étapes ignorées ne sont pas reproduits ici.
+
+### Actions restantes avant clôture de CMS-02
+
+1. Versionner la migration `client-id` et la documentation consolidée sur `fix/cms-sync-client-id`.
+2. Intégrer la correction dans `dev`, puis livrer vers `main` avec le snapshot espagnol corrigé.
+3. Vérifier les contrôles CI et le déploiement Vercel Production.
+4. Valider INT11 lors d'une exécution nécessitant réellement un token d'écriture ; restaurer les contenus de test et vérifier la fermeture de la PR si une modification temporaire a été utilisée.
+5. Retirer `CMS_SYNC_APP_ID` après validation et vérification de l'absence d'autres consommateurs de cette variable.
+6. Valider INT09 depuis l'historique GitHub Actions, en identifiant un événement `schedule` et son résultat.
+7. Actualiser les statuts de recette dans les documents CMS et CI/CD.
+
+## 17. Supervision, limites et évolutions
+
+Les résultats des synchronisations sont consultables depuis l'onglet Actions. Le workflow contrôle les différences avec Payload lors de ses exécutions, mais il ne mesure pas en continu la fraîcheur des snapshots effectivement déployés. Le workflow CI classique ne vérifie pas la disponibilité fonctionnelle du CMS de production ; la synchronisation CMS, elle, nécessite sa disponibilité.
+
+| Sujet | État ou évolution |
+|---|---|
+| CMS-01 — Socle CMS commun | Déployé. |
+| CMS-03 — Validation des snapshots | Déployée et intégrée au build. |
+| CMS-02 — Synchronisation automatique | Déployée ; recette finale et livraison corrective à terminer. |
+| CMS-05 — Déclenchement manuel | Fonctionnalité de base validée ; éventuels compléments à arbitrer. |
+| CMS-04 — Supervision | À réaliser : indicateur de dernière synchronisation réussie, alertes d'échec et de fraîcheur. |
+| CMS-06 — Retrait et dépublication | À réaliser : politique de prévention de la réapparition de contenus obsolètes. |
+| CMS-07 — Last Known Good | Stockage externe des derniers contenus valides à étudier. |
+| Tests CMS | Deux tests automatisés intégrés à la CI ; autres scénarios de résilience testés manuellement. Étendre la couverture unitaire, intégration et E2E. |
+| Audit des dépendances et analyse de sécurité | Aucun audit automatique ni pipeline de sécurité dédié établi dans la CI actuelle. |
+| Synchronisation événementielle | Aucun webhook Payload → GitHub Actions configuré. |
+| Épinglage des actions | Privilégier les SHA vérifiés et définir leur maintenance. |
+
+La synchronisation n'est ni une réplication transactionnelle ni une garantie de disponibilité absolue. Un contenu dépublié peut encore figurer dans un snapshot ancien tant que la nouvelle version du site n'est pas déployée. Une erreur pendant le remplacement des fichiers peut laisser des modifications locales partielles, mais les étapes de publication du workflow ne sont pas exécutées si le script échoue. La revue humaine, la protection des branches et le déploiement restent nécessaires.
+
+## 18. Documents associés et références techniques
+
+### Documentation interne
+
+- `docs/CMS_INTEGRATION.md` — Architecture CMS, contrats, validation et synchronisation.
+- `docs/CONTACT_PAGE.md` — Intégration fonctionnelle et technique de la page Contact.
+- `.github/workflows/ci.yml` — Configuration CI.
+- `.github/workflows/sync-cms-fallbacks.yml` — Configuration de la synchronisation CMS.
+- `package.json` — Commandes de développement, de validation, de test et de build.
+- `tiaki-backoffice/docs/DEPLOYMENT.md` — Livraison et exploitation du back-office.
+
+### Documentation officielle et références des actions
 
 - [GitHub Actions — Workflow syntax](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax)
 - [GitHub Actions — Events that trigger workflows](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows)
@@ -718,3 +476,7 @@ Les scénarios suivants doivent être validés avant la clôture de CMS-02 :
 - [Create Pull Request Action](https://github.com/peter-evans/create-pull-request)
 - [Node.js — Test runner](https://nodejs.org/api/test.html)
 - [Vercel — Git deployments](https://vercel.com/docs/git)
+
+---
+
+**Note de révision :** document consolidé à partir de la documentation CI/CD existante et des résultats de recette communiqués le 27 novembre 2026. Le dépôt et ses paramètres n'ont pas été inspectés directement lors de cette révision. Les fichiers de workflow et les paramètres GitHub/Vercel font foi ; les évolutions et validations restantes sont explicitement distinguées des fonctionnalités déjà opérationnelles.
