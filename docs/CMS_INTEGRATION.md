@@ -529,3 +529,227 @@ Les tests ont été réalisés manuellement en environnement local. L'intégrati
 - CMS-07 : étude d'un mécanisme Last Known Good.
 
 **Référence : CMS-03 — Validation et intégrité des contenus de fallback.**
+
+---
+## Synchronisation automatique des snapshots de secours
+
+### 1. Objectif
+
+Le mécanisme de synchronisation automatique des snapshots permet de maintenir les fichiers JSON locaux en cohérence avec les contenus éditoriaux publiés dans Payload CMS.
+
+Payload CMS constitue la source de vérité des contenus éditoriaux du site web T-IA-KI. Les snapshots locaux constituent un mécanisme de secours (*fallback*) permettant de garantir la disponibilité des contenus lorsque le CMS est indisponible ou retourne des données non conformes.
+
+Cette synchronisation vise notamment à :
+
+- Maintenir les contenus de secours à jour.
+- Réduire les interventions manuelles de maintenance.
+- Garantir la conformité des contenus avec les contrats de données.
+- Éviter les modifications et déploiements inutiles.
+- Assurer la traçabilité des évolutions éditoriales à travers Git.
+- Respecter les processus de validation et de mise en production existants.
+
+### 2. Architecture technique
+
+Le mécanisme de synchronisation repose sur une architecture modulaire permettant de séparer les responsabilités et de faciliter l'intégration de nouveaux contenus.
+
+| Fichier | Responsabilité |
+|---|---|
+| `lib/cms/config.ts` | Configuration du CMS, délai maximal des requêtes HTTP et limite de pagination. |
+| `lib/cms/client.ts` | Communication HTTP avec Payload CMS. |
+| `lib/cms/registry.ts` | Registre central des contenus, endpoints, schémas de validation et chemins des snapshots. |
+| `lib/cms/validation.ts` | Règles de validation communes. |
+| `lib/cms/pagination.ts` | Récupération des collections paginées et contrôle de leur intégrité. |
+| `lib/cms/comparison.ts` | Comparaison structurelle des contenus, identification des différences et sérialisation JSON. |
+| `lib/cms/persistence.ts` | Préparation des fichiers temporaires, remplacement des snapshots et nettoyage. |
+| `scripts/sync-cms-fallbacks.ts` | Orchestration du processus de synchronisation. |
+| `scripts/validate-cms-fallbacks.ts` | Validation des snapshots locaux. |
+| `scripts/check-cms-sync-changes.ts` | Contrôle du périmètre des modifications Git autorisées. |
+| `scripts/tests/` | Tests automatisés de non-régression. |
+
+Le registre CMS constitue le point central de configuration du mécanisme. Il permet d'ajouter de nouveaux contenus sans modifier la logique principale de synchronisation.
+
+### 3. Cycle de synchronisation
+
+Le processus de synchronisation se déroule selon les étapes suivantes :
+
+1. Chargement des définitions de contenus depuis le registre CMS.
+2. Récupération des contenus distants pour chaque langue prise en charge.
+3. Récupération de l'ensemble des pages dans le cas des collections paginées.
+4. Validation et normalisation des données à l'aide des schémas Zod.
+5. Conservation en mémoire de l'ensemble des contenus validés.
+6. Comparaison structurelle des contenus distants avec les snapshots locaux.
+7. Identification des snapshots nécessitant une mise à jour.
+8. Préparation de l'ensemble des fichiers temporaires.
+9. Remplacement des snapshots modifiés.
+10. Nettoyage des fichiers et répertoires temporaires.
+
+Aucun snapshot local n'est remplacé tant que l'ensemble des contenus distants n'a pas été récupéré et validé avec succès.
+
+Cette approche permet notamment d'éviter qu'une erreur de récupération ou de validation sur un contenu entraîne une synchronisation partielle des autres contenus.
+
+### 4. Contenus actuellement pris en charge
+
+| Contenu | Type Payload | Langues | Endpoint |
+|---|---|---|---|
+| Page Contact | Global | FR, ES | `/api/globals/contact-page` |
+| Questions fréquentes (FAQ) | Collection | FR, ES | `/api/faqs` |
+
+Les snapshots correspondants sont :
+
+- `lib/contact/fallback.fr.json`
+- `lib/contact/fallback.es.json`
+- `lib/contact/faq-fallback.fr.json`
+- `lib/contact/faq-fallback.es.json`
+
+L'intégration de nouveaux contenus nécessite de définir dans `cmsRegistry` :
+
+- Le type de contenu : `global` ou `collection`.
+- L'endpoint de l'API Payload.
+- Le schéma de validation Zod correspondant.
+- Les éventuels paramètres de requête.
+- Les chemins des snapshots pour chaque langue.
+
+### 5. Commandes disponibles
+
+#### Validation des snapshots locaux
+
+`pnpm cms:validate`
+
+Cette commande vérifie la conformité de l'ensemble des snapshots locaux avec leurs schémas Zod respectifs.
+
+Elle ne nécessite aucune connexion à Payload CMS et ne modifie aucun fichier.
+
+#### Simulation de la synchronisation
+
+`TIAKI_BACKOFFICE_URL=https://backoffice.tiaki.step.eco pnpm cms:sync --dry-run`
+
+Le mode `--dry-run` permet de :
+
+- Récupérer les contenus distants.
+- Vérifier leur conformité.
+- Identifier les snapshots nécessitant une mise à jour.
+- Afficher les différences entre les contenus locaux et distants.
+- Simuler la synchronisation sans modifier les fichiers locaux.
+
+#### Synchronisation effective
+
+`TIAKI_BACKOFFICE_URL=https://backoffice.tiaki.step.eco pnpm cms:sync`
+
+Cette commande exécute l'ensemble du processus de synchronisation et remplace uniquement les snapshots dont le contenu a évolué.
+
+#### Tests automatisés
+
+`pnpm cms:test`
+
+Cette commande exécute les tests automatisés présents dans le répertoire `scripts/tests/`.
+
+Ces tests sont indépendants de la disponibilité de Payload CMS.
+
+### 6. Normalisation et comparaison des données
+
+Les données récupérées depuis Payload sont traitées par les schémas Zod avant d'être comparées avec les snapshots locaux.
+
+La normalisation permet notamment :
+
+- De supprimer les métadonnées techniques de Payload non déclarées dans les schémas.
+- De conserver uniquement les propriétés nécessaires au fonctionnement du site.
+- De supprimer les espaces superflus conformément aux règles de validation.
+- D'assurer une structure de données cohérente entre les contenus distants et locaux.
+
+La comparaison est réalisée sur la structure des objets JSON et non sur leur représentation textuelle.
+
+Ainsi, une différence d'indentation ou d'ordre des propriétés d'un objet JSON ne déclenche pas de mise à jour inutile. En revanche, une modification de l'ordre des éléments d'un tableau peut être considérée comme une modification effective.
+
+Le mécanisme de synchronisation est idempotent : plusieurs exécutions successives sur des contenus distants inchangés ne produisent aucune modification supplémentaire des snapshots.
+
+### 7. Sécurisation de la pagination
+
+La récupération des collections paginées intègre plusieurs mécanismes de contrôle :
+
+| Mécanisme | Objectif |
+|---|---|
+| Limite maximale de 100 pages par collection et par langue | Éviter un nombre excessif de requêtes HTTP. |
+| Vérification des numéros de page | Détecter les réponses de pagination inattendues. |
+| Contrôle des métadonnées | Détecter les incohérences entre les pages successives. |
+| Détection des identifiants dupliqués | Empêcher l'intégration de documents dupliqués. |
+| Vérification du nombre total de documents | Contrôler la conformité du volume de données récupéré. |
+| Sélection explicite de la langue | Éviter la récupération involontaire de contenus dans une autre langue. |
+
+Une collection vide est considérée comme valide lorsque le schéma métier correspondant l'autorise.
+
+Dans le cas des FAQ, cela permet notamment de synchroniser correctement une collection dont tous les documents ont été dépubliés.
+
+### 8. Gestion des erreurs et résilience
+
+Le processus de synchronisation retourne un code de sortie non nul lorsqu'une erreur empêche son exécution complète.
+
+Le délai maximal d'une requête HTTP est configuré à 5 000 millisecondes.
+
+Ce délai s'applique individuellement à chaque requête et non à la durée totale du processus de synchronisation.
+
+Les scénarios suivants ont été testés et validés :
+
+| ID | Scénario | Comportement attendu |
+|---|---|---|
+| T01 | CMS indisponible | Interruption de la synchronisation sans modification des snapshots. |
+| T02 | Timeout HTTP | Interruption de la requête et préservation des snapshots. |
+| T03 | Contenu distant non conforme | Rejet des données par les schémas Zod. |
+| T04 | Pagination incohérente | Interruption de la récupération de la collection. |
+| T05 | Documents dupliqués | Rejet de la collection. |
+| T06 | Dépassement de la limite de pagination | Interruption de la récupération. |
+| T07 | Collection FAQ vide | Synchronisation de la collection vide. |
+| T08 | Échec de préparation des fichiers temporaires | Préservation des snapshots originaux. |
+| T09 | Exécution en mode dry-run | Aucune modification des fichiers locaux. |
+| T10 | Contenus distants inchangés | Aucune réécriture des snapshots. |
+
+En cas d'erreur, les étapes suivantes du workflow de synchronisation ne doivent pas être exécutées.
+
+### 9. Persistance des snapshots
+
+Le mécanisme de persistance repose sur deux phases distinctes.
+
+#### Phase de préparation
+
+L'ensemble des nouveaux snapshots est écrit dans des fichiers temporaires situés dans les répertoires de destination.
+
+Cette phase doit réussir intégralement avant le remplacement des fichiers originaux.
+
+#### Phase de remplacement
+
+Une fois tous les fichiers temporaires préparés, les snapshots originaux sont remplacés à l'aide de l'opération `rename()` du système de fichiers.
+
+Les répertoires temporaires sont ensuite supprimés dans un bloc `finally`.
+
+Cette approche limite les risques de corruption des fichiers lors de leur écriture.
+
+#### Garanties et limites
+
+Le remplacement de chaque fichier individuel repose sur une opération atomique de renommage sur le même système de fichiers.
+
+Toutefois, le remplacement de plusieurs fichiers ne constitue pas une transaction atomique globale.
+
+Une erreur survenant pendant la phase de remplacement peut donc entraîner une mise à jour locale partielle.
+
+Par conséquent, le processus de synchronisation automatisé doit réussir intégralement avant toute publication des modifications dans le dépôt Git.
+
+### 10. Contrôle du périmètre des modifications Git
+
+Avant la création d'une Pull Request automatique, le workflow vérifie l'ensemble des modifications présentes dans le dépôt Git.
+
+Cette vérification repose sur une liste blanche dynamique générée à partir des chemins de snapshots déclarés dans `cmsRegistry`.
+
+Seules les modifications non indexées de fichiers de snapshots existants et déclarés dans le registre sont autorisées.
+
+| Type de modification | Autorisation |
+|---|---|
+| Modification d'un snapshot déclaré | Autorisée |
+| Modification d'un snapshot non déclaré | Refusée |
+| Modification du code source | Refusée |
+| Modification des workflows GitHub Actions | Refusée |
+| Modification des dépendances | Refusée |
+| Création d'un nouveau fichier non suivi | Refusée |
+| Suppression d'un snapshot | Refusée |
+| Renommage d'un fichier | Refusé |
+| Modification déjà indexée dans Git | Refusée |
+
+Toute modification inattendue provoque l'échec du
