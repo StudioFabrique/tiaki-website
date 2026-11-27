@@ -77,7 +77,7 @@ jobs:
         id: app-token
         uses: actions/create-github-app-token@v3
         with:
-          app-id: ${{ vars.CMS_SYNC_APP_ID }}
+          client-id: ${{ vars.CMS_SYNC_CLIENT_ID }}
           private-key: ${{ secrets.CMS_SYNC_PRIVATE_KEY }}
           permission-contents: write
           permission-pull-requests: write
